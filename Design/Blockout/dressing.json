@@ -741,6 +741,230 @@
       "lot": "shop_07_e",
       "fit": "native",
       "yaw_deg": -34.67
+    },
+    {
+      "id": "terrace_0_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_00_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_00",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_01_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_01",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_02_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_02",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_03_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_03",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_04_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_04",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_00_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_00",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_01_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_01",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_02_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_02",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_03_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_03",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_04_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_04",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_05_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_05",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_06_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_06",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_07_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_07",
+      "fit": "native",
+      "yaw_deg": 90
     }
   ]
 }

@@ -1,0 +1,45 @@
+{
+  "asset": "townhouse-terrace",
+  "run": "20261106T105614-57672a",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T11:06:08.729931+00:00",
+  "files": {
+    "glb": {
+      "file": "townhouse-terrace.glb",
+      "sha256": "3d08d3e52e02621ca34e22bc4e276885fb1da8933500dcfc1c180550d74e2328",
+      "bytes": 19195084
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/33135b74-0d1c-429e-ab3a-46eb14a70a19",
+    "downloaded_at": "2026-11-06T10:55:28.731109+00:00",
+    "sha256": "e7c4898953caab3dc131e0d38411c1c47a5d1ac1499aba0ffc9bc263baef4593",
+    "bytes": 19175300,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T11:06:08.646583+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K scale run (10 m). Three terraced units with coral doors, balconies, planters, stairs and retaining wall match the reference; the stepped roofline flattened. Sol accept-local. Exterior shell for hillside terrace rows."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T105528-b44b29",
+    "change": "Uniform scale to 10 m height, base Z=0 and footprint-centred pivot; apply transforms without topology edits",
+    "candidate_sha256": "9c5c9833086e4f479701b6e0f2ca1a03cb030db9bf6d8ed91bcf3013b7521128",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T10:56:14.033283+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/townhouse-terrace/runs/20261106T105614-57672a",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

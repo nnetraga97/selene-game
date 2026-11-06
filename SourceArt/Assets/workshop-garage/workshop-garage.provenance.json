@@ -1,0 +1,45 @@
+{
+  "asset": "workshop-garage",
+  "run": "20261106T110216-a5b541",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T11:06:08.902332+00:00",
+  "files": {
+    "glb": {
+      "file": "workshop-garage.glb",
+      "sha256": "a1f9944462094092a6b5e3accd67fd43d554e999c7e039cdcf2983b26dc0b714",
+      "bytes": 17909444
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/c0949b00-9cc8-4924-9784-c37a251db036",
+    "downloaded_at": "2026-11-06T11:01:03.186712+00:00",
+    "sha256": "eeb08c94237454107e9f90d78f0c25c753f27e2dabd063d4898ec22b3485ca6c",
+    "bytes": 17904984,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T11:06:08.816816+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K scale run (10 m). Curved roof, clerestory, striped roller-shutter bay, sign and rooftop unit match; outside staircase lost. Sol accept-local. Exterior shell for the industrial area."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T110103-3e95f2",
+    "change": "Uniform scale to 10 m height, base Z=0 and footprint-centred pivot; apply transforms without topology edits",
+    "candidate_sha256": "e5edd14836a7b6141e19a89251fb8442f832c80338bd1c76ab0f5090fd0b547a",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T11:02:16.511816+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/workshop-garage/runs/20261106T110216-a5b541",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}
