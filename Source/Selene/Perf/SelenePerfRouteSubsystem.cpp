@@ -1,6 +1,9 @@
 #include "Perf/SelenePerfRouteSubsystem.h"
 #include "Perf/SelenePerfRoute.h"
 #include "Selene.h"
+#include "SeleneCharacter.h"
+#include "Lighting/SeleneTimeOfDay.h"
+#include "Components/CapsuleComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Components/SplineComponent.h"
 #include "Dom/JsonObject.h"
@@ -179,7 +182,8 @@ bool USelenePerfRouteSubsystem::Start()
 	TSet<FName> Tags;
 	for (const FSelenePerfSegment& S : PerfRoute->Segments)
 	{
-		if (S.Tag.IsNone() || Tags.Contains(S.Tag) || !FMath::IsFinite(S.StartDistance) || !FMath::IsFinite(S.EndDistance) ||
+		if (S.Tag.IsNone() || Tags.Contains(S.Tag) ||
+			(S.Category != TEXT("exterior") && S.Category != TEXT("doorway") && S.Category != TEXT("interior")) || !FMath::IsFinite(S.StartDistance) || !FMath::IsFinite(S.EndDistance) ||
 			S.StartDistance < 0 || S.EndDistance <= S.StartDistance || S.EndDistance > Length + 0.01f)
 		{
 			Finish(TEXT("Invalid or duplicate segment: ") + S.Tag.ToString()); return false;
@@ -192,9 +196,18 @@ bool USelenePerfRouteSubsystem::Start()
 		Tags.Add(S.Tag);
 		TSharedPtr<FJsonObject> Item = MakeShared<FJsonObject>();
 		Item->SetStringField(TEXT("tag"), S.Tag.ToString());
+		Item->SetStringField(TEXT("category"), S.Category.ToString());
 		Item->SetNumberField(TEXT("start_distance"), S.StartDistance);
 		Item->SetNumberField(TEXT("end_distance"), S.EndDistance);
 		Segments.Add(MakeShared<FJsonValueObject>(Item));
+	}
+	float PreviousKey = -1;
+	for (const FSelenePerfViewKey& Key : PerfRoute->ViewKeys)
+	{
+		if (!FMath::IsFinite(Key.Distance) || Key.Distance < 0 || Key.Distance <= PreviousKey ||
+			Key.Distance > Length + 0.01f || Key.LookAtTarget.ContainsNaN())
+		{ Finish(TEXT("Invalid view key distance or target")); return false; }
+		PreviousKey = Key.Distance;
 	}
 	Meta->SetArrayField(TEXT("segments"), Segments);
 	Meta->SetNumberField(TEXT("route_length_cm"), Length);
@@ -215,6 +228,20 @@ bool USelenePerfRouteSubsystem::Start()
 		Exec(FString::Printf(TEXT("tod.speed %g"), TimeFlow));
 		Exec(TEXT("tod.pause 0"));
 	}
+	// Command dispatch alone cannot demonstrate that the requested state was applied.
+	const ASeleneCharacter* Character = Cast<ASeleneCharacter>(Controller->GetPawn());
+	const ASeleneTimeOfDay* TimeOfDay = ASeleneTimeOfDay::Get(GetWorld());
+	const ESeleneCameraMode ExpectedMode = Camera == TEXT("1P") ? ESeleneCameraMode::FirstPerson : ESeleneCameraMode::ThirdPerson;
+	if (!Warnings.IsEmpty() || !Character || Character != Pawn || Character->GetCameraMode() != ExpectedMode ||
+		!TimeOfDay || !FMath::IsNearlyEqual(TimeOfDay->GetHour(), Hour, 0.001f) ||
+		TimeOfDay->bPaused != !bTimeFlow || (bTimeFlow && !FMath::IsNearlyEqual(TimeOfDay->Speed, TimeFlow, 0.001f)))
+	{
+		const FString Error = TEXT("Configuration verification failed: expected possessed SeleneCharacter in requested camera mode and matching time-of-day hour/pause/speed");
+		Meta->SetStringField(TEXT("configuration_error"), Error);
+		Finish(Error);
+		return false;
+	}
+	Meta->SetBoolField(TEXT("configuration_verified"), true);
 	TSharedPtr<FJsonObject> Settings = MakeShared<FJsonObject>();
 	// Include all registered sg.*, Lumen, VSM and Nanite settings, plus presentation controls.
 	IConsoleManager::Get().ForEachConsoleObjectThatStartsWith(FConsoleObjectVisitor::CreateLambda(
@@ -263,10 +290,14 @@ int32 USelenePerfRouteSubsystem::SegmentAt(float AtDistance) const
 
 void USelenePerfRouteSubsystem::MovePawn()
 {
-	const FRotator Rotation = PerfRoute->Route->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World).Rotation();
-	Pawn->SetActorLocationAndRotation(PerfRoute->Route->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World),
-		Rotation, false, nullptr, ETeleportType::TeleportPhysics);
-	Controller->SetControlRotation(Rotation);
+	ASeleneCharacter* Character = CastChecked<ASeleneCharacter>(Pawn);
+	FRotator MovementRotation = PerfRoute->Route->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World).Rotation();
+	MovementRotation.Pitch = MovementRotation.Roll = 0; // Keep the capsule upright on slopes.
+	const FVector Feet = PerfRoute->Route->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
+	Character->SetActorLocationAndRotation(Feet + FVector(0, 0, Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()),
+		MovementRotation, false, nullptr, ETeleportType::TeleportPhysics);
+	// Aim from the character eye independently of movement, preserving camera offsets.
+	Controller->SetControlRotation(PerfRoute->ViewRotationAt(Distance, Character->GetPawnViewLocation()));
 }
 
 void USelenePerfRouteSubsystem::Event(const FString& Text)

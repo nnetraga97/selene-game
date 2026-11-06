@@ -21,13 +21,13 @@ Unreal is left-handed: X forward, Y right, Z up. We choose **UE +X north and UE 
 
 Blender mesh vertices are baked as `(y,-x,z)` metres, with unit scale 1. Blender's Y-up glTF exporter maps this to glTF `(y,z,x)`. UE 5.8 Interchange's GLTF `ConvertVec3` swaps glTF Y/Z, yielding UE `(y,x,z)`; its metre-to-centimetre import yields the same mapping as the builder. Spawn the terrain at zero with **unit actor scale and zero rotation**, with no extra 90-degree correction. The builder refuses a terrain whose imported horizontal half-extents differ from UE X=20,000 cm / Y=24,000 cm. UV0 spans the full layout footprint once.
 
-## Schema v1
+## Schema v2
 
-The schema is enforced procedurally by the stdlib validator. V1 uses **rect+rotation footprints**, not arbitrary polygons. `layout_core.polygon()` converts rectangles into convex polygons for SAT checks and plotting. Unknown descriptive keys are allowed; required shape/type/range and geometric checks are in `validate_layout.py`.
+The schema is enforced procedurally by the stdlib validator. V2 uses **rect+rotation footprints**, not arbitrary polygons. `layout_core.polygon()` converts rectangles into convex polygons for SAT checks and plotting. Unknown descriptive keys are allowed; required shape/type/range and geometric checks are in `validate_layout.py`.
 
 | Key | Contract |
 | --- | --- |
-| `schema_version`, `name`, `units`, `axes` | Version 1, descriptive title, `metres`, `east,north,up` |
+| `schema_version`, `name`, `units`, `axes` | Version 2, descriptive title, `metres`, `east,north,up` |
 | `terrain.bounds` | `[min_x,min_y,max_x,max_y]`; all lots and route/corridor points must lie inside |
 | `terrain.grid` | Mesh grid spacing, 2–4 m; current 2.5 m |
 | `terrain.height_model` | `north_ramp`: 0 below `start_y`, linear to `rise` at `end_y`, then constant |
@@ -43,14 +43,14 @@ The schema is enforced procedurally by the stdlib validator. V1 uses **rect+rota
 | `viaduct` | Two 3D `points`, `width`, `deck_thickness`, `pier_spacing`, `pier_size`, `exclude_piers:[[min_x,max_x],...]` for crossings/depot. Deck surface is +12 m on the flat north-plaza corridor |
 | `boundaries[]` | South/west edge polylines and `embankment_depth`; terrain-following retaining blocks, posts and two rails |
 | `backdrop` | `center:[x,y,z]`, 2D `size`, `collision:false`, optional rectangular `west_extension`; distant bay proxy only |
-| `routes[]` | Unique R1/R2/R3 `id`, `points`, `eye_height`, `length_range:[min,max]` metres, `segments`, optional `look_at:[x,y,z]`. A 2D point follows final terrain + eye height; a 3D point is an **absolute camera elevation**, already including eye height |
-| `segments[]` | `tag:exterior/doorway/interior`, `start_index`, `end_index`; contiguous spans covering every route edge. Converted to cumulative 3D centimetre distances on `SelenePerfRoute` |
+| `routes[]` | Unique R1/R2/R3 `id`, `points`, `length_range:[min,max]` metres, `segments`, optional `look_at:[x,y,z]`. A 2D point follows final terrain height; a 3D point is an **absolute feet/floor elevation**. The builder samples the feet path at most every 25 cm (5 cm near stairs), follows terrain and constructed paving/treads, and accounts for lower-hemisphere contact near riser edges. Authored indices remain segment boundaries after resampling. Capsule half-height and camera offsets belong to the character |
+| `segments[]` | `tag` unique per route (case-insensitive), `category:exterior/doorway/interior`, `start_index`, `end_index`; contiguous spans covering every route edge. Converted to cumulative 3D centimetre distances on `SelenePerfRoute` |
 | `player_start` | Absolute capsule-centre `position:[x,y,z]`, `look_at:[x,y,z]` |
 | `east_west_walk` | Separate full-width traversal `points`, `speed:1.5`, `expected_minutes:[5,6]`; horizontal open corridor south of plaza |
 
 Terrain evaluation order is deterministic and shared by Blender, map rendering and routes: north ramp; explicit pads in order with smoothstep shoulders; derived flat lot pads (`base_z`, 0.8 m margin, 2 m blend); street ramps; then stair ramps. Corridors have 2 m blending shoulders outside their half-width. The final height supports step boxes, while their upper faces form the walkable treads. Lot pads and streets must stay clear of solid buildings; the validator checks complete corridor widths against solid footprints.
 
-The validator checks malformed fields, duplicate IDs, finite coordinates, footprint bounds, lot/lot SAT overlap, street/stair intrusion into solid lots, count targets, opening bounds/overlaps, continuous route segment tags, sampled route/solid intersections and shell door crossings, route length ranges and the 5–6 minute crossing. These are plan-level checks; they do not substitute for a player capsule sweep or human review.
+The validator checks malformed fields, duplicate IDs, finite coordinates, footprint bounds, lot/lot SAT overlap, street/stair intrusion into solid lots, count targets, opening bounds/overlaps, unique segment tags and valid categories, sampled capsule footprint/height and eye clearance through shell doors, route length ranges and the 5–6 minute crossing. These are plan-level checks; they do not substitute for a player capsule sweep or human review.
 
 ## Run from the project root
 
@@ -90,7 +90,7 @@ export SELENE_TERRAIN_GLB="$PWD/Saved/Blockout/Terrain/terrain.glb"
 
 The first build uses `LevelEditorSubsystem.new_level(..., False)`, an empty **non-World-Partition** map. Rebuilds remove only actors bearing `SeleneBlockout`; unrelated actors are retained. This map is generated content: do not hand-edit tagged actors expecting the changes to survive. Materials and the imported terrain are reused/reimported at stable package paths. A rebuild may produce new actor GUIDs/external filenames; idempotence means the same scene, labels, counts and paths, not binary-identical packages. Import/schema errors fail the commandlet and write `Saved/Blockout/report.json`. Asset mutation is not transactional; rerun a failed build before reviewing it.
 
-The report records engine/version, input SHA256 hashes, actors and lots per area, terrain bounds, route lengths and cm segment spans, class/material warnings and save status. Conditional integration uses `/Script/Selene.SelenePerfRoute`, its `Route` spline, `route_name` and a struct-array conversion from `{tag,start_distance,end_distance}` dictionaries. `/Script/Selene.SeleneTimeOfDay` is likewise loaded dynamically. Absent classes are warnings, not build failures; fallback sun/sky/atmosphere are spawned. R1 and R3 also get start/end review cameras aimed at `look_at`. These cameras are static review viewpoints; the performance-route consumer owns movement/panning.
+The report records engine/version, input SHA256 hashes, actors and lots per area, terrain bounds, route lengths and cm segment spans, class/material warnings and save status. Conditional integration uses `/Script/Selene.SelenePerfRoute`, its `Route` spline, `route_name` and a struct-array conversion from `{tag,category,start_distance,end_distance}` dictionaries. `/Script/Selene.SeleneTimeOfDay` is likewise loaded dynamically. Absent classes are warnings, not build failures; fallback sun/sky/atmosphere are spawned. R1 and R3 also get start/end review cameras aimed at `look_at`. These cameras use the native character eye height. The same targets are serialized as endpoint `view_keys` on each performance route; the runner interpolates them by distance independently of movement yaw. Town also explicitly selects `SeleneGameMode` in World Settings.
 
 ## External actors in UE 5.8.4
 
@@ -136,3 +136,7 @@ Verified in this worktree on UE **5.8.4** and Blender **5.2.0 LTS**:
 - Final lengths: **R1 92.26 m; R2 1,406.42 m; R3 25 m**. Full-width E–W plan traversal: **480 m / 1.5 m/s = 320 seconds = 5 minutes 20 seconds**. This is a distance/speed calculation, not a timed gameplay recording.
 
 `Saved/Blockout/report.json`, `verification.json`, `Terrain/terrain-report.json`, the build/conversion logs and `map-reviewed.png` preserve local evidence. Generated `Content/`, including copied prototypes, and `Design/Blockout/map.png` were removed from the handoff. Unreal's automatic Android File Server config addition was restored. No commit or push was made.
+
+## Integration contract update
+
+Schema v2 migrates authored route Z values from camera elevations to feet elevations and removes `eye_height`. The native character currently has a 34 cm capsule radius, 87.5 cm half-height and a first-person eye 64 cm above its centre (151.5 cm above feet). `verify_unreal.py` reads these dimensions from the class default object and checks saved route coordinates, categories, view targets, sampled capsule volume and eye segments against colliding cubes. The geometric check permits 3 cm contact tolerance. It is not a runtime capsule sweep or a third-person spring-arm/visibility test. Historical results above describe the prior eye-path implementation.

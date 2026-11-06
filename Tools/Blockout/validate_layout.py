@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate schema v1 plus checkpoint constraints. No third party dependencies."""
+"""Validate schema v2 plus checkpoint constraints. No third party dependencies."""
 
 import argparse
 import math
@@ -43,7 +43,7 @@ def validate(d):
         )
 
     try:
-        check(d["schema_version"] == 1, "unsupported schema_version")
+        check(d["schema_version"] == 2, "unsupported schema_version")
         check(
             d["units"] == "metres" and d["axes"] == "east,north,up",
             "units/axes mismatch",
@@ -214,10 +214,15 @@ def validate(d):
                 lo <= measured <= hi,
                 f"{r['id']}: length {measured:.1f} outside [{lo}, {hi}]",
             )
+            if "look_at" in r:
+                check(point(r["look_at"], 3), r["id"] + ": invalid look_at")
+            tags = [str(s["tag"]).casefold() for s in r["segments"]]
+            check(len(set(tags)) == len(tags), r["id"] + ": duplicate segment tags")
             end = 0
             for s in r["segments"]:
                 check(
-                    s["tag"] in ("exterior", "doorway", "interior")
+                    isinstance(s["tag"], str) and bool(s["tag"].strip())
+                    and s["category"] in ("exterior", "doorway", "interior")
                     and s["start_index"] == end
                     and s["start_index"] < s["end_index"] < len(r["points"]),
                     r["id"] + ": invalid segment coverage",
@@ -226,7 +231,8 @@ def validate(d):
             check(
                 end == len(r["points"]) - 1, r["id"] + ": segments do not cover route"
             )
-            # Sample at <=0.5 m. Solid lots and shell walls must not obstruct the camera.
+            # Sample capsule footprint and vertical clearance at <=0.5 m.
+            radius, capsule_height, eye_height = 0.34, 1.75, 1.515
             points = route_points(d, r)
             for a, b in zip(points, points[1:]):
                 for i in range(math.ceil(math.dist(a, b) / 0.5) + 1):
@@ -235,15 +241,18 @@ def validate(d):
                     for lot in d["lots"]:
                         x, y = local_xy(lot["footprint"], *p[:2])
                         w, h = lot["footprint"]["size"]
-                        if abs(x) >= w / 2 + 0.15 or abs(y) >= h / 2 + 0.15:
+                        if abs(x) >= w / 2 + radius or abs(y) >= h / 2 + radius:
                             continue
                         shell = lot.get("interior")
                         if not shell:
                             check(False, f"{r['id']}: passes through solid {lot['id']}")
                             break
+                        check(p[2] >= lot["base_z"] - 0.01
+                              and p[2] + max(capsule_height, eye_height) <= lot["base_z"] + shell["clear_height"],
+                              f"{r['id']}: capsule/eye outside {lot['id']} floor/ceiling")
                         if (
-                            abs(x) < w / 2 - shell["wall_thickness"]
-                            and abs(y) < h / 2 - shell["wall_thickness"]
+                            abs(x) < w / 2 - shell["wall_thickness"] - radius
+                            and abs(y) < h / 2 - shell["wall_thickness"] - radius
                         ):
                             continue
                         wall = (
@@ -256,7 +265,9 @@ def validate(d):
                             any(
                                 o["wall"] == wall
                                 and o["kind"] == "door"
-                                and abs(offset - o["offset"]) <= o["width"] / 2 - 0.15
+                                and abs(offset - o["offset"]) <= o["width"] / 2 - radius
+                                and p[2] >= lot["base_z"] + o["sill"] - 0.01
+                                and p[2] + max(capsule_height, eye_height) <= lot["base_z"] + o["sill"] + o["height"]
                                 for o in shell["openings"]
                             ),
                             f"{r['id']}: shell crossing misses {lot['id']} door",

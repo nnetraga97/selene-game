@@ -100,15 +100,82 @@ def height(data, x, y, pads=None):
     return z
 
 
+def route_geometry(data, route):
+    """Sample an upright capsule's feet path; retain authored segment boundaries.
+
+    Two-dimensional anchors follow terrain, explicit Z denotes floor height.
+    Samples follow terrain between anchors and the tops of constructed paving
+    and stairs. Near a riser the lower hemisphere contacts its edge before the
+    capsule centre crosses it, so the feet path rises continuously at that edge.
+    """
+    radius = 0.34  # Native SeleneCharacter radius; verified against the CDO.
+    pads = surface_pads(data)
+    steps = []
+    for stair in data["stairs"]:
+        for a, b in zip(stair["points"], stair["points"][1:]):
+            n = math.ceil(abs(b[2] - a[2]) / stair["max_riser"])
+            run = math.dist(a[:2], b[:2])
+            for i in range(n):
+                t = (i + 0.5) / n
+                steps.append(dict(center=[a[j] + (b[j] - a[j]) * t for j in range(2)],
+                    size=[run / n + 0.015, stair["width"]],
+                    rotation=math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])),
+                    z=a[2] + (b[2] - a[2]) * (i + 1) / n))
+
+    def ground(x, y, authored):
+        z = max(height(data, x, y, pads), authored if authored is not None else -math.inf)
+        for slab in data["slabs"]:
+            lx, ly = local_xy(slab, x, y)
+            distance = math.hypot(max(abs(lx) - slab["size"][0] / 2, 0),
+                                  max(abs(ly) - slab["size"][1] / 2, 0))
+            if distance < radius:
+                z = max(z, slab["z"] + 0.025 - radius + math.sqrt(radius**2 - distance**2))
+        for street in data["streets"]:
+            for a, b in zip(street["points"], street["points"][1:]):
+                dx, dy = b[0] - a[0], b[1] - a[1]
+                run = math.hypot(dx, dy)
+                t = ((x - a[0]) * dx + (y - a[1]) * dy) / run**2
+                side = abs((x - a[0]) * dy - (y - a[1]) * dx) / run
+                distance = math.hypot(max(max(-t, t - 1) * run - 0.015, 0),
+                                      max(side - street["width"] / 2, 0))
+                if distance < radius:
+                    slope = (b[2] - a[2]) / run
+                    # Builder's pitched 16 cm paving cube, including edge contact.
+                    z = max(z, a[2] + max(0, min(1, t)) * (b[2] - a[2]) + 0.025
+                            + (radius + 0.08) * (math.sqrt(1 + slope**2) - 1)
+                            - radius + math.sqrt(radius**2 - distance**2))
+        for step in steps:
+            lx, ly = local_xy(step, x, y)
+            distance = math.hypot(max(abs(lx) - step["size"][0] / 2, 0),
+                                  max(abs(ly) - step["size"][1] / 2, 0))
+            if distance < radius:
+                z = max(z, step["z"] - radius + math.sqrt(radius**2 - distance**2))
+        return z
+
+    points, anchors = [], []
+    for index, a in enumerate(route["points"]):
+        if index:
+            b = a
+            a = route["points"][index - 1]
+            # Resolve the curved capsule contact at stair edges more finely.
+            near_stairs = any(all(
+                max(a[j], b[j]) >= min(p[j] for p in stair["points"]) - stair["width"] / 2 - radius
+                and min(a[j], b[j]) <= max(p[j] for p in stair["points"]) + stair["width"] / 2 + radius
+                for j in range(2)) for stair in data["stairs"])
+            count = max(1, math.ceil(math.dist(a[:2], b[:2]) / (0.05 if near_stairs else 0.25)))
+            for i in range(1, count):
+                t = i / count
+                x, y = [a[j] + (b[j] - a[j]) * t for j in range(2)]
+                authored = a[2] + (b[2] - a[2]) * t if len(a) == len(b) == 3 else None
+                points.append([x, y, ground(x, y, authored)])
+            a = b
+        anchors.append(len(points))
+        points.append([a[0], a[1], ground(a[0], a[1], a[2] if len(a) == 3 else None)])
+    return points, anchors
+
+
 def route_points(data, route):
-    return [
-        [
-            p[0],
-            p[1],
-            p[2] if len(p) == 3 else height(data, *p) + route.get("eye_height", 1.65),
-        ]
-        for p in route["points"]
-    ]
+    return route_geometry(data, route)[0]
 
 
 def distances(points):

@@ -6,9 +6,9 @@ This implementation has been compiled, not performance-certified. No game was pa
 
 ## Route contract
 
-Place and save `ASelenePerfRoute` actors in the cooked map. Python class path: `/Script/Selene.SelenePerfRoute`. Set `route_name`; set `segments` to `SelenePerfSegment` structs with `tag`, `start_distance`, `end_distance`; edit the `Route` spline component's points. Distances are spline arc length in centimeters. Points describe the **pawn origin**, not the camera eye; author capsule/ground clearance accordingly. Keep these names stable for the external authoring script.
+Place and save `ASelenePerfRoute` actors in the cooked map. Python class path: `/Script/Selene.SelenePerfRoute`. Set `route_name`; set `segments` to `SelenePerfSegment` structs with `tag`, `category`, `start_distance`, `end_distance`; edit the `Route` spline component's points. Distances are spline arc length in centimeters. Points describe **ground-contact feet positions**. The runner adds the possessed character's scaled capsule half-height, keeps the capsule upright, and uses the character's own camera offsets. Layout schema v2 uses terrain height for 2D points and absolute floor/feet elevation for 3D points. Keep these names stable for the external authoring script.
 
-Each route name must be unique. Segments must have unique, nonempty tags, positive lengths, fit within the spline, and not overlap. Boundaries are start-inclusive/end-exclusive except the final route endpoint. Gaps are logged as `unsegmented` and included in whole-run statistics. Every declared segment must receive measured frames in the cold lap AND each warm lap; an undersized/skipped segment fails capture. Make route actors initially loaded (for World Partition, use a non-spatially loaded actor), and include the map in cooking. The harness waits for ordinary streaming to settle at startup; it does not preload all route content.
+Each route name must be unique. Segment `category` is `exterior`, `doorway`, or `interior`; tags identify individual spans (e.g. `doorway_workshop_entry`). Segments must have unique, nonempty tags, positive lengths, fit within the spline, and not overlap. Boundaries are start-inclusive/end-exclusive except the final route endpoint. Gaps are logged as `unsegmented` and included in whole-run statistics. Every declared segment must receive measured frames in the cold lap AND each warm lap; an undersized/skipped segment fails capture. Make route actors initially loaded (for World Partition, use a non-spatially loaded actor), and include the map in cooking. The harness waits for ordinary streaming to settle at startup; it does not preload all route content.
 
 `USelenePerfRouteSubsystem` is a **UWorldSubsystem**, created only in a Game world with `-PerfRoute=`. One map is launched per process, so world ownership avoids stale route/pawn references across travel and excludes Editor/PIE worlds. Begin play, a possessed pawn, a usable viewport, and initial streaming readiness are required within 60 seconds.
 
@@ -25,9 +25,9 @@ Each route name must be unique. Segments must have unique, nonempty tags, positi
 | `-PerfSpeed=150` | 150 cm/s | Kinematic spline travel speed |
 | `-PerfOut=/absolute/path` | ProjectSaved/Perf | Output directory |
 
-After begin play the subsystem executes `selene.Camera 3p|1p`, `tod.set <hour>`, `tod.pause 1`; time-flow additionally executes `tod.speed <speed>` and `tod.pause 0`. It uses the console exec path, with no camera/time module includes. Unknown/unhandled commands generate a warning in metadata and low-level output and execution continues. A warning means the requested camera/time setting has not been demonstrated; inspect those warnings before treating a matrix as coverage of all modes. Registered commands must themselves be available in Shipping (not stripped/cheat-only).
+After begin play the subsystem executes `selene.Camera 3p|1p`, `tod.set <hour>`, `tod.pause 1`; time-flow additionally executes `tod.speed <speed>` and `tod.pause 0`. It then verifies possession of `ASeleneCharacter`, the requested camera mode, and the world time-of-day actor's hour, paused state and (when flowing) speed before warm-up or measurement. Any dispatch warning or state mismatch records `configuration_error`, aborts with a nonzero status, and makes the report INVALID. Successful verification records `configuration_verified=true`. Registered commands must themselves be available in Shipping (not stripped/cheat-only).
 
-Movement and look input are ignored, and the pawn movement component is stopped and deactivated. The pawn is positioned without sweep via `SetActorLocationAndRotation` using the world-space spline tangent; control rotation looks down that tangent. Existing camera-mode offsets are preserved. Custom pawn ticks/physics that override its transform or camera require integration inspection.
+Movement and look input are ignored, and the pawn movement component is stopped and deactivated. The pawn is positioned without sweep via `SetActorLocationAndRotation` with upright yaw along the world-space spline tangent. `view_keys` (`distance`, world-cm `look_at_target`, `use_look_at`) independently drive control rotation from the character eye. Keys are ordered by distance; look-at targets interpolate linearly, mixed tangent/look-at keys blend rotations, and no keys means tangent view. The builder emits endpoint keys for layout `look_at`, including R1 toward the tower and R3 back over town. Existing camera-mode offsets are preserved. Custom pawn ticks/physics that override its transform or camera require integration inspection.
 
 Flow: moving warm-up (discarded) → teleport to start + camera cut + 2 seconds stationary/discarded → COLD lap (lap 0) → repeat teleport/cut/2-second discard + warm laps 1..N. **COLD means first recorded traversal after warm-up, not a cleared shader, streaming, Metal, or OS cache.** Streaming/PSO work occurring on measured traversals is included. There is no cache-deletion operation.
 
@@ -78,22 +78,22 @@ UE='/Users/Shared/Epic Games/UE_5.8'
 "$UE/Engine/Build/BatchFiles/Mac/Build.sh" Selene Mac Shipping -Project="$PWD/Selene.uproject" -WaitMutex
 ```
 
-Package the actual authored map, replacing `/Game/Maps/Town` below with its asset path. Keep Shipping and Development archives separate:
+Package the authored `/Game/Selene/Maps/Town` map. Keep Shipping and Development archives separate:
 
 ```bash
 UE='/Users/Shared/Epic Games/UE_5.8'
 "$UE/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun \
   -project="$PWD/Selene.uproject" -noP4 -platform=Mac -clientconfig=Shipping \
-  -build -cook -map=/Game/Maps/Town -stage -pak -package -archive \
+  -build -ubtargs="-noEntitlements" -cook -map=/Game/Selene/Maps/Town -stage -pak -package -archive \
   -archivedirectory="$PWD/Packaged/Shipping" -unattended
 
 "$UE/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun \
   -project="$PWD/Selene.uproject" -noP4 -platform=Mac -clientconfig=Development \
-  -build -cook -map=/Game/Maps/Town -stage -pak -package -archive \
+  -build -ubtargs="-noEntitlements" -cook -map=/Game/Selene/Maps/Town -stage -pak -package -archive \
   -archivedirectory="$PWD/Packaged/Development" -unattended
 ```
 
-Find the staged `.app` under the archive's Mac directory; do not benchmark the uncooked `Binaries/Mac` compile output. If code-signing sandbox entitlements prevent writing to the explicit output/archive directory, rebuild/repackage with `-ubtargs="-noEntitlements"` (a build-time switch, not a runtime app argument), or choose a permitted output directory. UBT's `Source/Programs/UnrealBuildTool/Platform/Apple/AppleExports.cs:27-35` reads `-noEntitlements`; `ProjectFiles/Xcode/XcodeProject.cs:1981,2856` omits entitlements accordingly. AutomationTool's `AutomationUtils/ProjectParams.cs:1057,2499-2500` exposes `-ubtargs`. Verify the resulting signature's entitlements when using a custom signing workflow.
+Find the staged `.app` under the archive's Mac directory; do not benchmark the uncooked `Binaries/Mac` compile output. Both package commands disable entitlements at build time because the matrix writes to explicit checkout paths. The matrix inspects `codesign -d --entitlements :- APP.app` before creating output or launching a process, and refuses sandboxed apps or unreadable signatures. UBT's `Source/Programs/UnrealBuildTool/Platform/Apple/AppleExports.cs:27-35` reads `-noEntitlements`; `ProjectFiles/Xcode/XcodeProject.cs:1981,2856` omits entitlements accordingly. AutomationTool's `AutomationUtils/ProjectParams.cs:1057,2499-2500` exposes `-ubtargs`; `Scripts/BuildProjectCommand.Automation.cs:130-145` forwards it into the build agenda. `AppleToolChain.cs:853,1418` carries the option into post-build sync. Verify the resulting signature's entitlements when using a custom signing workflow.
 
 ## Packaged Mac Saved location
 
@@ -112,16 +112,20 @@ A staged Development build carrying that installed-project marker uses the same 
 Close/idle Blender, builds, other games and GPU workloads. Keep power mode, power supply, display resolution/refresh, thermal state, and presentation settings consistent. The script prints this reminder. It launches the bundle executable directly (no `open`, editor, or live session) so arguments, waiting, and exit status are reliable.
 
 ```bash
-Tools/Perf/run_matrix.sh "$PWD/Packaged/Shipping/Mac/Selene.app" /Game/Maps/Town TownWalk InteriorWalk \
+Tools/Perf/run_matrix.sh "$PWD/Packaged/Shipping/Mac/Selene.app" /Game/Selene/Maps/Town R1 R2 R3 \
   --res-x 1920 --res-y 1080 --build Shipping --nosound
 
-Tools/Perf/run_matrix.sh "$PWD/Packaged/Development/Mac/Selene.app" /Game/Maps/Town TownWalk \
+Tools/Perf/run_matrix.sh "$PWD/Packaged/Development/Mac/Selene.app" /Game/Selene/Maps/Town R1 \
   --res-x 1920 --res-y 1080 --build Development --nosound
 ```
 
 Adjust actual bundle names. For each route there are 9 fresh-process runs: cameras 3P/1P × hours 12/17.5/19/22 plus one 3P/noon flowing-time run (speed 60 by default). Each uses fullscreen with explicit ResX/ResY. The harness records the actual viewport size; verify it matches the intended test pixels on Retina displays. Audio stays enabled unless `--nosound` is supplied. Vsync and `t.MaxFPS` are recorded, not silently changed; a 60 Hz cap will prevent demonstrating 120 fps headroom.
 
-`--out` must name a fresh directory. Defaults: `Tools/Perf/runs/<UTC-id>/run-0001/...`, reports beneath that matrix directory. Each launch saves process output, full argv, duration, return code, and artifact list. A process watchdog (default 1800 seconds, `--timeout`) terminates hung runs and retains the failure. Remaining runs still execute; the final script status is nonzero if any launch/capture/performance check fails. An interrupted matrix retains per-run launch records even if no final report is created.
+`--out` must name a fresh directory. Defaults: `Tools/Perf/runs/<UTC-id>/run-0001/...`, reports beneath that matrix directory. Each launch saves process output, full argv, duration, return code, and artifact list. The watchdog is calculated separately for each route from `Design/Blockout/layout.json` (override with `--layout` or explicit `--route-length-cm` for a custom map):
+
+`ceil(60 + 1.10 * (warmup_seconds + (warm_laps + 1) * (route_length_cm / speed_cm_s + 2)) + 120)`.
+
+This includes the 60-second startup allowance, cold plus warm traversal/settling, 10% scheduling slack, and 120 seconds for completion and disk I/O. At 150 cm/s, 3 warm laps and 15 seconds warm-up, R2 gets 4,346 seconds. `--timeout` may increase this value; shorter overrides are rejected. The selected value is saved in `launch.json`. The watchdog terminates hung runs and retains the failure. Remaining runs still execute; the final script status is nonzero if any launch/capture/performance check fails. An interrupted matrix retains per-run launch records even if no final report is created.
 
 Raw files are copied to a new archive directory (never overwritten), default:
 
@@ -142,11 +146,11 @@ python3 Tools/Perf/test_summarize.py
 
 Omit `--profiler` for Shipping. Adjacent matching `.meta.json` files are required, so a missing segment declaration or truncated/incomplete capture cannot produce PASS. Optional Development CSV files are preserved and hashed as opaque diagnostic inputs; their arbitrary profiler columns never substitute for frame logs. Launch manifests and process logs are archived too when supplied by the matrix.
 
-Outputs are `<reports>/<UTC date>-<build>.md` and `.json`; if already present, a unique run-id suffix preserves the earlier report. Every individual run, warm lap, declared segment and cold result is retained. SHA256 covers every archived raw file, including metadata and optional profiles. Missing raw inputs fail the report.
+Outputs are `<reports>/<UTC date>-<build>.md` and `.json`; if already present, a unique run-id suffix preserves the earlier report. Every individual run, warm lap, declared segment, category rollup and cold result is retained. Category metrics pool the constituent frames, not segment averages; per-segment acceptance remains mandatory. SHA256 covers every archived raw file, including metadata and optional profiles. Missing raw inputs fail the report.
 
 Metrics: average FPS = 1000/mean(frame ms); 1%-low FPS = 1000/mean(slowest ceil(1% of frames)); p99 uses nearest rank; slow-frame percentage counts `>16.7 ms`; hitch count counts `>33.3 ms`. GT/RT/GPU median and p99 exclude empty samples and include valid-sample counts in JSON. Gap to 120 = max(0, p99 - 8.33) milliseconds.
 
-Acceptance requires complete valid data, warm p99 ≤16.7 ms, and zero warm hitches >33.3 ms. This is checked per run, lap, and segment, preventing a short slow segment/lap from being hidden by pooling. Cold timing is reported separately and does not gate warm performance, but missing cold coverage is a capture failure. Overall Shipping PASS requires every individual run to pass. Development results are labeled DIAGNOSTIC_PASS/DIAGNOSTIC_FAIL and are never Shipping proof. Unknown command warnings must be resolved or explicitly acknowledged before claiming coverage of the requested camera/time matrix.
+Acceptance requires complete valid data, warm p99 ≤16.7 ms, and zero warm hitches >33.3 ms. This is checked per run, lap, and segment, preventing a short slow segment/lap from being hidden by pooling. Cold timing is reported separately and does not gate warm performance, but missing cold coverage is a capture failure. Overall Shipping PASS requires every individual run to pass. Development results are labeled DIAGNOSTIC_PASS/DIAGNOSTIC_FAIL and are never Shipping proof. Any metadata warning or configuration error/warning flag makes the run and aggregate report INVALID, regardless of frame timings. Invalid report rows cannot display PASS.
 
 ## Verification and remaining integration work
 

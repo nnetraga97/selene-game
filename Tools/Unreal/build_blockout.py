@@ -17,7 +17,7 @@ import unreal as u
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "Tools/Blockout"))
-from layout_core import load, world_xy, height, route_points, distances, terrain_digest
+from layout_core import load, world_xy, height, route_geometry, distances, terrain_digest
 from validate_layout import validate
 
 MAP = "/Game/Selene/Maps/Town"
@@ -482,13 +482,14 @@ def routes(data):
             "SelenePerfRoute class unavailable; skipped route actors (route metrics still reported)."
         )
     for route in data["routes"]:
-        points = route_points(data, route)
+        points, anchors = route_geometry(data, route)
         ds = distances(points)
         segments = [
             dict(
                 tag=s["tag"],
-                start_distance=ds[s["start_index"]] * 100,
-                end_distance=ds[s["end_index"]] * 100,
+                category=s["category"],
+                start_distance=ds[anchors[s["start_index"]]] * 100,
+                end_distance=ds[anchors[s["end_index"]]] * 100,
             )
             for s in route["segments"]
         ]
@@ -498,7 +499,12 @@ def routes(data):
             "look_at": route.get("look_at"),
         }
         if route.get("look_at"):
+            # Review cameras use the native character's first-person eye above feet.
+            character = u.get_default_object(u.load_class(None, "/Script/Selene.SeleneCharacter"))
+            eye_height = (character.get_component_by_class(u.CapsuleComponent).get_scaled_capsule_half_height()
+                          + character.get_editor_property("base_eye_height")) / 100
             for suffix, p in [("start", points[0]), ("end", points[-1])]:
+                p = [p[0], p[1], p[2] + eye_height]
                 camera = spawn(
                     u.CameraActor,
                     route["id"] + "_view_" + suffix,
@@ -527,7 +533,16 @@ def routes(data):
         for i in range(len(points)):
             spline.set_spline_point_type(i, u.SplinePointType.LINEAR, False)
         spline.update_spline()
+        # Use Unreal's accumulated float distances for serialized boundaries;
+        # independently summed Python doubles can drift after resampling.
+        for segment, authored in zip(segments, route["segments"]):
+            segment["start_distance"] = spline.get_distance_along_spline_at_spline_point(anchors[authored["start_index"]])
+            segment["end_distance"] = spline.get_distance_along_spline_at_spline_point(anchors[authored["end_index"]])
         actor.set_editor_property("segments", segments)
+        actor.set_editor_property("view_keys", [
+            dict(distance=distance * 100, look_at_target=vec(route["look_at"]), use_look_at=True)
+            for distance in (0, spline.get_spline_length() / 100)
+        ] if "look_at" in route else [])
         if abs(spline.get_spline_length() / 100 - ds[-1]) > 0.05:
             raise RuntimeError("Route spline distance mismatch")
     p = data["player_start"]
@@ -625,6 +640,10 @@ def main():
     world = u.get_editor_subsystem(u.UnrealEditorSubsystem).get_editor_world()
     if world.get_world_settings().get_editor_property("world_partition"):
         raise RuntimeError("Town is World Partition; refusing to overwrite")
+    game_mode = u.load_class(None, "/Script/Selene.SeleneGameMode")
+    if not game_mode:
+        raise RuntimeError("SeleneGameMode class unavailable")
+    world.get_world_settings().set_editor_property("default_game_mode", game_mode)
     removed = 0
     for actor in ACTORS.get_all_level_actors():
         if actor.actor_has_tag(TAG):

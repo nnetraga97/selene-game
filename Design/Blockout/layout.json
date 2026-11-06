@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "name": "Selene checkpoint 1",
   "units": "metres",
   "axes": "east,north,up",
@@ -2338,26 +2338,28 @@
           -30
         ]
       ],
-      "eye_height": 1.65,
       "length_range": [
         85,
         100
       ],
       "segments": [
         {
-          "tag": "exterior",
+          "tag": "exterior_cafe_approach",
           "start_index": 0,
-          "end_index": 5
+          "end_index": 5,
+          "category": "exterior"
         },
         {
-          "tag": "doorway",
+          "tag": "doorway_cafe",
           "start_index": 5,
-          "end_index": 6
+          "end_index": 6,
+          "category": "doorway"
         },
         {
-          "tag": "interior",
+          "tag": "interior_cafe",
           "start_index": 6,
-          "end_index": 8
+          "end_index": 8,
+          "category": "interior"
         }
       ],
       "look_at": [
@@ -2456,77 +2458,77 @@
         [
           38,
           62,
-          8.2
+          6.55
         ],
         [
           38,
           69,
-          9.65
+          8.0
         ],
         [
           38,
           92,
-          14.65
+          13.0
         ],
         [
           38,
           115,
-          19.65
+          18.0
         ],
         [
           38,
           138,
-          24.65
+          23.0
         ],
         [
           38,
           161,
-          29.65
+          28.0
         ],
         [
           38,
           187,
-          29.65
+          28.0
         ],
         [
           18,
           187,
-          29.65
+          28.0
         ],
         [
           -65,
           187,
-          5.65
+          4.0
         ],
         [
           -65,
           140,
-          5.65
+          4.0
         ],
         [
           -150,
           140,
-          5.65
+          4.0
         ],
         [
           -150,
           120,
-          5.65
+          4.0
         ],
         [
           -150,
           140,
-          5.65
+          4.0
         ],
         [
           -65,
           140,
-          5.65
+          4.0
         ],
         [
           -65,
           45,
-          1.65
+          0.0
         ],
         [
           -75,
@@ -2557,56 +2559,64 @@
           -111
         ]
       ],
-      "eye_height": 1.65,
       "length_range": [
         1350,
         1450
       ],
       "segments": [
         {
-          "tag": "exterior",
+          "tag": "exterior_main_street",
           "start_index": 0,
-          "end_index": 5
+          "end_index": 5,
+          "category": "exterior"
         },
         {
-          "tag": "doorway",
+          "tag": "doorway_transit_hall_entry",
           "start_index": 5,
-          "end_index": 6
+          "end_index": 6,
+          "category": "doorway"
         },
         {
-          "tag": "interior",
+          "tag": "interior_transit_hall",
           "start_index": 6,
-          "end_index": 7
+          "end_index": 7,
+          "category": "interior"
         },
         {
-          "tag": "doorway",
+          "tag": "doorway_transit_hall_exit",
           "start_index": 7,
-          "end_index": 8
+          "end_index": 8,
+          "category": "doorway"
         },
         {
-          "tag": "exterior",
+          "tag": "exterior_workshop_approach",
           "start_index": 8,
-          "end_index": 12
+          "end_index": 12,
+          "category": "exterior"
         },
         {
-          "tag": "doorway",
+          "tag": "doorway_workshop_entry",
           "start_index": 12,
-          "end_index": 13
+          "end_index": 13,
+          "category": "doorway"
         },
         {
-          "tag": "interior",
+          "tag": "interior_workshop",
           "start_index": 13,
-          "end_index": 15
+          "end_index": 15,
+          "category": "interior"
         },
         {
-          "tag": "doorway",
+          "tag": "doorway_workshop_exit",
           "start_index": 15,
-          "end_index": 17
+          "end_index": 17,
+          "category": "doorway"
         },
         {
-          "tag": "exterior",
+          "tag": "exterior_hill_loop",
           "start_index": 17,
-          "end_index": 42
+          "end_index": 42,
+          "category": "exterior"
         }
       ]
     },
@@ -2616,29 +2626,29 @@
         [
           26,
           187,
-          29.65
+          28.0
         ],
         [
           38,
           187,
-          29.65
+          28.0
         ],
         [
           51,
           187,
-          29.65
+          28.0
         ]
       ],
-      "eye_height": 1.65,
       "length_range": [
         20,
         35
       ],
       "segments": [
         {
-          "tag": "exterior",
+          "tag": "exterior_overlook",
           "start_index": 0,
-          "end_index": 2
+          "end_index": 2,
+          "category": "exterior"
         }
       ],
       "look_at": [

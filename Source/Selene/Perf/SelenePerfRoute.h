@@ -14,9 +14,24 @@ struct SELENE_API FSelenePerfSegment
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
 	FName Tag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	FName Category;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
 	float StartDistance = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
 	float EndDistance = 0;
+};
+
+// Keys are sorted by distance. Missing keys use the movement tangent.
+USTRUCT(BlueprintType)
+struct SELENE_API FSelenePerfViewKey
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	float Distance = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	FVector LookAtTarget = FVector::ZeroVector;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	bool bUseLookAt = false;
 };
 
 UCLASS(BlueprintType)
@@ -32,4 +47,9 @@ public:
 	FName RouteName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
 	TArray<FSelenePerfSegment> Segments;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	TArray<FSelenePerfViewKey> ViewKeys;
+
+	// World-space feet path; the runner adds the possessed capsule half-height.
+	FRotator ViewRotationAt(float Distance, const FVector& Eye) const;
 };

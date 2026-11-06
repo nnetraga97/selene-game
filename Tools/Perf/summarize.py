@@ -58,17 +58,26 @@ def analyze(path):
             errors.append('capture did not complete')
         if metadata.get('error'):
             errors.append(str(metadata['error']))
+        for flag in ('warnings', 'configuration_error', 'configuration_errors',
+                     'configuration_warning', 'configuration_warnings'):
+            if metadata.get(flag):
+                errors.append(f"configuration {flag}: {metadata[flag]}")
+        if metadata.get('configuration_verified') is False:
+            errors.append('configuration was not verified')
     except (OSError, ValueError) as exc:
         errors.append(f'metadata: {exc}')
         metadata = {}
-    declared = []
+    declared, categories = [], {}
     try:
         declared = [s['tag'] for s in metadata['segments']]
-        if not declared or any(not isinstance(s, str) or not s for s in declared) or len(set(declared)) != len(declared):
+        if not declared or any(not isinstance(s, str) or not s for s in declared) or len({s.casefold() for s in declared}) != len(declared):
             raise ValueError('segments must have unique nonempty tags')
+        categories = {s['tag']: s['category'] for s in metadata['segments']}
+        if any(c not in ('exterior', 'doorway', 'interior') for c in categories.values()):
+            raise ValueError('invalid segment category')
     except (KeyError, TypeError, ValueError) as exc:
         errors.append(f'segment declarations: {exc}')
-        declared = []
+        declared, categories = [], {}
     try:
         with path.open(newline='') as stream:
             reader = csv.DictReader(stream)
@@ -119,7 +128,9 @@ def analyze(path):
     def group(items):
         tags = sorted(set(declared) | {r['segment_tag'] for r in items})
         return {'overall': metrics(items), 'segments': {
-            tag: metrics([r for r in items if r['segment_tag'] == tag]) for tag in tags}}
+            tag: metrics([r for r in items if r['segment_tag'] == tag]) for tag in tags},
+            'categories': {category: metrics([r for r in items if categories.get(r['segment_tag']) == category])
+                           for category in sorted(set(categories.values()))}}
 
     by_lap = {}
     for lap in range(laps + 1):
@@ -138,7 +149,9 @@ def analyze(path):
     passed = not errors and performance_pass
     build = metadata.get('build_config', 'Unknown')
     return {'input': str(path.resolve()), 'build': build, 'metadata': metadata, 'errors': errors,
-            'warnings': metadata.get('warnings', []), 'pass': passed,
+            'warnings': (metadata.get('warnings', []) if isinstance(metadata.get('warnings', []), list)
+                         else [str(metadata['warnings'])]), 'pass': passed,
+            'result': 'INVALID' if errors else ('PASS' if passed else 'FAIL'),
             'shipping_pass': passed and build == 'Shipping',
             'warm': warm_metrics, 'cold': cold_metrics, 'laps': by_lap}
 
@@ -168,7 +181,7 @@ def markdown(report):
              'Diagnostic timers are latest available samples, potentially delayed; empty timers stay unavailable.', '']
     for run in report['runs']:
         lines += [f"## {Path(run['input']).name}", '',
-                  f"**{'PASS' if run['pass'] else 'FAIL'}** ({run['build']}); Shipping evidence: {run['shipping_pass']}.", '']
+                  f"**{run['result']}** ({run['build']}); Shipping evidence: {run['shipping_pass']}.", '']
         for error in run['errors']:
             lines.append(f'- ERROR: {error}')
         for warning in run['warnings']:
@@ -178,7 +191,8 @@ def markdown(report):
         groups = [('WARM all', run['warm']), ('COLD', run['cold'])]
         groups += [(f"lap {lap}", group) for lap, group in run['laps'].items() if lap != '0']
         for label, group in groups:
-            for tag, metric in [('overall', group['overall']), *group['segments'].items()]:
+            for tag, metric in [('overall', group['overall']), *group['segments'].items(),
+                                *((f'category:{k}', v) for k, v in group['categories'].items())]:
                 def fmt(value):
                     return '—' if value is None else f'{value:.2f}'
                 values = [f'{label}/{tag}'.replace('|', '\\|'), str(metric['frames'])]
@@ -187,7 +201,7 @@ def markdown(report):
                 for timer in TIMERS:
                     value = metric.get(timer, {})
                     values.append(f"{fmt(value.get('median'))}/{fmt(value.get('p99'))}")
-                values.append('PASS' if metric['pass'] else 'FAIL')
+                values.append('INVALID' if run['errors'] else ('PASS' if metric['pass'] else 'FAIL'))
                 lines.append('| ' + ' | '.join(values) + ' |')
         lines += ['', '<details><summary>Run metadata</summary>', '', '```json',
                   json.dumps(run['metadata'], indent=2), '```', '</details>', '']
@@ -225,9 +239,12 @@ def main(argv=None):
         if run['build'] != args.build:
             run['errors'].append(f"expected {args.build}, found {run['build']}")
             run['pass'] = run['shipping_pass'] = False
+            run['result'] = 'INVALID'
     inputs = archive_inputs(raw, args.archive or ARCHIVE_ROOT / args.run_id)
     passed = bool(runs) and all(r['pass'] for r in runs) and not failures and all('error' not in p for p in inputs)
     result = ('PASS' if passed else 'FAIL') if args.build == 'Shipping' else ('DIAGNOSTIC_PASS' if passed else 'DIAGNOSTIC_FAIL')
+    if any(r['errors'] for r in runs) or failures or not runs or any('error' in p for p in inputs):
+        result = 'INVALID'
     report = {'run_id': args.run_id, 'build': args.build, 'result': result, 'runs': runs,
               'launch_failures': failures, 'raw_inputs': inputs}
     args.reports.mkdir(parents=True, exist_ok=True)

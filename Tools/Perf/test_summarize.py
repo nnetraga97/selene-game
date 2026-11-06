@@ -38,8 +38,57 @@ class SummaryTests(unittest.TestCase):
             writer.writeheader()
             writer.writerows(rows)
         summarize.meta_path(self.path).write_text(json.dumps(dict(status='complete', build_config='Shipping', warm_laps=1,
-            segments=[dict(tag=tag) for tag in declared], measured_frames=len(warm) + len(cold), total_frames=len(rows))))
+            segments=[dict(tag=tag, category=tag.split("_")[0]) for tag in declared], measured_frames=len(warm) + len(cold), total_frames=len(rows))))
         return summarize.analyze(self.path)
+
+    def test_categories_and_unique_tags(self):
+        self.fixture()
+        with self.path.open() as stream:
+            rows = list(csv.DictReader(stream))
+        for row in rows:
+            row['segment_tag'] = 'exterior_street' if int(row['frame_index']) % 2 else 'exterior_hill'
+            row['delta_ms'] = 5 if row['segment_tag'] == 'exterior_street' else 15
+        with self.path.open('w', newline='') as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+        meta = json.loads(summarize.meta_path(self.path).read_text())
+        meta['segments'] = [dict(tag=t, category='exterior') for t in ('exterior_street', 'exterior_hill')]
+        summarize.meta_path(self.path).write_text(json.dumps(meta))
+        run = summarize.analyze(self.path)
+        self.assertTrue(run['pass'])
+        self.assertEqual(run['warm']['categories']['exterior']['frames'], 100)
+        self.assertEqual(run['warm']['categories']['exterior']['avg_fps'], 100)
+        self.assertEqual(run['warm']['segments']['exterior_street']['avg_fps'], 200)
+        self.assertEqual(run['laps']['0']['categories']['exterior']['frames'], 100)
+        meta['segments'][1]['tag'] = 'EXTERIOR_STREET'
+        summarize.meta_path(self.path).write_text(json.dumps(meta))
+        self.assertEqual(summarize.analyze(self.path)['result'], 'INVALID')
+        meta['segments'] = [dict(tag='exterior_street', category='unknown')]
+        summarize.meta_path(self.path).write_text(json.dumps(meta))
+        self.assertEqual(summarize.analyze(self.path)['result'], 'INVALID')
+
+    def test_configuration_flags_invalidate_complete_fast_capture(self):
+        for flag, value in [('warnings', ['unhandled tod.set']),
+                            ('configuration_error', 'wrong pawn'),
+                            ('configuration_warning', True), ('warnings', True),
+                            ('configuration_errors', ['wrong camera']),
+                            ('configuration_warnings', ['wrong hour']),
+                            ('configuration_verified', False)]:
+            with self.subTest(flag=flag):
+                self.fixture()
+                meta = json.loads(summarize.meta_path(self.path).read_text())
+                meta[flag] = value
+                summarize.meta_path(self.path).write_text(json.dumps(meta))
+                run = summarize.analyze(self.path)
+                self.assertEqual(run['result'], 'INVALID')
+                self.assertFalse(run['pass'])
+                self.assertFalse(run['shipping_pass'])
+        self.assertEqual(self.summarize_cli([str(self.path), '--reports', str(self.root / 'reports'),
+                                           '--archive', str(self.root / 'archive')]), 1)
+        report = json.loads(next((self.root / 'reports').glob('*.json')).read_text())
+        self.assertEqual(report['result'], 'INVALID')
+        self.assertNotIn('| PASS |', summarize.markdown(report))
 
     def test_pass_and_unavailable_timers(self):
         run = self.fixture()
