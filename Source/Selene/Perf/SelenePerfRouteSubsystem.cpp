@@ -603,6 +603,10 @@ void USelenePerfRouteSubsystem::Finish(const FString& Error)
 
 bool USelenePerfRouteSubsystem::WriteMeta()
 {
+	if (const ASeleneCharacter* Character = Cast<ASeleneCharacter>(Pawn))
+	{
+		Meta->SetStringField(TEXT("player_character"), Character->GetActiveCharacterName().ToString());
+	}
 	TArray<TSharedPtr<FJsonValue>> Values;
 	for (const FString& Warning : Warnings) Values.Add(MakeShared<FJsonValueString>(Warning));
 	Meta->SetArrayField(TEXT("warnings"), Values);

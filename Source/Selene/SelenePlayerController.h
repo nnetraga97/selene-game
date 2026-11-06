@@ -34,6 +34,7 @@ private:
 	void EndSprint();
 	void ToggleWalk();
 	void ToggleCamera();
+	void CycleCharacter();
 	void ApplyMovementPace();
 
 	UPROPERTY(Transient)
@@ -56,6 +57,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> CameraAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> CharacterAction;
 
 	bool bSprintHeld = false;
 	bool bWalkToggled = false;

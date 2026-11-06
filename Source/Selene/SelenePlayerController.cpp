@@ -30,6 +30,7 @@ void ASelenePlayerController::CreateRuntimeInput()
 	JumpAction = MakeAction(TEXT("Jump"), EInputActionValueType::Boolean);
 	SprintAction = MakeAction(TEXT("Sprint"), EInputActionValueType::Boolean);
 	WalkAction = MakeAction(TEXT("WalkToggle"), EInputActionValueType::Boolean);
+	CharacterAction = MakeAction(TEXT("CharacterCycle"), EInputActionValueType::Boolean);
 	CameraAction = MakeAction(TEXT("CameraToggle"), EInputActionValueType::Boolean);
 
 	auto MapMovementKey = [this](FKey Key, bool bNegate, bool bSwizzle)
@@ -72,6 +73,7 @@ void ASelenePlayerController::CreateRuntimeInput()
 	RuntimeMappingContext->MapKey(SprintAction, EKeys::LeftShift);
 	RuntimeMappingContext->MapKey(WalkAction, EKeys::LeftControl);
 	RuntimeMappingContext->MapKey(CameraAction, EKeys::V);
+	RuntimeMappingContext->MapKey(CharacterAction, EKeys::C);
 }
 
 void ASelenePlayerController::SetupInputComponent()
@@ -93,6 +95,7 @@ void ASelenePlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASelenePlayerController::EndSprint);
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Canceled, this, &ASelenePlayerController::EndSprint);
 	EnhancedInput->BindAction(WalkAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleWalk);
+	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::CycleCharacter);
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
 	AddRuntimeMappingContext();
 }
@@ -230,5 +233,13 @@ void ASelenePlayerController::ToggleCamera()
 	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn()))
 	{
 		Character->ToggleCameraMode();
+	}
+}
+
+void ASelenePlayerController::CycleCharacter()
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn()))
+	{
+		Character->CycleCharacter();
 	}
 }

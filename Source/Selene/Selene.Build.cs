@@ -12,6 +12,7 @@ public class Selene : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"DeveloperSettings",
 			"InputCore",
 			"EnhancedInput",
 			"AIModule",

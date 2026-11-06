@@ -2,10 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "SeleneCharacterSettings.h"
 #include "SeleneCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+struct FStreamableHandle;
 
 UENUM(BlueprintType)
 enum class ESeleneCameraMode : uint8
@@ -31,6 +33,15 @@ class SELENE_API ASeleneCharacter : public ACharacter
 public:
 	ASeleneCharacter();
 
+	UFUNCTION(BlueprintCallable, Category = "Selene|Character")
+	void SelectCharacter(FName Name);
+
+	UFUNCTION(BlueprintCallable, Category = "Selene|Character")
+	void CycleCharacter();
+
+	UFUNCTION(BlueprintPure, Category = "Selene|Character")
+	FName GetActiveCharacterName() const { return ActiveCharacterName; }
+
 	UFUNCTION(BlueprintCallable, Category = "Selene|Camera")
 	void SetCameraMode(ESeleneCameraMode NewMode);
 
@@ -54,6 +65,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selene|Camera")
 	TObjectPtr<USpringArmComponent> CameraBoom;
@@ -69,4 +82,22 @@ protected:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Selene|Movement")
 	ESelenePace MovementPace = ESelenePace::Jog;
+
+private:
+	void ApplyCharacter(const FSelenePlayableCharacter& Entry, uint64 RequestId);
+	void ConfigureBlendAxes();
+	void UpdateSingleNodeAnimation(float DeltaSeconds);
+
+	// Streamable handles keep all loaded soft assets alive, including inactive jump/land clips.
+	TSharedPtr<FStreamableHandle> PendingCharacterLoad;
+	TSharedPtr<FStreamableHandle> ActiveCharacterLoad;
+	FSelenePlayableCharacter ActiveCharacter;
+	FName ActiveCharacterName;
+	FName PendingCharacterName;
+	uint64 CharacterRequestId = 0;
+	int32 SpeedAxis = 0;
+	int32 DirectionAxis = INDEX_NONE;
+	bool bWasFalling = false;
+	enum class ESingleNodePhase : uint8 { Ground, Jump, Fall, Land };
+	ESingleNodePhase SingleNodePhase = ESingleNodePhase::Ground;
 };
