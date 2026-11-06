@@ -140,3 +140,47 @@ Verified in this worktree on UE **5.8.4** and Blender **5.2.0 LTS**:
 ## Integration contract update
 
 Schema v2 migrates authored route Z values from camera elevations to feet elevations and removes `eye_height`. The native character currently has a 34 cm capsule radius, 87.5 cm half-height and a first-person eye 64 cm above its centre (151.5 cm above feet). `verify_unreal.py` reads these dimensions from the class default object and checks saved route coordinates, categories, view targets, sampled capsule volume and eye segments against colliding cubes. The geometric check permits 3 cm contact tolerance. It is not a runtime capsule sweep or a third-person spring-arm/visibility test. Historical results above describe the prior eye-path implementation.
+
+
+## Second integration fix round
+
+`layout_core.TerrainSurface` now defines the exported grid and explicit SW–NE
+triangles. Blender exports those triangles directly, and the terrain digest
+includes the triangulation version to invalidate old quad exports. Route feet
+use exact lower-hemisphere support over nearby triangle faces and edges, plus
+the existing paving/stair contact. This includes capsule radius on slopes.
+
+The saved-map audit checks terrain identity, collision and actor transform,
+then samples capsule support against the shared triangle surface at intervals
+of at most 5 cm along each serialized linear route segment. It reports the
+maximum vertical terrain penetration per route, a conservative bound on radial
+capsule penetration, and rejects values over the existing 3 cm tolerance.
+It also exercises the compiled native camera function every 5 cm: unkeyed
+pitch must stay within ±25° and change by less than 3° per sample; authored
+look-at keys must still aim at their exact targets. These are headless geometry
+and camera-function checks, not a gameplay physics or rendered camera test.
+
+Verified on UE 5.8.4 / Blender 5.2.0 LTS in this fix round:
+
+- Editor Development and Shipping both returned `Result: Succeeded` (final
+  incremental builds: 9.45 s / 14.05 s; full builds: 32.42 s / 38.30 s).
+- `python3 Tools/Perf/test_summarize.py`: 14 tests, OK. Missing verification,
+  integer `1`, and string `"true"` all produce INVALID; fixtures use boolean true.
+- `python3 Tools/Blockout/validate_layout.py`: VALID, 57 lots / 10 heroes;
+  R1 92.27 m, R2 1411.46 m, R3 25.00 m; E–W traversal 320.00 s.
+- Export: 31,073 vertices / 61,440 triangles. Independent GLB decoding matched
+  every shared triangle; maximum vertex error was 0.000000949 m.
+- Headless build, capability probe and saved-map verification succeeded with
+  894 generated actors. Capsule samples: R1 2,223; R2 40,399; R3 600.
+  Maximum sampled vertical terrain penetration: R1 0 cm; R2 0.099499 cm;
+  R3 0 cm (3 cm tolerance). Cube, doorway and eye checks also passed.
+- At [38, 133.7], feet are now 22.284745 m; the old 22.1667 m feet fail the new
+  capsule/terrain audit with an 11.8045 cm vertical support deficit.
+- R2 native view pitch peaks at 23.0634°, with maximum change 0.6589° per
+  5 cm of spline travel. At [38, 158.15], the raw 81.7537° tangent becomes
+  a 10.4813° view pitch. Both keyed routes retained their exact look-at targets.
+
+Commandlets reported the expected missing mannequin animation warning in this
+source-only checkout; no gameplay or rendered camera validation was performed.
+Generated test content (including copied prototypes), build artifacts and logs
+were removed afterward, and Unreal's automatic config addition was restored.

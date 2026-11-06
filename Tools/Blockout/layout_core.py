@@ -100,6 +100,88 @@ def height(data, x, y, pads=None):
     return z
 
 
+
+class TerrainSurface:
+    """The exported grid, with an explicit SW-to-NE diagonal in every cell.
+
+    Vertices are evaluated lazily so route queries need only nearby cells.
+    Capsule support maximizes the triangle height plus the lower hemisphere
+    over each face/edge, rather than checking only the point beneath the feet.
+    """
+
+    def __init__(self, data):
+        self.data = data
+        self.pads = surface_pads(data)
+        self.x0, self.y0, x1, y1 = data["terrain"]["bounds"]
+        grid = data["terrain"]["grid"]
+        self.nx = math.ceil((x1 - self.x0) / grid)
+        self.ny = math.ceil((y1 - self.y0) / grid)
+        self.dx = (x1 - self.x0) / self.nx
+        self.dy = (y1 - self.y0) / self.ny
+        self.vertices = {}
+
+    def vertex(self, i, j):
+        if (i, j) not in self.vertices:
+            x, y = self.x0 + i * self.dx, self.y0 + j * self.dy
+            self.vertices[i, j] = (x, y, height(self.data, x, y, self.pads))
+        return self.vertices[i, j]
+
+    def cell_faces(self, i, j):
+        a = j * (self.nx + 1) + i
+        return ((a, a + 1, a + self.nx + 2),
+                (a, a + self.nx + 2, a + self.nx + 1))
+
+    def mesh(self):
+        vertices = [self.vertex(i, j) for j in range(self.ny + 1) for i in range(self.nx + 1)]
+        faces = [face for j in range(self.ny) for i in range(self.nx)
+                 for face in self.cell_faces(i, j)]
+        return vertices, faces
+
+    def triangles_near(self, x, y, radius):
+        for j in range(max(0, math.floor((y - radius - self.y0) / self.dy)),
+                       min(self.ny - 1, math.floor((y + radius - self.y0) / self.dy)) + 1):
+            for i in range(max(0, math.floor((x - radius - self.x0) / self.dx)),
+                           min(self.nx - 1, math.floor((x + radius - self.x0) / self.dx)) + 1):
+                for face in self.cell_faces(i, j):
+                    yield tuple(self.vertex(k % (self.nx + 1), k // (self.nx + 1)) for k in face)
+
+    def capsule_feet_height(self, x, y, radius=0.34):
+        result = -math.inf
+        for triangle in self.triangles_near(x, y, radius):
+            a, b, c = triangle
+            ux, uy, uz = (b[k] - a[k] for k in range(3))
+            vx, vy, vz = (c[k] - a[k] for k in range(3))
+            det = ux * vy - uy * vx
+            gx, gy = (uz * vy - uy * vz) / det, (ux * vz - uz * vx) / det
+            norm = math.sqrt(1 + gx * gx + gy * gy)
+            # Interior stationary point of plane(q) + sqrt(r^2 - |q-xy|^2).
+            qx, qy = x + radius * gx / norm, y + radius * gy / norm
+            if all((q[0] - p[0]) * (qy - p[1]) - (q[1] - p[1]) * (qx - p[0]) >= -1e-10
+                   for p, q in zip(triangle, triangle[1:] + triangle[:1])):
+                result = max(result, a[2] + gx * (x - a[0]) + gy * (y - a[1]) + radius * (norm - 1))
+            # Boundary stationary points, including vertices and disk clipping.
+            for p, q in zip(triangle, triangle[1:] + triangle[:1]):
+                ex, ey = q[0] - p[0], q[1] - p[1]
+                run = math.hypot(ex, ey)
+                ex, ey = ex / run, ey / run
+                along = (x - p[0]) * ex + (y - p[1]) * ey
+                across = (x - p[0]) * ey - (y - p[1]) * ex
+                remaining = radius * radius - across * across
+                if remaining < 0:
+                    continue
+                reach = math.sqrt(remaining)
+                lo, hi = max(0, along - reach), min(run, along + reach)
+                if lo > hi:
+                    continue
+                slope = (q[2] - p[2]) / run
+                t = max(lo, min(hi, along + reach * slope / math.sqrt(1 + slope * slope)))
+                z = p[2] + slope * t + math.sqrt(max(0, remaining - (t - along)**2)) - radius
+                result = max(result, z)
+        if not math.isfinite(result):
+            raise ValueError(f"Capsule outside terrain at {(x, y)}")
+        return result
+
+
 def route_geometry(data, route):
     """Sample an upright capsule's feet path; retain authored segment boundaries.
 
@@ -109,7 +191,7 @@ def route_geometry(data, route):
     capsule centre crosses it, so the feet path rises continuously at that edge.
     """
     radius = 0.34  # Native SeleneCharacter radius; verified against the CDO.
-    pads = surface_pads(data)
+    terrain = TerrainSurface(data)
     steps = []
     for stair in data["stairs"]:
         for a, b in zip(stair["points"], stair["points"][1:]):
@@ -123,7 +205,7 @@ def route_geometry(data, route):
                     z=a[2] + (b[2] - a[2]) * (i + 1) / n))
 
     def ground(x, y, authored):
-        z = max(height(data, x, y, pads), authored if authored is not None else -math.inf)
+        z = max(terrain.capsule_feet_height(x, y), authored if authored is not None else -math.inf)
         for slab in data["slabs"]:
             lx, ly = local_xy(slab, x, y)
             distance = math.hypot(max(abs(lx) - slab["size"][0] / 2, 0),
@@ -194,6 +276,7 @@ def terrain_digest(data):
     import hashlib
 
     inputs = {
+        "triangulation": "sw-ne-v1",
         "terrain": data["terrain"],
         "lots": [
             {"footprint": l["footprint"], "base_z": l["base_z"]} for l in data["lots"]

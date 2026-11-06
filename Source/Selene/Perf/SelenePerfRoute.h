@@ -21,7 +21,7 @@ struct SELENE_API FSelenePerfSegment
 	float EndDistance = 0;
 };
 
-// Keys are sorted by distance. Missing keys use the movement tangent.
+// Keys are sorted by distance. Missing keys use the smoothed look-ahead path.
 USTRUCT(BlueprintType)
 struct SELENE_API FSelenePerfViewKey
 {
@@ -51,5 +51,9 @@ public:
 	TArray<FSelenePerfViewKey> ViewKeys;
 
 	// World-space feet path; the runner adds the possessed capsule half-height.
+	UFUNCTION(BlueprintPure, Category="Performance")
 	FRotator ViewRotationAt(float Distance, const FVector& Eye) const;
+
+private:
+	FRotator PathViewRotationAt(float Distance) const;
 };

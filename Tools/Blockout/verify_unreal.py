@@ -1,8 +1,8 @@
 """Read-only saved-map audit via Unreal's headless pythonscript commandlet.
 
 Checks serialized actors, materials, collision configuration and actual cube
-transforms around doors/floors. Capsule-volume and eye checks are analytic: a commandlet world
-is not a gameplay physics scene. This does not claim a runtime physics sweep.
+transforms around doors/floors, plus shared exported terrain triangles. Capsule
+volume and eye checks are analytic: a commandlet world is not a gameplay physics scene. This does not claim a runtime physics sweep.
 """
 
 import json
@@ -134,9 +134,17 @@ def main():
         assert not found, name + ": blocked by " + str(found)
         result["door_geometry"][name] = "clear"
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from layout_core import load, route_points
+    from layout_core import load, route_points, TerrainSurface, terrain_digest
 
     layout = load(build["layout"])
+    terrain = TerrainSurface(layout)
+    assert build["terrain_contract_sha256"] == terrain_digest(layout), "Terrain contract differs from export"
+    assert result.get("terrain_collision_configuration") == "complex as simple", "Missing colliding terrain"
+    terrain_actor = next(a for a in generated if a.get_actor_label() == "SeleneTerrain")
+    assert terrain_actor.get_actor_location().length() < 0.001
+    assert (terrain_actor.get_actor_scale3d() - u.Vector(1, 1, 1)).length() < 0.001
+    rotation = terrain_actor.get_actor_rotation()
+    assert max(abs(rotation.pitch), abs(rotation.yaw), abs(rotation.roll)) < 0.001
     character = u.get_default_object(u.load_class(None, "/Script/Selene.SeleneCharacter"))
     capsule = character.get_component_by_class(u.CapsuleComponent)
     radius = capsule.get_scaled_capsule_radius() / 100
@@ -203,21 +211,56 @@ def main():
             assert (key.get_editor_property("look_at_target") - vec(route["look_at"])).length() < 0.01
         points = route_points(layout, route)
         assert spline.get_number_of_spline_points() == len(points)
+        saved_points = []
         for index, point in enumerate(points):
-            assert (spline.get_location_at_spline_point(index, u.SplineCoordinateSpace.WORLD) - vec(point)).length() < 0.1
+            saved = spline.get_location_at_spline_point(index, u.SplineCoordinateSpace.WORLD)
+            assert (saved - vec(point)).length() < 0.1
+            saved_points.append([saved.y / 100, saved.x / 100, saved.z / 100])
+        points = saved_points
         samples = 0
+        max_terrain_penetration = 0.0
+        max_view_pitch = 0.0
+        max_view_pitch_step = 0.0
+        previous_pitch = None
+        # Exercise the compiled native camera function against the saved spline.
+        camera_count = max(1, math.ceil(spline.get_spline_length() / 5))
+        for index in range(camera_count + 1):
+            distance = spline.get_spline_length() * index / camera_count
+            eye = spline.get_location_at_distance_along_spline(distance, u.SplineCoordinateSpace.WORLD) + u.Vector(0, 0, eye_height * 100)
+            view = actor.view_rotation_at(distance, eye)
+            max_view_pitch = max(max_view_pitch, abs(view.pitch))
+            if previous_pitch is not None:
+                max_view_pitch_step = max(max_view_pitch_step, abs(view.pitch - previous_pitch))
+            previous_pitch = view.pitch
+            if keys:
+                expected = u.MathLibrary.find_look_at_rotation(eye, vec(route["look_at"]))
+                assert abs(view.pitch - expected.pitch) < 0.01, "Explicit look-at pitch changed"
+                assert abs((view.yaw - expected.yaw + 180) % 360 - 180) < 0.01, "Explicit look-at yaw changed"
+            else:
+                assert abs(view.pitch) <= 25.001, "Unkeyed pitch exceeds clamp"
+        if not keys:
+            assert max_view_pitch_step < 3, "Unkeyed pitch jumps over 3 degrees per 5 cm"
         for a, b in zip(points, points[1:]):
             eye_a, eye_b = [*a[:2], a[2] + eye_height], [*b[:2], b[2] + eye_height]
             found = hits(eye_a, eye_b)
             assert not found, route["id"] + ": eye blocked by " + str(found)
-            count = max(1, math.ceil(math.dist(a, b) / 0.25))
+            count = max(1, math.ceil(math.dist(a, b) / 0.05))
             for i in range(count + 1):
                 feet = [a[j] + (b[j] - a[j]) * i / count for j in range(3)]
+                # Vertical displacement needed to clear every terrain triangle
+                # under the lower hemisphere: conservative vs radial penetration.
+                penetration = max(0, terrain.capsule_feet_height(*feet[:2], radius) - feet[2])
+                max_terrain_penetration = max(max_terrain_penetration, penetration)
+                assert penetration <= 0.03, f"{route['id']}: terrain penetration {penetration:.6f} m at {feet}"
                 found = capsule_hits(feet)
                 assert not found, f"{route['id']}: capsule at {feet} blocked by {found}"
                 samples += 1
         result["route_geometry"][route["id"]] = dict(capsule_samples=samples, eye_segments_clear=True,
-            tolerance_cm=3, view_keys=len(keys), serialized_feet_points=True)
+            tolerance_cm=3, view_keys=len(keys), serialized_feet_points=True,
+            max_terrain_penetration_cm=max_terrain_penetration * 100,
+            terrain_penetration_measure="vertical capsule support deficit (conservative)",
+            max_abs_view_pitch_degrees=max_view_pitch,
+            max_view_pitch_step_degrees_per_5cm=max_view_pitch_step)
     # The intended seat-to-tower sightline must leave the cafe through a window gap.
     found = hits([-40, -30, 1.65], [-37, -24.525, 2.277])
     assert not found, "Cafe view blocked by " + str(found)

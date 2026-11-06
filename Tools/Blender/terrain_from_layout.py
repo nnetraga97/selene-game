@@ -2,13 +2,12 @@
 
 import argparse
 import json
-import math
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "Tools/Blockout"))
-from layout_core import load, height, surface_pads, terrain_digest
+from layout_core import load, TerrainSurface, terrain_digest
 from validate_layout import validate
 
 
@@ -29,22 +28,10 @@ def main():
     bpy.ops.object.delete(use_global=False)
     x0, y0, x1, y1 = d["terrain"]["bounds"]
     grid = d["terrain"]["grid"]
-    nx = math.ceil((x1 - x0) / grid)
-    ny = math.ceil((y1 - y0) / grid)
-    pads = surface_pads(d)
-    verts = []
-    faces = []
-    for j in range(ny + 1):
-        y = y0 + (y1 - y0) * j / ny
-        for i in range(nx + 1):
-            x = x0 + (x1 - x0) * i / nx
-            # Bake layout to Blender: (north, -east, up), metres.
-            # glTF -> (north, up, east); UE -> (north, east, up), cm.
-            verts.append((y, -x, height(d, x, y, pads)))
-    for j in range(ny):
-        for i in range(nx):
-            a = j * (nx + 1) + i
-            faces.append((a, a + 1, a + nx + 2, a + nx + 1))
+    layout_vertices, faces = TerrainSurface(d).mesh()
+    # Bake layout to Blender: (north, -east, up), metres.
+    # glTF -> (north, up, east); UE -> (north, east, up), cm.
+    verts = [(y, -x, z) for x, y, z in layout_vertices]
     mesh = bpy.data.meshes.new("SeleneTerrain")
     mesh.from_pydata(verts, [], faces)
     mesh.update()
@@ -74,7 +61,8 @@ def main():
     report = dict(
         terrain_contract_sha256=terrain_digest(d),
         vertices=len(verts),
-        quads=len(faces),
+        triangles=len(faces),
+        triangulation="sw-ne-v1",
         bounds=d["terrain"]["bounds"],
         grid=grid,
         blender_axes="north,-east,up",

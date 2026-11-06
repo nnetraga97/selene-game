@@ -37,7 +37,7 @@ class SummaryTests(unittest.TestCase):
             writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
-        summarize.meta_path(self.path).write_text(json.dumps(dict(status='complete', build_config='Shipping', warm_laps=1,
+        summarize.meta_path(self.path).write_text(json.dumps(dict(status='complete', configuration_verified=True, build_config='Shipping', warm_laps=1,
             segments=[dict(tag=tag, category=tag.split("_")[0]) for tag in declared], measured_frames=len(warm) + len(cold), total_frames=len(rows))))
         return summarize.analyze(self.path)
 
@@ -89,6 +89,22 @@ class SummaryTests(unittest.TestCase):
         report = json.loads(next((self.root / 'reports').glob('*.json')).read_text())
         self.assertEqual(report['result'], 'INVALID')
         self.assertNotIn('| PASS |', summarize.markdown(report))
+
+    def test_configuration_verification_requires_literal_true(self):
+        for value in (None, 1, 'true'):
+            with self.subTest(value=value):
+                self.assertTrue(self.fixture()['shipping_pass'])
+                meta = json.loads(summarize.meta_path(self.path).read_text())
+                if value is None:
+                    del meta['configuration_verified']
+                else:
+                    meta['configuration_verified'] = value
+                summarize.meta_path(self.path).write_text(json.dumps(meta))
+                run = summarize.analyze(self.path)
+                self.assertEqual(run['result'], 'INVALID')
+                self.assertFalse(run['pass'])
+                self.assertFalse(run['shipping_pass'])
+                self.assertIn('configuration was not verified', run['errors'])
 
     def test_pass_and_unavailable_timers(self):
         run = self.fixture()

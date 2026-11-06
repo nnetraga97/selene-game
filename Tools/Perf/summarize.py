@@ -62,7 +62,7 @@ def analyze(path):
                      'configuration_warning', 'configuration_warnings'):
             if metadata.get(flag):
                 errors.append(f"configuration {flag}: {metadata[flag]}")
-        if metadata.get('configuration_verified') is False:
+        if metadata.get('configuration_verified') is not True:
             errors.append('configuration was not verified')
     except (OSError, ValueError) as exc:
         errors.append(f'metadata: {exc}')
