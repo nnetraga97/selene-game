@@ -19,8 +19,9 @@ SHOTS = [
     ("02_cafe_terrace", (-30, -12, 1.65), (-45, -24, 2)),
     ("03_cafe_interior_counter", (-40, -30, 1.65), (-50, -33, 1.2)),
     ("04_cafe_window_seat_to_tower", (-40, -30, 1.25), (0, 43, 10)),
-    ("05_main_street", (-55, -58, 1.65), (-178, -181, 3)),
-    ("06_side_square", (-125, -92, 1.65), (-142, -79, 2)),
+    ("05_main_street", (-55.256, -49.944, 1.65), (-97.556, -92.244, 3)),
+    ("05b_main_street_bend", (-107.5, -110.5, 1.65), (-143.075, -159.525, 3)),
+    ("06_side_square", (-112, -106, 1.65), (-154.92, -84.67, 2)),
     ("07_concourse_interior", (-10, 48, 1.65), (10, 38, 4)),
     ("08_workshop_entrance", (105, -55, 1.65), (105, -36, 3)),
     ("09_industrial_yard_viaduct", (135, -5, 1.65), (156, 22, 6)),
@@ -28,6 +29,10 @@ SHOTS = [
     ("11_overlook_to_town", (39, 187, 29.65), (0, 0, 4)),
     ("12_aerial_overview", (-210, -250, 110), (0, 40, 0)),
 ]
+# Optional filter: SELENE_SHOTS="05,06,12" reshoots only names starting with those prefixes.
+_only = [x for x in os.environ.get("SELENE_SHOTS", "").split(",") if x]
+if _only:
+    SHOTS = [shot for shot in SHOTS if any(shot[0].startswith(x) for x in _only)]
 INITIAL_WAIT = 45.0  # map load, shader compile, Lumen settle
 SETTLE = 4.0  # per camera move
 WRITE_TIMEOUT = 30.0
