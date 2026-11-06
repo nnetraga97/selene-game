@@ -41,6 +41,17 @@ class SummaryTests(unittest.TestCase):
             segments=[dict(tag=tag, category=tag.split("_")[0]) for tag in declared], measured_frames=len(warm) + len(cold), total_frames=len(rows))))
         return summarize.analyze(self.path)
 
+    def test_shots_are_ignored_even_without_frame_log(self):
+        self.fixture()
+        shots = self.root / 'shots.frames.csv'
+        summarize.meta_path(shots).write_text(json.dumps(dict(mode='shots', status='complete')))
+        self.assertIsNone(summarize.analyze(shots))
+        self.assertEqual(self.summarize_cli([str(self.path), str(shots),
+            '--reports', str(self.root / 'reports'), '--archive', str(self.root / 'archive')]), 0)
+        report = json.loads(next((self.root / 'reports').glob('*.json')).read_text())
+        self.assertEqual(len(report['runs']), 1)
+        self.assertEqual(len(report['raw_inputs']), 2)
+
     def test_categories_and_unique_tags(self):
         self.fixture()
         with self.path.open() as stream:

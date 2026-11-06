@@ -13,6 +13,7 @@
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "HAL/FileManager.h"
@@ -94,7 +95,11 @@ void USelenePerfRouteSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	};
 	ParseNumber(TEXT("PerfHour="), Hour);
 	bTimeFlow = ParseNumber(TEXT("PerfTimeFlow="), TimeFlow);
-	ParseNumber(TEXT("PerfLaps="), Laps);
+	const bool bShotsSpecified = ParseNumber(TEXT("PerfShots="), Shots);
+	int32 DriveOption = 0;
+	const bool bDriveSpecified = ParseNumber(TEXT("PerfDrive="), DriveOption);
+	bDrive = DriveOption == 1;
+	if (!bShotsSpecified && !bDrive) ParseNumber(TEXT("PerfLaps="), Laps);
 	ParseNumber(TEXT("PerfWarmup="), Warmup);
 	ParseNumber(TEXT("PerfSpeed="), Speed);
 	OutDir = FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("Perf"));
@@ -104,6 +109,8 @@ void USelenePerfRouteSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Stem = FPaths::Combine(OutDir, Timestamp + TEXT("_") + SelenePerf::SafeName(RouteName) + TEXT("_") + SelenePerf::SafeName(Camera) + TEXT("_") + SelenePerf::SafeName(FString::SanitizeFloat(Hour)));
 	Meta = MakeShared<FJsonObject>();
 	Meta->SetNumberField(TEXT("schema_version"), 1);
+	if (bShotsSpecified) Meta->SetStringField(TEXT("mode"), TEXT("shots"));
+	else if (bDrive) Meta->SetStringField(TEXT("mode"), TEXT("drive"));
 	Meta->SetStringField(TEXT("build_config"), LexToString(FApp::GetBuildConfiguration()));
 	Meta->SetStringField(TEXT("engine_version"), FEngineVersion::Current().ToString());
 	Meta->SetStringField(TEXT("map"), GetWorld()->GetPackage()->GetName());
@@ -117,7 +124,7 @@ void USelenePerfRouteSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Meta->SetNumberField(TEXT("speed_cm_s"), Speed);
 	Meta->SetStringField(TEXT("command_line"), Cmd);
 	Meta->SetStringField(TEXT("saved_dir"), FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()));
-	Meta->SetStringField(TEXT("frame_log"), Stem + TEXT(".frames.csv"));
+	if (Shots == 0) Meta->SetStringField(TEXT("frame_log"), Stem + TEXT(".frames.csv"));
 	Meta->SetStringField(TEXT("status"), TEXT("running"));
 	Meta->SetStringField(TEXT("timer_notes"), TEXT("delta_ms is monotonic begin-frame interval, not clamped game delta. GT/RT exclude engine idle accounting; GPU is latest completed GPU busy interval. Diagnostic timers may lag/repeat across frames; zero cycles are empty, never interpreted as zero cost. COLD is first recorded traversal after warm-up, not a cleared shader/OS cache."));
 	CreatedAt = FPlatformTime::Seconds();
@@ -127,11 +134,13 @@ void USelenePerfRouteSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		Finish(TEXT("Cannot create output directory or metadata: ") + OutDir);
 	}
 	else if (bInvalidNumber || RouteName.IsEmpty() || (Camera != TEXT("3P") && Camera != TEXT("1P")) ||
+		(bShotsSpecified && (Shots < 1 || Shots > 60)) ||
+		(bDriveSpecified && DriveOption != 1) || (bShotsSpecified && bDrive) ||
 		Laps < 1 || Laps > 1000 || !FMath::IsFinite(Speed) || Speed <= 0 ||
 		!FMath::IsFinite(Warmup) || Warmup < 0 || !FMath::IsFinite(Hour) || Hour < 0 || Hour >= 24 ||
 		!FMath::IsFinite(TimeFlow) || TimeFlow < 0)
 	{
-		Finish(TEXT("Invalid PerfRoute/PerfCam/PerfLaps/PerfSpeed/PerfWarmup/PerfHour/PerfTimeFlow option"));
+		Finish(TEXT("Invalid PerfRoute/PerfCam/PerfLaps/PerfSpeed/PerfWarmup/PerfHour/PerfTimeFlow/PerfShots (1..60)/PerfDrive (1; mutually exclusive with shots) option"));
 	}
 }
 
@@ -212,7 +221,7 @@ bool USelenePerfRouteSubsystem::Start()
 	Meta->SetArrayField(TEXT("segments"), Segments);
 	Meta->SetNumberField(TEXT("route_length_cm"), Length);
 	SegmentCounts.Init(0, (Laps + 1) * PerfRoute->Segments.Num());
-	Controller->SetIgnoreMoveInput(true);
+	Controller->SetIgnoreMoveInput(!bDrive);
 	Controller->SetIgnoreLookInput(true);
 	if (UPawnMovementComponent* Movement = Pawn->GetMovementComponent())
 	{
@@ -265,10 +274,10 @@ bool USelenePerfRouteSubsystem::Start()
 	Meta->SetStringField(TEXT("rhi"), GDynamicRHI ? GDynamicRHI->GetName() : TEXT("unknown"));
 	Meta->SetStringField(TEXT("window_mode"), LexToString(static_cast<int32>(GEngine->GameViewport->Viewport->GetWindowMode())));
 	// Reserve outside measurement; fail instead of growing unbounded during a run.
-	const double ExpectedSeconds = Warmup + (Laps + 1) * (Length / Speed + 2.0);
+	const double ExpectedSeconds = Warmup + (bDrive ? 1 : Laps + 1) * (Length / Speed + 2.0);
 	const double Capacity = FMath::CeilToDouble(ExpectedSeconds * 1000.0 + 10000.0);
 	if (Capacity > 10000000) { Finish(TEXT("Route duration exceeds in-memory capture limit")); return false; }
-	Frames.Reserve(static_cast<int32>(Capacity));
+	if (Shots == 0) Frames.Reserve(static_cast<int32>(Capacity));
 	Phase = EPhase::Warmup;
 	LastTime = FPlatformTime::Seconds();
 	MovePawn();
@@ -298,6 +307,103 @@ void USelenePerfRouteSubsystem::MovePawn()
 		MovementRotation, false, nullptr, ETeleportType::TeleportPhysics);
 	// Aim from the character eye independently of movement, preserving camera offsets.
 	Controller->SetControlRotation(PerfRoute->ViewRotationAt(Distance, Character->GetPawnViewLocation()));
+}
+
+void USelenePerfRouteSubsystem::BeginShot()
+{
+	const float Length = PerfRoute->Route->GetSplineLength();
+	Distance = Shots == 1 ? 0 : (ShotIndex == Shots - 1 ? Length : Length * ShotIndex / (Shots - 1));
+	MovePawn();
+	if (Controller->PlayerCameraManager) Controller->PlayerCameraManager->SetGameCameraCutThisFrame();
+	ShotStartedAt = FPlatformTime::Seconds();
+	Phase = EPhase::ShotHold;
+}
+
+void USelenePerfRouteSubsystem::TickShots(double Now)
+{
+	if (Phase == EPhase::ShotHold)
+	{
+		if (Now - ShotStartedAt < 1.5) return;
+		const FString Directory = FPaths::Combine(OutDir, TEXT("shots"));
+		ShotFilename = FPaths::Combine(Directory, FString::Printf(TEXT("%s_%s_%02d.png"),
+			*SelenePerf::SafeName(RouteName), *Camera, ShotIndex + 1));
+		if (!IFileManager::Get().MakeDirectory(*Directory, true) || IFileManager::Get().FileExists(*ShotFilename))
+		{ Finish(TEXT("Cannot create shots directory or shot already exists: ") + ShotFilename); return; }
+		FScreenshotRequest::RequestScreenshot(ShotFilename, false, false);
+		ShotStartedAt = Now;
+		Phase = EPhase::ShotWait;
+		return;
+	}
+	if (IFileManager::Get().FileSize(*ShotFilename) > 0)
+	{
+		TSharedPtr<FJsonObject> Item = MakeShared<FJsonObject>();
+		Item->SetNumberField(TEXT("index"), ShotIndex + 1);
+		Item->SetNumberField(TEXT("distance_cm"), Distance);
+		const FVector Location = Pawn->GetActorLocation();
+		const FRotator Rotation = Controller->GetControlRotation();
+		auto VectorObject = [](double X, double Y, double Z)
+		{
+			TSharedPtr<FJsonObject> Value = MakeShared<FJsonObject>();
+			Value->SetNumberField(TEXT("x"), X); Value->SetNumberField(TEXT("y"), Y); Value->SetNumberField(TEXT("z"), Z);
+			return Value;
+		};
+		Item->SetObjectField(TEXT("world_location"), VectorObject(Location.X, Location.Y, Location.Z));
+		TSharedPtr<FJsonObject> View = MakeShared<FJsonObject>();
+		View->SetNumberField(TEXT("pitch"), Rotation.Pitch); View->SetNumberField(TEXT("yaw"), Rotation.Yaw); View->SetNumberField(TEXT("roll"), Rotation.Roll);
+		Item->SetObjectField(TEXT("rotation"), View);
+		const FRotator ActorRotation = Pawn->GetActorRotation();
+		TSharedPtr<FJsonObject> ActorView = MakeShared<FJsonObject>();
+		ActorView->SetNumberField(TEXT("pitch"), ActorRotation.Pitch); ActorView->SetNumberField(TEXT("yaw"), ActorRotation.Yaw); ActorView->SetNumberField(TEXT("roll"), ActorRotation.Roll);
+		Item->SetObjectField(TEXT("actor_rotation"), ActorView);
+		Item->SetStringField(TEXT("filename"), FPaths::GetCleanFilename(ShotFilename));
+		const int32 Segment = SegmentAt(Distance);
+		Item->SetStringField(TEXT("segment_tag"), Segment < 0 ? TEXT("unsegmented") : PerfRoute->Segments[Segment].Tag.ToString());
+		ShotManifest.Add(MakeShared<FJsonValueObject>(Item));
+		TSharedPtr<FJsonObject> Manifest = MakeShared<FJsonObject>();
+		Manifest->SetArrayField(TEXT("shots"), ShotManifest);
+		FString JSON;
+		const FString ManifestPath = FPaths::Combine(OutDir, TEXT("shots"), SelenePerf::SafeName(RouteName) + TEXT("_") + Camera + TEXT(".manifest.json"));
+		if (!FJsonSerializer::Serialize(Manifest.ToSharedRef(), TJsonWriterFactory<>::Create(&JSON)) ||
+			!FFileHelper::SaveStringToFile(JSON, *ManifestPath, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM))
+		{ Finish(TEXT("Cannot write shots manifest")); return; }
+		Meta->SetStringField(TEXT("shots_manifest"), ManifestPath);
+		Meta->SetNumberField(TEXT("shot_count"), ShotManifest.Num());
+		if (++ShotIndex == Shots) Finish();
+		else BeginShot();
+	}
+	else if (Now - ShotStartedAt >= 20) Finish(TEXT("Screenshot file timed out after 20 seconds: ") + ShotFilename);
+}
+
+void USelenePerfRouteSubsystem::TickDrive()
+{
+	ASeleneCharacter* Character = CastChecked<ASeleneCharacter>(Pawn);
+	const FVector Location = Character->GetActorLocation();
+	PathLength += FVector::Distance(Location, PreviousLocation);
+	PreviousLocation = Location;
+	const FVector Feet = Location - FVector(0, 0, Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+	USplineComponent* Spline = PerfRoute->Route;
+	Distance = Spline->GetDistanceAlongSplineAtLocation(Feet, ESplineCoordinateSpace::World);
+	const double WalkSeconds = GetWorld()->GetTimeSeconds() - DriveStartedAt;
+	Meta->SetNumberField(TEXT("walk_seconds"), WalkSeconds);
+	Meta->SetNumberField(TEXT("path_length_cm"), PathLength);
+	Meta->SetNumberField(TEXT("average_speed_cm_s"), WalkSeconds > 0 ? PathLength / WalkSeconds : 0);
+	if (FVector::Dist2D(Location, Spline->GetLocationAtDistanceAlongSpline(Spline->GetSplineLength(), ESplineCoordinateSpace::World)) <= 50)
+	{
+		Character->GetCharacterMovement()->StopMovementImmediately();
+		Finish(); return;
+	}
+	const double Now = FPlatformTime::Seconds();
+	ProgressHistory.Add(FVector2D(Now, Distance));
+	while (ProgressHistory.Num() > 1 && ProgressHistory[1].X <= Now - 8) ProgressHistory.RemoveAt(0);
+	if (Now - ProgressHistory[0].X >= 8 && Distance - ProgressHistory[0].Y < 100)
+	{
+		Meta->SetStringField(TEXT("stuck_location"), Location.ToString());
+		Finish(FString::Printf(TEXT("Drive stuck: progress under 100 cm in 8 seconds at %s"), *Location.ToString())); return;
+	}
+	FVector Direction = Spline->GetLocationAtDistanceAlongSpline(FMath::Min(Distance + 250.f, Spline->GetSplineLength()), ESplineCoordinateSpace::World) - Location;
+	Direction.Z = 0;
+	Controller->SetControlRotation(PerfRoute->ViewRotationAt(Distance, Character->GetPawnViewLocation()));
+	Character->AddMovementInput(Direction.GetSafeNormal(), 1.f);
 }
 
 void USelenePerfRouteSubsystem::Event(const FString& Text)
@@ -350,12 +456,13 @@ void USelenePerfRouteSubsystem::OnFrame()
 	{ Finish(TEXT("Route, pawn or possession lost during capture")); return; }
 	const double Delta = Now - LastTime;
 	LastTime = Now;
-	if (Frames.Num() == Frames.Max()) { Finish(TEXT("Frame buffer full")); return; }
+	if (Phase == EPhase::ShotHold || Phase == EPhase::ShotWait) { TickShots(Now); return; }
+	if (Shots == 0 && Frames.Num() == Frames.Max()) { Finish(TEXT("Frame buffer full")); return; }
 	const int32 Segment = SegmentAt(Distance);
 	const bool bDiscarded = Phase != EPhase::Lap;
-	Frames.Add({GFrameCounter - 1, Lap, Segment, Delta * 1000.0,
+	if (Shots == 0) Frames.Add({GFrameCounter - 1, Lap, Segment, Delta * 1000.0,
 		GGameThreadTime, GRenderThreadTime, RHIGetGPUFrameCycles(), bDiscarded});
-	if (!bDiscarded && Segment != INDEX_NONE)
+	if (!bDrive && !bDiscarded && Segment != INDEX_NONE)
 		++SegmentCounts[Lap * PerfRoute->Segments.Num() + Segment];
 	PhaseElapsed += Delta;
 	if (Phase == EPhase::Warmup)
@@ -363,6 +470,25 @@ void USelenePerfRouteSubsystem::OnFrame()
 		if (PhaseElapsed >= Warmup)
 		{
 			Lap = 0;
+			if (Shots > 0) { BeginShot(); return; }
+			if (bDrive)
+			{
+				Distance = 0;
+				MovePawn();
+				if (Controller->PlayerCameraManager) Controller->PlayerCameraManager->SetGameCameraCutThisFrame();
+				ASeleneCharacter* Character = CastChecked<ASeleneCharacter>(Pawn);
+				Character->SetMovementPace(ESelenePace::Walk);
+				UCharacterMovementComponent* Movement = Character->GetCharacterMovement();
+				Movement->MaxWalkSpeed = Speed;
+				Movement->Activate();
+				Movement->SetComponentTickEnabled(true);
+				Movement->SetMovementMode(MOVE_Walking);
+				DriveStartedAt = GetWorld()->GetTimeSeconds();
+				ProgressHistory.Add(FVector2D(Now, 0));
+				PreviousLocation = Pawn->GetActorLocation();
+				Phase = EPhase::Drive;
+				return;
+			}
 #if CSV_PROFILER && !UE_BUILD_SHIPPING
 			FCsvProfiler::Get()->BeginCapture(-1, OutDir, FPaths::GetCleanFilename(Stem) + TEXT(".profile.csv"));
 			bCSVStarted = true;
@@ -376,6 +502,7 @@ void USelenePerfRouteSubsystem::OnFrame()
 		}
 		return;
 	}
+	if (Phase == EPhase::Drive) { TickDrive(); return; }
 	if (Phase == EPhase::Settle)
 	{
 #if CSV_PROFILER && !UE_BUILD_SHIPPING
@@ -420,8 +547,8 @@ void USelenePerfRouteSubsystem::Finish(const FString& Error)
 	ErrorText = Error;
 	int32 MeasuredFrames = 0;
 	for (const FFrame& Frame : Frames) if (!Frame.bDiscarded) ++MeasuredFrames;
-	if (MeasuredFrames == 0) ErrorText += TEXT(" Frame log contains no measured frames.");
-	if (PerfRoute)
+	if (Shots == 0 && !bDrive && MeasuredFrames == 0) ErrorText += TEXT(" Frame log contains no measured frames.");
+	if (PerfRoute && Shots == 0 && !bDrive)
 	{
 		for (int32 I = 0; I < SegmentCounts.Num(); ++I)
 			if (SegmentCounts[I] == 0) ErrorText += FString::Printf(TEXT(" Zero frames: lap=%d segment=%s."),
@@ -444,25 +571,28 @@ void USelenePerfRouteSubsystem::Finish(const FString& Error)
 	Meta->SetObjectField(TEXT("valid_timer_samples"), TimerSamples);
 	Meta->SetNumberField(TEXT("measured_frames"), MeasuredFrames);
 	Meta->SetNumberField(TEXT("total_frames"), Frames.Num());
-	TUniquePtr<FArchive> File(IFileManager::Get().CreateFileWriter(*(Stem + TEXT(".frames.csv"))));
-	if (File)
+	if (Shots == 0)
 	{
-		auto Write = [&File](const FString& Line)
+		TUniquePtr<FArchive> File(IFileManager::Get().CreateFileWriter(*(Stem + TEXT(".frames.csv"))));
+		if (File)
 		{
-			FTCHARToUTF8 UTF8(*Line);
-			File->Serialize(const_cast<ANSICHAR*>(UTF8.Get()), UTF8.Length());
-		};
-		Write(TEXT("frame_index,lap,segment_tag,delta_ms,game_thread_ms,render_thread_ms,gpu_ms,is_discarded\n"));
-		for (const FFrame& Frame : Frames)
-		{
-			const FString Tag = Frame.Segment < 0 ? TEXT("unsegmented") : PerfRoute->Segments[Frame.Segment].Tag.ToString();
-			Write(FString::Printf(TEXT("%llu,%d,%s,%.6f,%s,%s,%s,%d\n"), Frame.Index, Frame.Lap, *SelenePerf::Quote(Tag),
-				Frame.DeltaMs, *SelenePerf::Timer(Frame.GameCycles), *SelenePerf::Timer(Frame.RenderCycles),
-				*SelenePerf::Timer(Frame.GPUCycles), Frame.bDiscarded ? 1 : 0));
+			auto Write = [&File](const FString& Line)
+			{
+				FTCHARToUTF8 UTF8(*Line);
+				File->Serialize(const_cast<ANSICHAR*>(UTF8.Get()), UTF8.Length());
+			};
+			Write(TEXT("frame_index,lap,segment_tag,delta_ms,game_thread_ms,render_thread_ms,gpu_ms,is_discarded\n"));
+			for (const FFrame& Frame : Frames)
+			{
+				const FString Tag = Frame.Segment < 0 ? TEXT("unsegmented") : PerfRoute->Segments[Frame.Segment].Tag.ToString();
+				Write(FString::Printf(TEXT("%llu,%d,%s,%.6f,%s,%s,%s,%d\n"), Frame.Index, Frame.Lap, *SelenePerf::Quote(Tag),
+					Frame.DeltaMs, *SelenePerf::Timer(Frame.GameCycles), *SelenePerf::Timer(Frame.RenderCycles),
+					*SelenePerf::Timer(Frame.GPUCycles), Frame.bDiscarded ? 1 : 0));
+			}
+			if (!File->Close() || File->IsError()) ErrorText += TEXT(" Frame log write failed.");
 		}
-		if (!File->Close() || File->IsError()) ErrorText += TEXT(" Frame log write failed.");
+		else ErrorText += TEXT(" Cannot open frame log.");
 	}
-	else ErrorText += TEXT(" Cannot open frame log.");
 #if CSV_PROFILER && !UE_BUILD_SHIPPING
 	if (bCSVStarted) CaptureFinished = FCsvProfiler::Get()->EndCapture();
 #endif

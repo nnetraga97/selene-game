@@ -190,7 +190,10 @@ def main():
         return found
 
     result["route_geometry"] = {}
-    for route in layout["routes"]:
+    ew_points = layout["east_west_walk"]["points"]
+    ew_route = dict(id="EW", points=ew_points, segments=[dict(
+        tag="crossing", category="exterior", start_index=0, end_index=len(ew_points) - 1)])
+    for route in [*layout["routes"], ew_route]:
         actor = next(a for a in generated if a.get_actor_label() == route["id"])
         spline = actor.get_component_by_class(u.SplineComponent)
         segments = actor.get_editor_property("segments")

@@ -54,6 +54,8 @@ def analyze(path):
         metadata = json.loads(meta_path(path).read_text())
         if not isinstance(metadata, dict):
             raise ValueError('metadata must be an object')
+        if metadata.get('mode') == 'shots':
+            return None
         if metadata.get('status') != 'complete':
             errors.append('capture did not complete')
         if metadata.get('error'):
@@ -224,7 +226,9 @@ def main(argv=None):
     parser.add_argument('--run-id', default=dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%S') + '-' + uuid.uuid4().hex[:8])
     args = parser.parse_args(argv)
     logs = list(dict.fromkeys(p.resolve() for p in args.logs))
-    runs = [analyze(p) for p in logs]
+    analyzed = [(p, analyze(p)) for p in logs]
+    logs = [p for p, run in analyzed if run is not None]
+    runs = [run for _, run in analyzed if run is not None]
     raw = logs + [meta_path(p) for p in logs] + args.profiler
     failures = []
     if args.manifest:
