@@ -629,6 +629,118 @@
       "lot": "plaza_front_03",
       "fit": "native",
       "yaw_deg": -135
+    },
+    {
+      "id": "shop_00_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_00_w",
+      "fit": "native",
+      "yaw_deg": 145.33
+    },
+    {
+      "id": "shop_00_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_00_e",
+      "fit": "native",
+      "yaw_deg": -34.67
+    },
+    {
+      "id": "shop_01_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_01_w",
+      "fit": "native",
+      "yaw_deg": 135.0
+    },
+    {
+      "id": "shop_01_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_01_e",
+      "fit": "native",
+      "yaw_deg": -45.0
+    },
+    {
+      "id": "shop_02_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_02_w",
+      "fit": "native",
+      "yaw_deg": 124.67
+    },
+    {
+      "id": "shop_02_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_02_e",
+      "fit": "native",
+      "yaw_deg": -55.33
+    },
+    {
+      "id": "shop_03_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_03_w",
+      "fit": "native",
+      "yaw_deg": 118.58
+    },
+    {
+      "id": "shop_03_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_03_e",
+      "fit": "native",
+      "yaw_deg": -61.42
+    },
+    {
+      "id": "shop_04_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_04_w",
+      "fit": "native",
+      "yaw_deg": 118.58
+    },
+    {
+      "id": "shop_04_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_04_e",
+      "fit": "native",
+      "yaw_deg": -61.42
+    },
+    {
+      "id": "shop_05_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_05_w",
+      "fit": "native",
+      "yaw_deg": 124.67
+    },
+    {
+      "id": "shop_05_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_05_e",
+      "fit": "native",
+      "yaw_deg": -55.33
+    },
+    {
+      "id": "shop_06_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_06_w",
+      "fit": "native",
+      "yaw_deg": 135.0
+    },
+    {
+      "id": "shop_06_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_06_e",
+      "fit": "native",
+      "yaw_deg": -45.0
+    },
+    {
+      "id": "shop_07_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_07_w",
+      "fit": "native",
+      "yaw_deg": 145.33
+    },
+    {
+      "id": "shop_07_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_07_e",
+      "fit": "native",
+      "yaw_deg": -34.67
     }
   ]
 }
