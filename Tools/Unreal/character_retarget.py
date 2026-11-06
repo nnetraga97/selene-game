@@ -1,0 +1,115 @@
+"""Retarget the template Manny locomotion onto a Mixamo-skeleton character (headless, -nullrhi is fine).
+
+Environment: SELENE_CHAR (name, e.g. Champion), SELENE_CHAR_MESH (skeletal mesh asset path).
+The mesh must face Unreal +Y like Manny (see game-asset-workflow work/repairs/_shared/normalize_character.py).
+Creates under /Game/Selene/Characters/<name>: IK_Manny, IK_<name>, RTG_Manny_To_<name>, and Anims/ with
+ABP_Unarmed's idle/walk/jog anims + blend space retargeted (suffix _<name>). Writes Saved/Characters/<name>/retarget.json.
+"""
+import json
+import os
+
+import unreal as u
+
+ROOT = u.Paths.convert_relative_path_to_full(u.Paths.project_dir())
+NAME = os.environ["SELENE_CHAR"]
+CHAMP = os.environ["SELENE_CHAR_MESH"]
+BASE = "/Game/Selene/Characters/" + NAME
+MANNY = "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple"
+ABP = "/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed"
+report = {"status": "failed"}
+lib = u.EditorAssetLibrary
+tools = u.AssetToolsHelpers.get_asset_tools()
+
+
+def fresh(name, cls, factory):
+    """Reuse an existing asset (it is reset below; referenced assets cannot be deleted) or create it."""
+    path = BASE + "/" + name
+    if lib.does_asset_exist(path):
+        return u.load_asset(path)
+    asset = tools.create_asset(name, BASE, cls, factory)
+    if not asset:
+        raise RuntimeError("Could not create " + path)
+    return asset
+
+
+def ik_rig(name, mesh):
+    rig = fresh(name, u.IKRigDefinition, u.IKRigDefinitionFactory())
+    c = u.IKRigController.get_controller(rig)
+    if not c.set_skeletal_mesh(mesh):
+        raise RuntimeError(name + ": skeletal mesh rejected")
+    while c.get_num_solvers() > 0:  # reruns: avoid stacking a second auto FBIK solver
+        c.remove_solver(0)
+    if not c.apply_auto_generated_retarget_definition():
+        raise RuntimeError(name + ": auto retarget definition failed (skeleton not recognised)")
+    c.apply_auto_fbik()
+    names = [ch.chain_name for ch in c.get_retarget_chains()]
+    chains = [(str(n), str(c.get_retarget_chain_start_bone(n)), str(c.get_retarget_chain_end_bone(n))) for n in names]
+    report[name] = {"retarget_root": str(c.get_retarget_root()), "chains": chains}
+    return rig
+
+
+def main():
+    champ = u.load_asset(CHAMP)
+    manny = u.load_asset(MANNY)
+    if not champ or not manny:
+        raise RuntimeError("Missing champion or Manny mesh")
+    src = ik_rig("IK_Manny", manny)
+    tgt = ik_rig("IK_" + NAME, champ)
+
+    rtg = fresh("RTG_Manny_To_" + NAME, u.IKRetargeter, u.IKRetargetFactory())
+    r = u.IKRetargeterController.get_controller(rtg)
+    S, T = u.RetargetSourceOrTarget.SOURCE, u.RetargetSourceOrTarget.TARGET
+    r.set_ik_rig(S, src)
+    r.set_ik_rig(T, tgt)
+    r.set_preview_mesh(S, manny)
+    r.set_preview_mesh(T, champ)
+    r.remove_all_ops()
+    r.add_default_ops()
+    # Her skeleton has no root bone: the auto rig makes mixamorig_Hips the root-motion bone, so the
+    # Root Motion op would stack Manny's pelvis height onto the hips again (~1 m float on root-motion
+    # anims). Locomotion comes from CharacterMovement, so disable it.
+    rm = r.get_index_of_op_by_name("Root Motion")
+    if rm >= 0:
+        r.set_retarget_op_enabled(rm, False)
+    report["ops"] = [(str(r.get_op_name(i)), r.get_retarget_op_enabled(i)) for i in range(r.get_num_retarget_ops())]
+    r.assign_ik_rig_to_all_ops(S, src)
+    r.assign_ik_rig_to_all_ops(T, tgt)
+    r.auto_map_chains(u.AutoMapChainType.FUZZY, True)
+    # Tripo characters bind in A/T-pose; align their chains to Manny's reference pose directions.
+    pose = r.create_retarget_pose("AlignedToManny", T)
+    r.set_current_retarget_pose(pose, T)
+    r.auto_align_all_bones(T)
+    report["mapping"] = {ch[0]: str(r.get_source_chain(ch[0])) for ch in report["IK_" + NAME]["chains"]}
+    lib.save_loaded_asset(src)
+    lib.save_loaded_asset(tgt)
+    lib.save_loaded_asset(rtg)
+
+    inputs = u.IKRetargetBatchOperationInputs()
+    inputs.set_editor_property("assets_to_retarget", [u.AssetRegistryHelpers.get_asset_registry().get_asset_by_object_path(ABP + ".ABP_Unarmed")])
+    inputs.set_editor_property("source_mesh", manny)
+    inputs.set_editor_property("target_mesh", champ)
+    inputs.set_editor_property("ik_retarget_asset", rtg)
+    inputs.set_editor_property("suffix", "_" + NAME)
+    inputs.set_editor_property("target_path", BASE + "/Anims")
+    inputs.set_editor_property("include_referenced_assets", True)
+    inputs.set_editor_property("overwrite_existing_files", True)
+    made = u.IKRetargetBatchOperation.run_batch_retarget(inputs)
+    report["retargeted"] = sorted(str(a.package_name) for a in made)
+    for a in made:
+        lib.save_asset(str(a.package_name), only_if_is_dirty=False)
+    report["status"] = "success" if made else "failed: batch retarget produced nothing"
+
+
+try:
+    main()
+except Exception as exc:  # report, then fail the commandlet
+    import traceback
+    report["error"] = str(exc)
+    report["traceback"] = traceback.format_exc()
+out = os.path.join(ROOT, "Saved", "Characters", NAME)
+os.makedirs(out, exist_ok=True)
+with open(os.path.join(out, "retarget.json"), "w") as f:
+    json.dump(report, f, indent=2)
+u.log("CHARACTER_RETARGET " + report["status"])
+if report["status"] != "success":
+    raise RuntimeError(report.get("error", report["status"]))

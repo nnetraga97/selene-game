@@ -1,0 +1,39 @@
+{
+  "asset": "angel-warrior",
+  "run": "20261106T065901-a84846",
+  "run_state": "needs_review",
+  "draft": true,
+  "delivered_at": "2026-11-06T07:07:13.511703+00:00",
+  "files": {
+    "glb": {
+      "file": "angel-warrior.glb",
+      "sha256": "0b6e57079b8a157763ac39074945dfe096c633d3e8875a3e499686ea138bc534",
+      "bytes": 18532676
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/3d-model/angelic-winged-warrior-wearing-ornate-white-and-gold-armor-with-expans-af824379-ec8c-4918-a65f-1ad06f8e7500",
+    "downloaded_at": "2026-11-06T06:58:04.585195+00:00",
+    "sha256": "ebeacb8870dd4cbbd1d227fd3807f3d006ddacd07598acdb05ccffdc8be208c4",
+    "bytes": 18983824,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [],
+  "lineage": {
+    "parent_run": "20261106T065851-0ab075",
+    "change": "Normalize for Unreal: remove importer bone-display helper, apply all node transforms, scale 0.997->1.80 m, feet at Z=0, facing -Y (Unreal +Y like Manny). No geometry/weight/UV/material edits.",
+    "candidate_sha256": "2400e05371a1b6fdad9eccdc1767a07683757ad13a8510243a53dbdf45e05d27",
+    "candidate_name": "angel-normalized.glb",
+    "at": "2026-11-06T06:59:01.388009+00:00",
+    "repair_files": [
+      {
+        "file": "normalize_character.py",
+        "sha256": "5296cc0e94d886fb75a87a8598f0f7cbf2466195104576e1f689d0cd4f7f32b5"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/angel-warrior/runs/20261106T065901-a84846",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

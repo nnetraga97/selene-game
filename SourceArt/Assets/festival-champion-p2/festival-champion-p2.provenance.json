@@ -1,0 +1,45 @@
+{
+  "asset": "festival-champion-p2",
+  "run": "20261106T074911-d8e6df",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T07:49:32.577497+00:00",
+  "files": {
+    "glb": {
+      "file": "festival-champion-p2.glb",
+      "sha256": "8d8141f5dcef5f43dffa68333d95425258f2b089150ec1ae784f1b5dc9bb8488",
+      "bytes": 6991220
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/rigging/female-warrior-3d-model-781ff1fb-ceff-412c-a988-427b590919dd",
+    "downloaded_at": "2026-11-06T07:37:13.945069+00:00",
+    "sha256": "aff2fd9d2ceaa8f698b53c85b930bb4adeac810b99be112f709cd0c46109fbf2",
+    "bytes": 7485896,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T07:49:32.515429+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: P2 candidate 1 (Texture 20 + Auto Rig 20) normalized facing -Y. Clearly better than v1 (d1b8c2): sharper hair strands, cleaner face, same outfit. Sol needs-work items (armpit gaps on arm raise, braid shift on right-arm raise, angular fingertips, flat gold, skirt flecks) accepted as known defects for the demo; idle/walk do not raise arms overhead. Engine test (import, retarget, walk) next. Not game-ready."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T073730-365edd",
+    "change": "Normalize for Unreal with facing -Y (Manny-compatible; attempt 5 used the obsolete +X setting). Source already faced -Y so no yaw; helper removed, scale to 1.72 m, feet at Z=0. No geometry/weight/UV/material edits.",
+    "candidate_sha256": "a8f23c9fccc2fd86f3af13acc1224fd95f73b988d483cc37c5b1c84cc62a00a2",
+    "candidate_name": "normalized-negY.glb",
+    "at": "2026-11-06T07:49:11.213134+00:00",
+    "repair_files": [
+      {
+        "file": "normalize_character.py",
+        "sha256": "ff25e3f766a1b30f4680d2634a2ec069f9590296c5696f76d727df8fd7345301"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/festival-champion-p2/runs/20261106T074911-d8e6df",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}
