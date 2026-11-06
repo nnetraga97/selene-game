@@ -35,3 +35,15 @@ Summary of the revision prompt: Revision of reference image 1 (clock-tower and a
 Tool: orchestrator generate_image (openai.luna), job `d6598b707a104d998c84d4b5b60e9554`. References: `04-npc-courier.png`, `../character-style-study-01/B-soft-cinematic.png`.
 
 Summary of the revision prompt: Revision of reference image 1 (scooter courier) to v2, keeping his identity exactly. Oversized cropped cream courier jacket hangs off one shoulder to the elbow; fitted charcoal sleeveless tank top baring shoulders and lean athletic arms; petrol-blue cargo shorts above the knee with bare calves and low cream socks into the chunky sneakers; coral satchel, cream fingerless gloves and coral laces kept. Adult around 26, lean athletic, non-explicit. Same framing and approved soft cinematic anime rendering.
+
+## 03-npc-clockkeeper-nocoat
+
+Tool: orchestrator generate_image (openai.luna), job `190f2d2202b64e97a072d4f0676abdea`. References: `03-npc-clockkeeper.png`, `../character-style-study-01/B-soft-cinematic.png`.
+
+Summary of the revision prompt: Coat removed (user direction). Charcoal ribbed turtleneck tucked into slim charcoal trousers with a brass-buckled belt; pocket watch on its chain at the hip; coral crescent-moon pin moved to the turtleneck collar; thin petrol-blue cuff bands. Identity, hair and framing unchanged.
+
+## 03-npc-clockkeeper-v2-nocoat
+
+Tool: orchestrator generate_image (openai.luna), job `4a90475d824c4b5895cead67aaa2d93d`. References: `03-npc-clockkeeper-v2.png`, `../character-style-study-01/B-soft-cinematic.png`.
+
+Summary of the revision prompt: Coat removed (user direction). Sleeveless high-neck charcoal crop top, high-waisted petrol-blue shorts with thin coral cuff trim, brass-buckled belt with pocket watch, knee boots; coral crescent-moon pin moved to the collar. Identity, hair and framing unchanged; adult, tasteful.

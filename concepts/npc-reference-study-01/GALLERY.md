@@ -29,3 +29,13 @@ Images 3 and 4 were generated with orchestrator generate_image in a near-A-pose 
 ![Scooter courier v2](04-npc-courier-v2.png)
 
 Versions 2 follow the user's wardrobe direction (more skin, stylish anime-game fashion, adult and tasteful) while keeping each character's identity. Originals kept for comparison. Pending user feedback.
+
+## 3c. Clock-tower keeper — v1 without coat
+
+![Keeper v1 without coat](03-npc-clockkeeper-nocoat.png)
+
+## 3d. Clock-tower keeper — v2 without coat
+
+![Keeper v2 without coat](03-npc-clockkeeper-v2-nocoat.png)
+
+The user asked to remove the coat from both keeper versions. The pocket watch stays her signature accessory and the coral moon pin moves to the collar. Pending user feedback.
