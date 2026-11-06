@@ -157,3 +157,62 @@ Acceptance requires complete valid data, warm p99 ≤16.7 ms, and zero warm hitc
 The checked-in source changes add only `RenderCore`, `RHI`, and `Json` module dependencies. `build-editor-console.log`, `build-shipping-console.log`, and `test-output.log` in this directory retain local verification output; generated build artifacts are not source changes. Unreal/Xcode may also create their normal user-level build caches/trace files even when `-Log` points inside the checkout.
 
 Remaining runtime work: author/cook route assets, integrate the external camera/time commands, package both configurations, confirm camera tracking/viewport/entitlements and valid Metal timer samples, then run the Shipping matrix and inspect the archived per-run evidence. No ≥60 fps claim is made without those measurements.
+
+## Checkpoint 1 shots and collision walk
+
+Rebuild Town with `Tools/Unreal/build_blockout.py` before capture: it now creates
+`EW` from `east_west_walk.points` using the existing terrain/paving feet path,
+metres-to-cm axis conversion and linear spline authoring. EW has one exterior
+`crossing` segment and no view keys. `verify_unreal.py` audits it with R1–R3.
+
+- `-PerfShots=N` (integer 1–60) replaces measured laps with one sequence of
+  evenly spaced stops including both endpoints. N=1 captures the start only.
+  Laps are ignored. After moving warm-up, each stop uses normal pawn placement
+  and view aiming, settles for 1.5 real seconds, then requests a PNG without UI.
+  It waits for a nonempty file (20-second timeout) before advancing. No frame
+  CSV or CSV profiler capture is produced. Metadata has `mode: "shots"`.
+  `<PerfOut>/shots/<Route>_<Cam>_<NN>.png` uses indices 01 through N;
+  `<Route>_<Cam>.manifest.json` alongside them records index, distance_cm,
+  world_location (capsule centre, world cm), rotation (control/view rotation,
+  degrees), actor_rotation, filename (relative to the manifest) and segment_tag.
+  Existing shot filenames cause an error rather than accepting stale evidence.
+  The summarizer ignores inputs whose adjacent metadata has `mode: "shots"`;
+  shots alone cannot produce a performance PASS.
+- `-PerfDrive=1` replaces measured laps with one collision-driven walk. After
+  moving warm-up it resets to the start once, enables CharacterMovement in
+  walking mode, selects Walk pace and sets MaxWalkSpeed to `-PerfSpeed`
+  (default 150 cm/s). It supplies horizontal movement input toward the nearest
+  spline distance plus 250 cm; no teleport occurs during the walk. Completion
+  is horizontal distance within 50 cm of the endpoint. Metadata has
+  `mode: "drive"`, game-time `walk_seconds`, actual 3D `path_length_cm`,
+  `route_length_cm` and `average_speed_cm_s`. Less than 100 cm net spline
+  progress over any rolling eight real seconds fails with `stuck_location`
+  and an error. Frame CSV is diagnostic/discarded; drive runs do not supply
+  cold/warm performance evidence or start the CSV profiler.
+
+The two modes are mutually exclusive; invalid values fail explicitly. Without
+these flags the existing cold/warm traversal and output contract is unchanged.
+
+```bash
+Tools/Perf/capture_checkpoint1.sh
+```
+
+This launches the Development `UnrealEditor` in `-game`, windowed 1920×1080,
+without sound, once per job in sequence: R1×6, R2×12, R3×3 shots, each in 3P
+then 1P, followed by EW in 3P at 150 cm/s. All jobs use noon and 10 seconds
+warm-up. Set `ENGINE` to override `/Users/Shared/Epic Games/UE_5.8`.
+Outputs share a fresh `Saved/Checkpoint1/<UTC timestamp>-<pid>/`: PNGs and
+manifests in `shots/`, unique metadata per run, EW frame CSV, and per-job
+engine/process logs and exit codes. Expected total: 42 PNGs.
+
+Per-job watchdogs derive route length from the same terrain-aware Python
+geometry as the builder. Shots allow 60 seconds startup, 110% of warm-up plus
+route-length/speed plus 21.5 seconds per shot, then 120 seconds exit margin.
+EW allows 60 seconds startup, 150% of warm-up plus route-length/speed, and
+120 seconds exit margin (roughly 11 minutes for a 5.5-minute walk). A timed-out
+process receives TERM then KILL after five seconds. Jobs continue after a
+failure; the script exits nonzero if any process or artifact validation fails.
+Its final summary lists shot counts per route/camera and EW game time as m:ss
+versus the expected 5–6 minutes; an out-of-range completed walk also fails validation. Screenshot delivery under `-game`, actual camera framing and
+collision navigation must be checked by running the controller's capture;
+compilation and Python checks alone do not establish runtime success.

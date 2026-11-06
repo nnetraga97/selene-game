@@ -9,6 +9,7 @@ class ASelenePerfRoute;
 class APawn;
 class APlayerController;
 class FJsonObject;
+class FJsonValue;
 
 // One map per process. A world subsystem cannot accidentally retain a route from an old map.
 UCLASS()
@@ -21,7 +22,7 @@ public:
 	virtual void Deinitialize() override;
 
 private:
-	enum class EPhase : uint8 { Waiting, Warmup, Settle, Lap, Finishing, Done };
+	enum class EPhase : uint8 { Waiting, Warmup, Settle, Lap, ShotHold, ShotWait, Drive, Finishing, Done };
 	struct FFrame
 	{
 		uint64 Index;
@@ -35,6 +36,9 @@ private:
 	bool Start();
 	void MovePawn();
 	void RestartLap();
+	void BeginShot();
+	void TickShots(double Now);
+	void TickDrive();
 	void Event(const FString& Text);
 	void Exec(const FString& Command);
 	void Finish(const FString& Error = FString());
@@ -50,7 +54,13 @@ private:
 	FString RouteName, Camera = TEXT("3P"), OutDir, Stem, ErrorText;
 	float Hour = 12, TimeFlow = 0, Speed = 150, Warmup = 15, Distance = 0;
 	int32 Laps = 3, Lap = -1, LastSegment = INDEX_NONE;
-	bool bTimeFlow = false, bCSVStarted = false;
+	bool bTimeFlow = false, bCSVStarted = false, bDrive = false;
+	int32 Shots = 0, ShotIndex = 0;
+	FString ShotFilename;
+	TArray<TSharedPtr<FJsonValue>> ShotManifest;
+	double ShotStartedAt = 0, DriveStartedAt = 0, PathLength = 0;
+	TArray<FVector2D> ProgressHistory;
+	FVector PreviousLocation = FVector::ZeroVector;
 	double CreatedAt = 0, LastTime = 0, PhaseElapsed = 0;
 	TArray<FFrame> Frames;
 	TArray<int32> SegmentCounts;

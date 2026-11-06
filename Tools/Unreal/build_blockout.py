@@ -481,7 +481,10 @@ def routes(data):
         warn(
             "SelenePerfRoute class unavailable; skipped route actors (route metrics still reported)."
         )
-    for route in data["routes"]:
+    ew_points = data["east_west_walk"]["points"]
+    ew_route = dict(id="EW", points=ew_points, segments=[dict(
+        tag="crossing", category="exterior", start_index=0, end_index=len(ew_points) - 1)])
+    for route in [*data["routes"], ew_route]:
         points, anchors = route_geometry(data, route)
         ds = distances(points)
         segments = [
