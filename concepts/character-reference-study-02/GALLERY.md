@@ -1,6 +1,6 @@
 # Character reference study — 02
 
-Two original adult women in the approved style B, following the wardrobe direction (more skin, more interesting clothes; adult and tasteful). Framed at eye level in a near-A-pose for 3D use. Pending user review; not yet assigned as main characters or NPCs.
+Two original adult women in the approved style B, following the wardrobe direction (more skin, more interesting clothes; adult and tasteful). Framed at eye level in a near-A-pose for 3D use. **Approved by the user (November 5).** Not yet assigned as main characters or NPCs.
 
 ## 01 — Festival champion and skyrail racer
 

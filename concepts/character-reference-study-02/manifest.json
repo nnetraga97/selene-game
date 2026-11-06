@@ -1,7 +1,7 @@
 {
   "tool": "orchestrator generate_image",
   "created": "2026-11-05",
-  "status": "pending user review",
+  "status": "approved by user 2026-11-05",
   "images": [
     {
       "file": "01-festival-champion.png",
@@ -14,7 +14,8 @@
       ],
       "sha256": "15a11695a37495c327ae6d37401b2b11036a02a14e7265045c32677a642f655f",
       "prompt_summary": "Warm, graceful, fearless adult woman around 25. Very long copper-red braid over one shoulder bound with bronze rings; warm green eyes. Asymmetric cream wrap top baring one shoulder and the midriff, edged in petrol blue; sculpted burnished-bronze open-crescent collar piece (silhouette hook); one bronze-and-cream forearm guard; petrol-blue pleated asymmetric half-skirt over fitted charcoal athletic shorts; cream-and-bronze laced wrap sandal-boots; coral silk racing ribbon tied on the upper arm (signature accessory). No weapons, shield, helmet, circlet or breastplate.",
-      "note": "Original design. Inspiration was limited to personality and energy: the graceful, warm champion energy of Pyrrha Nikos (RWBY). Their signature looks are deliberately excluded (circlet, bronze breastplate, red sash, high ponytail, spear and shield). No existing character's look, name or outfit was copied."
+      "note": "Original design. Inspiration was limited to personality and energy: the graceful, warm champion energy of Pyrrha Nikos (RWBY). Their signature looks are deliberately excluded (circlet, bronze breastplate, red sash, high ponytail, spear and shield). No existing character's look, name or outfit was copied.",
+      "status": "approved"
     },
     {
       "file": "02-night-market-fixer.png",
@@ -27,7 +28,8 @@
       ],
       "sha256": "56078d717ab9840e6c0fd443a2dbfcc07ab2fca969650916f5641b84a420f71e",
       "prompt_summary": "Sharp, sleek, teasing adult woman around 27. Asymmetric jaw-length crimson-black bob, shaved nape on one side, one coral streak; narrow amber eyes, sly half-smile, coral ear stud. Cropped charcoal leather halter with high zip collar baring shoulders, arms and midriff; short petrol-blue bomber with coral lining worn off one shoulder, one sleeve only (silhouette hook); high-waisted charcoal leather trousers with one thigh cut-out; two criss-crossing cream belts with pouches; fingerless gloves; laced knee-high cream-and-charcoal combat boots; glowing coral lantern-shaped courier beacon on the hip (signature accessory). No weapons, no facial scar.",
-      "note": "Original design. Inspiration was limited to personality and energy: the sharp, sleek, dangerous energy of Katarina (League of Legends). Their signature looks are deliberately excluded (long straight red hair, eye scar, daggers, red-and-black assassin outfit). No existing character's look, name or outfit was copied."
+      "note": "Original design. Inspiration was limited to personality and energy: the sharp, sleek, dangerous energy of Katarina (League of Legends). Their signature looks are deliberately excluded (long straight red hair, eye scar, daggers, red-and-black assassin outfit). No existing character's look, name or outfit was copied.",
+      "status": "approved"
     }
   ]
 }
