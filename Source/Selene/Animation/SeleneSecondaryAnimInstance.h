@@ -19,4 +19,10 @@ class SELENE_API USeleneSecondaryAnimInstance : public UAnimSingleNodeInstance
 
 protected:
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+private:
+	/** selene.SecondaryDebug 1: every 0.5 s log each chain's largest sim-vs-animated displacement (cm). */
+	float DebugTimer = 0.f;
+	TMap<FName, float> DebugMaxSwing;
 };

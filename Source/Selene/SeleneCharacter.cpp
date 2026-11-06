@@ -19,6 +19,9 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HAL/IConsoleManager.h"
+#include "HAL/FileManager.h"
+#include "Misc/Paths.h"
+#include "UnrealClient.h"
 #include "UObject/ConstructorHelpers.h"
 
 namespace
@@ -480,10 +483,48 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 	}
 }
 
+namespace
+{
+	TAutoConsoleVariable<int32> CVarAutoWalk(TEXT("selene.AutoWalk"), 0,
+		TEXT("Debug: 1 drives the player on a repeating 12 s loop (walk, sprint, sharp stop, turn, jog, jump) for tuning secondary motion."));
+	TAutoConsoleVariable<float> CVarAutoShots(TEXT("selene.AutoShots"), 0.f,
+		TEXT("Debug: > 0 takes a game screenshot every N seconds to Saved/AutoShots/."));
+}
+
 void ASeleneCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	UpdateSingleNodeAnimation(DeltaSeconds);
+	TickDebugDrivers(DeltaSeconds);
+}
+
+void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
+{
+	DebugTime += DeltaSeconds;
+	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsLocallyControlled())
+	{
+		// 12 s loop: 0-3 walk, 3-5.5 sprint, 5.5-7 stop, 7-9 turn and jog back, 9-10 jump, 10-12 idle.
+		const float T = FMath::Fmod(DebugTime, 12.f);
+		const float Heading = T < 7.f ? 0.f : 180.f;
+		const FVector Dir = FRotator(0.f, AutoWalkBaseYaw + Heading, 0.f).Vector();
+		if (T < 3.f) { SetMovementPace(ESelenePace::Walk); AddMovementInput(Dir); }
+		else if (T < 5.5f) { SetMovementPace(ESelenePace::Sprint); AddMovementInput(Dir); }
+		else if (T < 7.f) {}
+		else if (T < 9.f) { SetMovementPace(ESelenePace::Jog); AddMovementInput(Dir); }
+		else if (T < 9.1f) { Jump(); }
+	}
+	else
+	{
+		AutoWalkBaseYaw = GetActorRotation().Yaw;
+	}
+	const float Interval = CVarAutoShots.GetValueOnGameThread();
+	if (Interval > 0.f && DebugTime >= NextAutoShot)
+	{
+		NextAutoShot = DebugTime + Interval;
+		const FString Dir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir() / TEXT("AutoShots"));
+		IFileManager::Get().MakeDirectory(*Dir, true);
+		FScreenshotRequest::RequestScreenshot(Dir / FString::Printf(TEXT("%s_%05.1f.png"), *ActiveCharacterName.ToString(), DebugTime), false, false);
+	}
 }
 
 void ASeleneCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)

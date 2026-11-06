@@ -21,10 +21,17 @@ struct SELENE_API FSeleneSecondaryChain
 
 	/** Kawaii PhysicsSettings: Damping 0..1 (higher = calmer), Stiffness 0..1 (higher = returns to pose faster). */
 	UPROPERTY(EditAnywhere, Category = "Secondary")
-	float Damping = 0.3f;
+	float Damping = 0.12f;
 
 	UPROPERTY(EditAnywhere, Category = "Secondary")
-	float Stiffness = 0.25f;
+	float Stiffness = 0.05f;
+
+	/** How much of the character's own movement/rotation the chain ignores (Kawaii default 0.8 = barely reacts). */
+	UPROPERTY(EditAnywhere, Category = "Secondary")
+	float WorldDampingLocation = 0.35f;
+
+	UPROPERTY(EditAnywhere, Category = "Secondary")
+	float WorldDampingRotation = 0.45f;
 
 	/** Bone collision radius in cm. */
 	UPROPERTY(EditAnywhere, Category = "Secondary")

@@ -9,9 +9,13 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "ReferenceSkeleton.h"
+#include "HAL/IConsoleManager.h"
 
 namespace
 {
+	TAutoConsoleVariable<int32> CVarSecondaryDebug(TEXT("selene.SecondaryDebug"), 0,
+		TEXT("1: log each Kawaii chain's largest simulated-vs-animated bone displacement (cm) every 0.5 s."));
+
 	/** Component-space reference transform of a bone (accumulated local ref pose). */
 	FTransform RefComponentSpace(const FReferenceSkeleton& Ref, int32 Index)
 	{
@@ -93,6 +97,21 @@ struct FSeleneSecondaryProxy : public FAnimSingleNodeInstanceProxy
 		}
 	}
 
+	/** Game-thread debug read: largest |simulated - animated| bone offset per chain (racy, debug only). */
+	void GatherSwing(TMap<FName, float>& InOutMax) const
+	{
+		for (const TUniquePtr<FAnimNode_KawaiiPhysics>& Node : Chains)
+		{
+			float Max = 0.f;
+			for (const FKawaiiPhysicsModifyBone& Bone : Node->ModifyBones)
+			{
+				if (!Bone.bDummy) Max = FMath::Max(Max, FVector::Dist(Bone.Location, Bone.PoseLocation));
+			}
+			float& Slot = InOutMax.FindOrAdd(Node->RootBone.BoneName);
+			Slot = FMath::Max(Slot, Max);
+		}
+	}
+
 private:
 	void BuildGraph(UAnimInstance* InAnimInstance)
 	{
@@ -145,6 +164,8 @@ private:
 			Node->RootBone.BoneName = Setup.RootBone;
 			Node->PhysicsSettings.Damping = Setup.Damping;
 			Node->PhysicsSettings.Stiffness = Setup.Stiffness;
+			Node->PhysicsSettings.WorldDampingLocation = Setup.WorldDampingLocation;
+			Node->PhysicsSettings.WorldDampingRotation = Setup.WorldDampingRotation;
 			Node->PhysicsSettings.Radius = Setup.Radius;
 			Node->PhysicsSettings.LimitAngle = Setup.LimitAngle;
 			Node->Gravity = FVector(0.f, 0.f, Setup.GravityZ);
@@ -179,4 +200,19 @@ private:
 FAnimInstanceProxy* USeleneSecondaryAnimInstance::CreateAnimInstanceProxy()
 {
 	return new FSeleneSecondaryProxy(this);
+}
+
+void USeleneSecondaryAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeUpdateAnimation(DeltaSeconds);
+	if (CVarSecondaryDebug.GetValueOnGameThread() <= 0) return;
+	GetProxyOnGameThread<FSeleneSecondaryProxy>().GatherSwing(DebugMaxSwing);
+	DebugTimer += DeltaSeconds;
+	if (DebugTimer < 0.5f) return;
+	const APawn* Pawn = Cast<APawn>(GetOwningActor());
+	FString Line = FString::Printf(TEXT("speed=%.0f"), Pawn ? Pawn->GetVelocity().Size2D() : 0.f);
+	for (const TPair<FName, float>& Pair : DebugMaxSwing) Line += FString::Printf(TEXT(" %s=%.1f"), *Pair.Key.ToString(), Pair.Value);
+	UE_LOG(LogSelene, Log, TEXT("Secondary swing cm: %s"), *Line);
+	DebugTimer = 0.f;
+	DebugMaxSwing.Reset();
 }

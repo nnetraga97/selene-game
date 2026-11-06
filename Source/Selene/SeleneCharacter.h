@@ -90,6 +90,10 @@ private:
 	void ApplyCharacter(const FSelenePlayableCharacter& Entry, uint64 RequestId);
 	void ConfigureBlendAxes();
 	void UpdateSingleNodeAnimation(float DeltaSeconds);
+	void TickDebugDrivers(float DeltaSeconds);
+	float DebugTime = 0.f;
+	float NextAutoShot = 0.f;
+	float AutoWalkBaseYaw = 0.f;
 
 	// Streamable handles keep all loaded soft assets alive, including inactive jump/land clips.
 	TSharedPtr<FStreamableHandle> PendingCharacterLoad;

@@ -47,7 +47,9 @@ def main():
 
     mat = asset("M_Character_Toon", u.Material, u.MaterialFactoryNew())
     mel.delete_all_material_expressions(mat)
-    mat.set_editor_property("two_sided", True)  # Tripo cloth/ribbons are single sheets (glTF doubleSided)
+    mat.set_editor_property("two_sided", True)
+    # Without this flag a cooked/-game run silently swaps in the default material ("missing usage flag SkeletalMesh").
+    mat.set_editor_property("used_with_skeletal_mesh", True)  # Tripo cloth/ribbons are single sheets (glTF doubleSided)
     toon = mel.create_material_expression(mat, u.MaterialExpressionSubstrateToonBSDF, -300, 0)
     toon.set_editor_property("toon_profile", profile)
 
