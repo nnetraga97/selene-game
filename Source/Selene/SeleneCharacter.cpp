@@ -5,6 +5,7 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimSingleNodeInstance.h"
 #include "Animation/AnimSequence.h"
+#include "Animation/AnimMontage.h"
 #include "Animation/BlendSpace.h"
 #include "Animation/BlendSpace1D.h"
 #include "Engine/AssetManager.h"
@@ -254,6 +255,17 @@ void ASeleneCharacter::SelectCharacter(FName Name)
 	AddPath(Entry->Jump);
 	AddPath(Entry->Land);
 	AddPath(Entry->OverrideMaterial);
+	AddPath(Entry->IdleLoop);
+	AddPath(Entry->WalkLoop);
+	AddPath(Entry->RunLoop);
+	AddPath(Entry->SprintLoop);
+	AddPath(Entry->WalkStart);
+	AddPath(Entry->RunStart);
+	AddPath(Entry->WalkStop);
+	AddPath(Entry->RunStop);
+	AddPath(Entry->SprintStop);
+	AddPath(Entry->WalkPivot);
+	AddPath(Entry->RunPivot);
 	PendingCharacterLoad = UAssetManager::GetStreamableManager().RequestAsyncLoad(Paths,
 		FStreamableDelegate::CreateWeakLambda(this, [this, Selection = *Entry, RequestId]()
 		{
@@ -309,6 +321,17 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 	Validate(Entry.Jump);
 	Validate(Entry.Land);
 	Validate(Entry.OverrideMaterial);
+	Validate(Entry.IdleLoop);
+	Validate(Entry.WalkLoop);
+	Validate(Entry.RunLoop);
+	Validate(Entry.SprintLoop);
+	Validate(Entry.WalkStart);
+	Validate(Entry.RunStart);
+	Validate(Entry.WalkStop);
+	Validate(Entry.RunStop);
+	Validate(Entry.SprintStop);
+	Validate(Entry.WalkPivot);
+	Validate(Entry.RunPivot);
 	PendingCharacterName = NAME_None;
 	if (!bLoaded)
 	{
@@ -439,6 +462,13 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 
 	UAnimationAsset* Animation = ActiveCharacter.Locomotion.Get();
 	bool bLoop = true;
+	const float Speed = GetVelocity().Size2D();
+	float LoopRate = 1.f;
+	const bool bClipLocomotion = !ActiveCharacter.WalkLoop.IsNull() && ActiveCharacter.WalkLoop.Get();
+	if (bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground)
+	{
+		Animation = ChooseGroundLoop(Speed, LoopRate);
+	}
 	if (SingleNodePhase == ESingleNodePhase::Jump)
 	{
 		Animation = ActiveCharacter.Jump.Get();
@@ -458,17 +488,46 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 		Animation = ActiveCharacter.Land.Get();
 		bLoop = false;
 	}
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (Instance->GetAnimationAsset() != Animation)
 	{
+		UAnimSequence* PreviousLoop = Cast<UAnimSequence>(Instance->GetAnimationAsset());
+		const float PreviousTime = Instance->GetCurrentTime();
+		const float PreviousRate = Instance->GetPlayRate();
+		const bool bLoopToLoop = bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground && PreviousLoop &&
+			(PreviousLoop == ActiveCharacter.IdleLoop.Get() || PreviousLoop == ActiveCharacter.WalkLoop.Get() ||
+			 PreviousLoop == ActiveCharacter.RunLoop.Get() || PreviousLoop == ActiveCharacter.SprintLoop.Get());
+		// SetAnimationAsset stops slot montages, so switch first, then cross-fade from the old loop on the slot.
 		Instance->SetAnimationAsset(Animation, bLoop);
 		Instance->SetPosition(0.f, false);
 		Instance->SetPlaying(true);
+		if (bLoopToLoop && AnimInstance)
+		{
+			if (UAnimMontage* Fade = AnimInstance->PlaySlotAnimationAsDynamicMontage(PreviousLoop, TEXT("DefaultSlot"),
+				0.f, 0.25f, PreviousRate, 1, -1.f, PreviousTime))
+			{
+				AnimInstance->Montage_Stop(0.25f, Fade);
+			}
+		}
+	}
+	if (bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground)
+	{
+		if (!FMath::IsNearlyEqual(Instance->GetPlayRate(), LoopRate, 0.01f))
+		{
+			// UAnimSingleNodeInstance::SetPlayRate also retimes an active montage; restore transitions to 1x.
+			Instance->SetPlayRate(LoopRate);
+			if (AnimInstance)
+			{
+				if (UAnimMontage* Active = AnimInstance->GetCurrentActiveMontage()) AnimInstance->Montage_SetPlayRate(Active, 1.f);
+			}
+		}
+		UpdateLocomotionTransitions(Speed, DeltaSeconds);
 	}
 	if (UBlendSpace* Blend = ActiveCharacter.Locomotion.Get(); Blend && Animation == Blend)
 	{
 		FVector Input = FVector::ZeroVector;
 		const FVector Velocity = GetVelocity();
-		const float Speed = Velocity.Size2D();
+		// Speed is the outer horizontal speed.
 		const FBlendParameter& SpeedParameter = Blend->GetBlendParameter(SpeedAxis);
 		Input[SpeedAxis] = FMath::Clamp(Speed, SpeedParameter.Min, SpeedParameter.Max);
 		if (DirectionAxis != INDEX_NONE)
@@ -491,6 +550,67 @@ namespace
 		TEXT("Debug: > 0 takes a game screenshot every N seconds to Saved/AutoShots/."));
 }
 
+UAnimationAsset* ASeleneCharacter::ChooseGroundLoop(float Speed, float& OutPlayRate) const
+{
+	OutPlayRate = 1.f;
+	const FSelenePlayableCharacter& C = ActiveCharacter;
+	if (Speed < 20.f && C.IdleLoop.Get()) return C.IdleLoop.Get();
+	struct FLoop { UAnimSequence* Clip; float ClipSpeed; };
+	// Thresholds sit between the pace speeds (walk 150 / jog 350 / sprint 600).
+	const FLoop Loop = Speed < 250.f ? FLoop{C.WalkLoop.Get(), C.WalkLoopSpeed}
+		: Speed < 475.f ? FLoop{C.RunLoop.Get() ? C.RunLoop.Get() : C.WalkLoop.Get(), C.RunLoop.Get() ? C.RunLoopSpeed : C.WalkLoopSpeed}
+		: FLoop{C.SprintLoop.Get() ? C.SprintLoop.Get() : C.RunLoop.Get(), C.SprintLoop.Get() ? C.SprintLoopSpeed : C.RunLoopSpeed};
+	if (!Loop.Clip) return C.WalkLoop.Get();
+	// Feet stay planted when the clip plays at the speed the capsule actually moves.
+	OutPlayRate = FMath::Clamp(FMath::Max(Speed, 20.f) / FMath::Max(Loop.ClipSpeed, 1.f), 0.5f, 1.5f);
+	return Loop.Clip;
+}
+
+void ASeleneCharacter::PlayTransition(UAnimSequence* Clip, float BlendIn, float BlendOut)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!Clip || !AnimInstance) return;
+	AnimInstance->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), BlendIn, BlendOut, 1.f, 1, -1.f, 0.f);
+}
+
+void ASeleneCharacter::UpdateLocomotionTransitions(float Speed, float DeltaSeconds)
+{
+	const UCharacterMovementComponent* Move = GetCharacterMovement();
+	const FVector Accel = Move->GetCurrentAcceleration();
+	const bool bHasInput = Accel.SizeSquared2D() > 1.f;
+	TransitionCooldown = FMath::Max(0.f, TransitionCooldown - DeltaSeconds);
+	const FSelenePlayableCharacter& C = ActiveCharacter;
+	const bool bFast = MovementPace != ESelenePace::Walk;
+	if (bHasInput && !bHadInput && PrevSpeed < 30.f)
+	{
+		PlayTransition(bFast && C.RunStart.Get() ? C.RunStart.Get() : C.WalkStart.Get(), 0.1f, 0.25f);
+		TransitionCooldown = 0.3f;
+	}
+	else if (!bHasInput && bHadInput && Speed > 100.f)
+	{
+		UAnimSequence* Stop = Speed > 450.f && C.SprintStop.Get() ? C.SprintStop.Get()
+			: Speed > 200.f && C.RunStop.Get() ? C.RunStop.Get() : C.WalkStop.Get();
+		PlayTransition(Stop, 0.1f, 0.3f);
+		TransitionCooldown = 0.3f;
+	}
+	else if (bHasInput && !bHadInput)
+	{
+		// Input came back mid-stop: drop the stop overlay instead of finishing it.
+		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance()) AnimInstance->Montage_Stop(0.15f);
+	}
+	else if (bHasInput && Speed > 120.f && TransitionCooldown <= 0.f)
+	{
+		const FVector Velocity2D = GetVelocity().GetSafeNormal2D();
+		if (FVector::DotProduct(Accel.GetSafeNormal2D(), Velocity2D) < -0.7f)  // input points > ~135 deg away
+		{
+			PlayTransition(Speed > 250.f && C.RunPivot.Get() ? C.RunPivot.Get() : C.WalkPivot.Get(), 0.1f, 0.25f);
+			TransitionCooldown = 0.6f;
+		}
+	}
+	bHadInput = bHasInput;
+	PrevSpeed = Speed;
+}
+
 void ASeleneCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -503,15 +623,16 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 	DebugTime += DeltaSeconds;
 	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsLocallyControlled())
 	{
-		// 12 s loop: 0-3 walk, 3-5.5 sprint, 5.5-7 stop, 7-9 turn and jog back, 9-10 jump, 10-12 idle.
+		// 12 s loop: 0-3 walk, 3-5.5 sprint, 5.5-7 stop, 7-9 jog back (start), 9-10.5 reverse while jogging (pivot),
+		// 10.5-10.6 jump, 10.6-12 idle.
 		const float T = FMath::Fmod(DebugTime, 12.f);
-		const float Heading = T < 7.f ? 0.f : 180.f;
+		const float Heading = T < 7.f ? 0.f : (T < 9.f ? 180.f : 0.f);
 		const FVector Dir = FRotator(0.f, AutoWalkBaseYaw + Heading, 0.f).Vector();
 		if (T < 3.f) { SetMovementPace(ESelenePace::Walk); AddMovementInput(Dir); }
 		else if (T < 5.5f) { SetMovementPace(ESelenePace::Sprint); AddMovementInput(Dir); }
 		else if (T < 7.f) {}
-		else if (T < 9.f) { SetMovementPace(ESelenePace::Jog); AddMovementInput(Dir); }
-		else if (T < 9.1f) { Jump(); }
+		else if (T < 10.5f) { SetMovementPace(ESelenePace::Jog); AddMovementInput(Dir); }
+		else if (T < 10.6f) { Jump(); }
 	}
 	else
 	{

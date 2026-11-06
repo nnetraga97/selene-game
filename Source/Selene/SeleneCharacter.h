@@ -107,4 +107,12 @@ private:
 	bool bWasFalling = false;
 	enum class ESingleNodePhase : uint8 { Ground, Jump, Fall, Land };
 	ESingleNodePhase SingleNodePhase = ESingleNodePhase::Ground;
+
+	// Borrowed-clip locomotion (roster WalkLoop etc.): ground loop choice, speed matching and transitions.
+	UAnimationAsset* ChooseGroundLoop(float Speed, float& OutPlayRate) const;
+	void UpdateLocomotionTransitions(float Speed, float DeltaSeconds);
+	void PlayTransition(UAnimSequence* Clip, float BlendIn, float BlendOut);
+	float PrevSpeed = 0.f;
+	bool bHadInput = false;
+	float TransitionCooldown = 0.f;
 };

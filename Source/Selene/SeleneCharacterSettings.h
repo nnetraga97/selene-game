@@ -92,6 +92,54 @@ struct SELENE_API FSelenePlayableCharacter
 	UPROPERTY(EditAnywhere, Category = "Character")
 	TSoftObjectPtr<UMaterialInterface> OverrideMaterial;
 
+	/**
+	 * Borrowed mocap locomotion (Epic Game Animation Sample clips, retargeted to the hero). When WalkLoop is set it
+	 * replaces the Locomotion blend space on the ground: the loop is picked by speed and played at
+	 * actual speed / the loop's measured ground speed (no foot sliding); starts, stops and 180-degree
+	 * pivots play as short slot overlays. Speeds are cm/s, measured from the retargeted clips.
+	 */
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> IdleLoop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> WalkLoop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> RunLoop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> SprintLoop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	float WalkLoopSpeed = 206.f;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	float RunLoopSpeed = 520.f;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	float SprintLoopSpeed = 735.f;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> WalkStart;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> RunStart;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> WalkStop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> RunStop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> SprintStop;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> WalkPivot;
+
+	UPROPERTY(EditAnywhere, Category = "Locomotion")
+	TSoftObjectPtr<UAnimSequence> RunPivot;
+
 	/** Kawaii Physics secondary motion (requires single-node locomotion, i.e. no AnimClass). */
 	UPROPERTY(EditAnywhere, Category = "Secondary")
 	TArray<FSeleneSecondaryChain> SecondaryChains;
