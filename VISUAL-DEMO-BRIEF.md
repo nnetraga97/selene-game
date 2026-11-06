@@ -38,6 +38,8 @@ The user strongly approved the town concepts in `concepts/town-style-study-01/`,
 
 Keep the town's stylization close to the initial ZZZ-inspired direction, with its own identity: cream rounded architecture, petrol-blue trim, coral accents, substantial readable props, welcoming inhabited streets and vegetation. Use richer shading, soft cinematic gradients, warm light, cool shadow fill and distinct restrained materials. Preserve anime character design and silhouettes.
 
+**Character wardrobe (user direction, November 5):** clothes may show more skin, in the stylish modern anime-game manner of popular gacha characters: bare shoulders and arms, crop tops, shorts, coats worn off the shoulder. Characters are clearly adults; keep it tasteful and non-explicit. Each design keeps one silhouette hook, the town palette with a single saturated accent, and one signature accessory. Designs are original: draw on what makes popular Zenless Zone Zero and Honkai: Star Rail characters appealing, never their specific looks, names or outfits.
+
 Reference images establish the look, feel and vibe. Exact camera matching, street layout, building placement and architectural replication are **not required**. Adjust geometry and composition for a coherent playable 3D town. The day/night cycle must keep that visual identity beyond the two reference lighting states.
 
 ## Engine and performance
