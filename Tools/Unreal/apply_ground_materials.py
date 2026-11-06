@@ -5,6 +5,7 @@ are eligible. Building lots, stairs, walls, rails and dressing are excluded.
 Run headless after build_ground_materials.py. Writes Saved/Ground/report.json.
 """
 import json
+import os
 from pathlib import Path
 import traceback
 
@@ -100,7 +101,8 @@ if __name__ == "__main__":
         REPORT.update(status="failed", error=str(error), traceback=traceback.format_exc())
         raise
     finally:
-        path = ROOT / "Saved/Ground/report.json"
+        path = Path(os.environ["SELENE_STAGE_REPORT"]) if os.environ.get("SELENE_STAGE_REPORT") else ROOT / "Saved/Ground/report.json"
         path.parent.mkdir(parents=True, exist_ok=True)
+        REPORT["invocation"] = os.environ.get("SELENE_STAGE_ID")
         path.write_text(json.dumps(REPORT, indent=2) + "\n")
         u.log("Ground assignment report: " + str(path))

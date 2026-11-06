@@ -192,6 +192,9 @@ def main():
         REPORT["parent"] = mat.get_path_name()
     else:
         mat = build_parent(base, textures["ground_tiles_27"])
+    if os.environ.get("SELENE_GROUND_PARENT_ONLY") == "1":
+        REPORT["status"] = "success"
+        return
     for name, settings in data["materials"].items():
         mi = asset(base, "MI_Ground_" + name, u.MaterialInstanceConstant, u.MaterialInstanceConstantFactoryNew())
         mi.modify()
@@ -235,7 +238,8 @@ if __name__ == "__main__":
         REPORT.update(status="failed", error=str(error), traceback=traceback.format_exc())
         raise
     finally:
-        path = ROOT / "Saved/Ground/materials.json"
+        path = Path(os.environ["SELENE_STAGE_REPORT"]) if os.environ.get("SELENE_STAGE_REPORT") else ROOT / "Saved/Ground/materials.json"
         path.parent.mkdir(parents=True, exist_ok=True)
+        REPORT["invocation"] = os.environ.get("SELENE_STAGE_ID")
         path.write_text(json.dumps(REPORT, indent=2) + "\n")
         u.log("Ground material report: " + str(path))

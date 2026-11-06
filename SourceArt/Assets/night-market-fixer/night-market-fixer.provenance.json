@@ -1,0 +1,45 @@
+{
+  "asset": "night-market-fixer",
+  "run": "20261106T185037-019bb6",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T18:51:10.551271+00:00",
+  "files": {
+    "glb": {
+      "file": "night-market-fixer.glb",
+      "sha256": "fcc066accc6eadbbc1d74b362b5525bbe0926f043b97835b9bdd7d75c283e20b",
+      "bytes": 12093964
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/4b154ee7-a09f-4362-ba1d-d57ad9f552e4",
+    "downloaded_at": "2026-11-06T18:24:53.625425+00:00",
+    "sha256": "3a3ddc03310e5014772ad2d39a4d8fc1f6fcee4b753aeef261cc4747a8f89c0a",
+    "bytes": 12733436,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T18:51:10.495122+00:00",
+      "decision": "accept-local",
+      "notes": "Claude 2026-11-06: engine-compat candidate of the accepted run; root scale baked (no non-unit glTF node), dims match spec, triangles unchanged, single mesh, no importer helper. Same visual asset."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T184552-ea2e7d",
+    "change": "Engine-compat: bake the Node_0 root scale into the rig/mesh so no glTF node keeps a non-unit scale (UE 5.8 Interchange double-applies a scaled root; see festival-champion). No geometry, weight, UV or material edits.",
+    "candidate_sha256": "f5d3c4c4b415fd8ce73d6a4d9f90ccd8b18d86b3e4eb9bb49f59c14f2960420a",
+    "candidate_name": "night-market-fixer-baked.glb",
+    "at": "2026-11-06T18:50:37.974830+00:00",
+    "repair_files": [
+      {
+        "file": "bake_root_scale.py",
+        "sha256": "ebcd533500e28d161c5ff6ec8b25b91be59b70e6d8c33ab29d824b6eb726cb31"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/night-market-fixer/runs/20261106T185037-019bb6",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

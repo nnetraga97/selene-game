@@ -1,9 +1,10 @@
-"""Writes the SecondaryChains/SecondaryColliders of the Champion and Angel roster entries in Config/DefaultGame.ini.
+"""Writes hero SecondaryChains/SecondaryColliders in Config/DefaultGame.ini.
 
 Tuning lives here (Kawaii Physics PhysicsSettings): Damping (higher = calmer), Stiffness (higher = snaps back to the
 animated pose), WorldDampingLocation/Rotation (share of the character's own movement the chain ignores; Kawaii's
 0.8 default makes cloth barely react), LimitAngle (deg, 0 = free), GravityZ (cm/s^2). Run: python3 Tools/Unreal/secondary_roster.py
 """
+import argparse
 import re
 from pathlib import Path
 
@@ -22,6 +23,19 @@ ANGEL = (
     + [(f"wing_{s}_00", .30, .25, .60, .70, 3, 20, G * .3) for s in "lr"]
     + [(f"hair_{n}_00", .18, .10, .65, .70, 1.5, 40, G) for n in ("side_l", "back_l", "back_r", "side_r")]
 )
+# Verified on Sparrow's default mesh, not the larger skin-shared skeleton.
+# Quiver is a single thigh-twist child; weapon/facial/single-bone hair are left authored.
+SPARROW = (
+    [("ponytail_01", .18, .10, .65, .70, 1.8, 50, G)]
+    + [(n, .18, .08, .60, .68, .8, 45, G) for n in
+       ("front_strap_01", "skirt_back_cloth_01", "skirt_cloth_l_01", "skirt_front_cloth_01", "back_tail_cloth_01")]
+    + [(n, .20, .10, .60, .65, .5, 25, G * .5) for n in ("chest_cloth_l_01", "chest_cloth_r_01")]
+)
+SPARROW_BODY = [
+    ("pelvis", None, 11), ("spine_01", "spine_03", 9), ("spine_03", "neck_01", 9.5),
+    ("thigh_l", "calf_l", 6), ("thigh_r", "calf_r", 6),
+    ("calf_l", "foot_l", 4.5), ("calf_r", "foot_r", 4.5),
+    ("upperarm_l", "lowerarm_l", 4), ("upperarm_r", "lowerarm_r", 4)]
 
 
 def body(hips, spine, chest, thigh, calf, arm):
@@ -37,16 +51,22 @@ def chains(rows):
         for r in rows) + ")"
 
 
-def colliders(rows):
+def colliders(rows, prefix="mixamorig_"):
     return "SecondaryColliders=(" + ",".join(
-        '(Bone="mixamorig_%s"%s,Radius=%g)' % (b, (',ChildBone="mixamorig_%s"' % c) if c else "", r) for b, c, r in rows) + ")"
+        '(Bone="%s%s"%s,Radius=%g)' % (prefix, b, (',ChildBone="%s%s"' % (prefix, c)) if c else "", r) for b, c, r in rows) + ")"
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--character", choices=("Champion", "Angel", "Sparrow"))
+    args = parser.parse_args()
     path = Path(__file__).resolve().parents[2] / "Config" / "DefaultGame.ini"
     text = path.read_text()
     blocks = {"Champion": chains(CHAMPION) + "," + colliders(body(11, 9, 9.5, 6, 4.5, 4)),
-              "Angel": chains(ANGEL) + "," + colliders(body(10.5, 8.5, 9, 6.5, 5, 4.5))}
+              "Angel": chains(ANGEL) + "," + colliders(body(10.5, 8.5, 9, 6.5, 5, 4.5)),
+              "Sparrow": chains(SPARROW) + "," + colliders(SPARROW_BODY, prefix="")}
+    if args.character:
+        blocks = {args.character: blocks[args.character]}
     lines = text.split("\n")
     for i, line in enumerate(lines):
         for name, block in blocks.items():

@@ -4,13 +4,14 @@ Run (editor with rendering, Town map):
   UnrealEditor Selene.uproject /Game/Selene/Maps/Town -ExecCmds="py <abs path without spaces>/simple_shots.py"  (ExecutePythonScript quits the editor after running)
 Writes PNGs to Saved/Checkpoint1/simple/ and quits the editor when done.
 """
+import json
 import os
 import time
 
 import unreal as u
 
 ROOT = u.Paths.convert_relative_path_to_full(u.Paths.project_dir())
-OUT = os.path.join(ROOT, "Saved", "Checkpoint1", "simple")
+OUT = os.environ.get("SELENE_SHOT_OUTPUT") or os.path.join(ROOT, "Saved", "Checkpoint1", "simple")
 os.makedirs(OUT, exist_ok=True)
 
 # name, eye [x east, y north, z up] metres, look-at target (layout coords, see Design/Blockout/README.md)
@@ -33,6 +34,8 @@ SHOTS = [
 _only = [x for x in os.environ.get("SELENE_SHOTS", "").split(",") if x]
 if _only:
     SHOTS = [shot for shot in SHOTS if any(shot[0].startswith(x) for x in _only)]
+if not SHOTS:
+    raise ValueError("SELENE_SHOTS did not match a capture")
 INITIAL_WAIT = 45.0  # map load, shader compile, Lumen settle
 SETTLE = 4.0  # per camera move
 WRITE_TIMEOUT = 30.0
@@ -54,6 +57,11 @@ def finish():
     with open(os.path.join(OUT, "shots.txt"), "w") as f:
         f.write("\n".join(log) + "\n")
     u.log("SIMPLE_SHOTS done: " + "; ".join(log))
+    if report := os.environ.get("SELENE_STAGE_REPORT"):
+        shots = [entry.removeprefix("ok ") for entry in log if entry.startswith("ok ")]
+        with open(report, "w") as f:
+            json.dump({"invocation": os.environ.get("SELENE_STAGE_ID"), "shots": shots,
+                       "expected": len(SHOTS), "status": "success" if shots and len(shots) == len(SHOTS) else "failed"}, f)
     u.SystemLibrary.quit_editor()
 
 

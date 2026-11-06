@@ -681,7 +681,7 @@ def main():
 
 
 if __name__ == "__main__":
-    report_path = Path(u.Paths.project_saved_dir()) / "Blockout/report.json"
+    report_path = Path(os.environ["SELENE_STAGE_REPORT"]) if os.environ.get("SELENE_STAGE_REPORT") else Path(u.Paths.project_saved_dir()) / "Blockout/report.json"
     try:
         main()
     except Exception as error:
@@ -691,5 +691,6 @@ if __name__ == "__main__":
         raise
     finally:
         report_path.parent.mkdir(parents=True, exist_ok=True)
+        REPORT["invocation"] = os.environ.get("SELENE_STAGE_ID")
         report_path.write_text(json.dumps(REPORT, indent=2) + "\n")
         u.log("Blockout report: " + str(report_path))

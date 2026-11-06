@@ -1,12 +1,17 @@
 """Retarget the template Manny locomotion onto a Mixamo-skeleton character (headless, -nullrhi is fine).
 
 Environment: SELENE_CHAR (name, e.g. Champion), SELENE_CHAR_MESH (skeletal mesh asset path).
-The mesh must face Unreal +Y like Manny (see game-asset-workflow work/repairs/_shared/normalize_character.py).
+The mesh normally faces Unreal +Y like Manny. SELENE_CHAR_POSE_YAW optionally aligns a differently
+oriented mesh in the target retarget pose (degrees about world Z; no mesh transform/scale edit).
+For this opt-in correction, SELENE_CHAR_BIND_QUAT can supply the audited mesh reference root
+quaternion as JSON [x,y,z,w], allowing regeneration without loading an existing output asset.
+Otherwise an existing MM_Idle_<name> supplies it.
 Creates under /Game/Selene/Characters/<name>: IK_Manny, IK_<name>, RTG_Manny_To_<name>, and Anims/ with
 ABP_Unarmed's idle/walk/jog anims + blend space retargeted (suffix _<name>). Writes Saved/Characters/<name>/retarget.json.
 """
 import json
 import os
+import math
 
 import unreal as u
 
@@ -102,6 +107,31 @@ def main():
     # Tripo characters bind in A/T-pose; align their chains to Manny's reference pose directions.
     pose = r.create_retarget_pose("AlignedToManny", T)
     r.set_current_retarget_pose(pose, T)
+    yaw = float(os.environ.get("SELENE_CHAR_POSE_YAW", "0"))
+    if yaw:
+        if os.environ.get("SELENE_CHAR_BIND_QUAT"):
+            values = json.loads(os.environ["SELENE_CHAR_BIND_QUAT"])
+            if len(values) != 4 or not all(math.isfinite(v) for v in values) or abs(sum(v*v for v in values)-1) > .0001:
+                raise RuntimeError("Invalid audited bind quaternion")
+            q = u.Quat(*values)
+        else:
+            idle = u.load_asset(BASE + "/Anims/MM_Idle_" + NAME)
+            if not idle:
+                raise RuntimeError("Pose-yaw alignment requires an audited bind quaternion or existing base idle")
+            opts = u.AnimPoseEvaluationOptions()
+            opts.set_editor_property("optional_skeletal_mesh", champ)
+            p = u.AnimPoseExtensions.get_anim_pose_at_time(idle, .5, opts)
+            q = u.AnimPoseExtensions.get_ref_bone_pose(p, "mixamorig_Hips", u.AnimPoseSpaces.WORLD).rotation
+        def mul(a, b):
+            x,y,z,w = a; X,Y,Z,W = b
+            return (w*X+x*W+y*Z-z*Y, w*Y-x*Z+y*W+z*X,
+                    w*Z+x*Y-y*X+z*W, w*W-x*X-y*Y-z*Z)
+        # Retarget pose deltas are local. Convert the desired component-Z turn through the bind quaternion.
+        bind = (q.x,q.y,q.z,q.w)
+        half = math.radians(yaw)/2
+        delta = mul(mul((-q.x,-q.y,-q.z,q.w), (0,0,math.sin(half),math.cos(half))), bind)
+        r.set_rotation_offset_for_retarget_pose_bone("mixamorig_Hips", u.Quat(*delta), T)
+        report["pose_yaw_alignment"] = {"world_yaw_degrees": yaw, "reference_root_quaternion": bind, "local_delta_quaternion": delta}
     r.auto_align_all_bones(T)
     report["mapping"] = {ch[0]: str(r.get_source_chain(ch[0])) for ch in report["IK_" + NAME]["chains"]}
     lib.save_loaded_asset(src)
@@ -119,8 +149,13 @@ def main():
     inputs.set_editor_property("overwrite_existing_files", True)
     made = u.IKRetargetBatchOperation.run_batch_retarget(inputs)
     report["retargeted"] = sorted(str(a.package_name) for a in made)
+    if os.environ.get("SELENE_CHAR_EXPECTED_PACKAGES"):
+        expected = sorted(json.loads(os.environ["SELENE_CHAR_EXPECTED_PACKAGES"]))
+        if report["retargeted"] != expected:
+            raise RuntimeError("Retarget output does not match exact canonical package names")
     for a in made:
-        lib.save_asset(str(a.package_name), only_if_is_dirty=False)
+        if not lib.save_asset(str(a.package_name), only_if_is_dirty=False):
+            raise RuntimeError("Could not save " + str(a.package_name))
     report["status"] = "success" if made else "failed: batch retarget produced nothing"
 
 
@@ -132,7 +167,8 @@ except Exception as exc:  # report, then fail the commandlet
     report["traceback"] = traceback.format_exc()
 out = os.path.join(ROOT, "Saved", "Characters", NAME)
 os.makedirs(out, exist_ok=True)
-with open(os.path.join(out, "retarget.json"), "w") as f:
+report["invocation"] = os.environ.get("SELENE_STAGE_ID")
+with open(os.environ.get("SELENE_STAGE_REPORT") or os.path.join(out, "retarget.json"), "w") as f:
     json.dump(report, f, indent=2)
 u.log("CHARACTER_RETARGET " + report["status"])
 if report["status"] != "success":

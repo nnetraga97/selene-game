@@ -633,6 +633,15 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 		else if (T < 7.f) {}
 		else if (T < 10.5f) { SetMovementPace(ESelenePace::Jog); AddMovementInput(Dir); }
 		else if (T < 10.6f) { Jump(); }
+		// Unattended captures: stray mouse deltas drift the pitch until the boom sits under the feet.
+		// Hold an ordinary over-the-shoulder view; yaw stays free so the camera still follows.
+		if (AController* PC = GetController())
+		{
+			FRotator View = PC->GetControlRotation();
+			View.Pitch = -15.f;
+			View.Roll = 0.f;
+			PC->SetControlRotation(View);
+		}
 	}
 	else
 	{

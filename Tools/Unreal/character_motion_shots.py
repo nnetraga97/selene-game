@@ -5,6 +5,7 @@ Run: UnrealEditor Selene.uproject /Game/Selene/Maps/Town -ExecCmds="py <abs path
 Writes Saved/Characters/<name>/motion/*.png and quits.
 """
 import math
+import json
 import os
 import time
 
@@ -12,7 +13,7 @@ import unreal as u
 
 ROOT = u.Paths.convert_relative_path_to_full(u.Paths.project_dir())
 NAME = os.environ["SELENE_CHAR"]
-OUT = os.path.join(ROOT, "Saved", "Characters", NAME, "motion")
+OUT = os.environ.get("SELENE_SHOT_OUTPUT") or os.path.join(ROOT, "Saved", "Characters", NAME, "motion")
 os.makedirs(OUT, exist_ok=True)
 CHAMP = os.environ["SELENE_CHAR_MESH"]
 MANNY = "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple"
@@ -66,6 +67,11 @@ def finish():
     with open(os.path.join(OUT, "shots.txt"), "w") as f:
         f.write("\n".join(log) + "\n")
     u.log("CHARACTER_MOTION done: " + "; ".join(log))
+    if report := os.environ.get("SELENE_STAGE_REPORT"):
+        shots = [entry.removeprefix("ok ") for entry in log if entry.startswith("ok ")]
+        with open(report, "w") as f:
+            json.dump({"invocation": os.environ.get("SELENE_STAGE_ID"), "shots": shots,
+                       "expected": len(SHOTS), "status": "success" if shots and len(shots) == len(SHOTS) else "failed"}, f)
     u.SystemLibrary.quit_editor()
 
 
