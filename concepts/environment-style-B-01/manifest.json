@@ -1,0 +1,25 @@
+{
+  "tool": "built-in image_gen",
+  "images": [
+    {
+      "title": "1 \u2014 Main street, soft cinematic daylight",
+      "file": "01-daylight-main-street.png",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-f6ee96ea-ea67-48c0-ae71-5cf3d88ec8dc.png",
+      "references": [
+        "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/concepts/character-style-study-01/B-soft-cinematic.png",
+        "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/concepts/town-style-study-01/02-main-street.png"
+      ],
+      "sha256": "1d064eb37a3c087f928fdbadab531cc2dcbeb4be35f147fd96edbebe4b63a5d3"
+    },
+    {
+      "title": "2 \u2014 Town square, soft cinematic dusk",
+      "file": "02-dusk-town-square.png",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-1fac80c9-5189-422e-bb43-68060c6312a8.png",
+      "references": [
+        "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/concepts/character-style-study-01/B-soft-cinematic.png",
+        "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/concepts/town-style-study-01/04-town-square-night.png"
+      ],
+      "sha256": "821efd21f0cc93d3ab50c71ec66b67bde0377295ee9fdd359a1d0d63ae3efc0b"
+    }
+  ]
+}

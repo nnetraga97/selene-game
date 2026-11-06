@@ -1,0 +1,38 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/concepts/town-style-study-01/02-main-street.png",
+  "images": [
+    {
+      "title": "A \u2014 Bold cel shading",
+      "file": "A-bold-cel.png",
+      "width": 1672,
+      "height": 941,
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-6f1e8b2e-f32e-4193-861c-013893e04427.png",
+      "sha256": "ac78aac1d75a866da69aba7b9f9af5041d3554df4d1be04d5763312816fe901b"
+    },
+    {
+      "title": "B \u2014 Soft cinematic anime",
+      "file": "B-soft-cinematic.png",
+      "width": 1672,
+      "height": 941,
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-1751ea7a-9d7c-4f3d-9f68-eb364d1779c2.png",
+      "sha256": "3f983060e43c972ff13219c23dab4c21157dbd60a799043bb87a99db3dd2b2c7"
+    },
+    {
+      "title": "C \u2014 Hand-drawn anime",
+      "file": "C-hand-drawn.png",
+      "width": 1672,
+      "height": 941,
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-18643205-6e64-49c0-8dce-745bf6fdcebe.png",
+      "sha256": "05ea2de28277945b575200797d8cef29e854bc4f6164c54e471f619174898bac"
+    },
+    {
+      "title": "D \u2014 Dimensional anime",
+      "file": "D-dimensional-anime.png",
+      "width": 1672,
+      "height": 941,
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-4a17ed81-540d-40bc-b591-4d57afcecc0a.png",
+      "sha256": "7b589974fcfd6b71d8f10b56c08c83c91270b816db1c1afba0e3b013133987aa"
+    }
+  ]
+}

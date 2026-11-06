@@ -1,0 +1,37 @@
+{
+  "tool": "built-in image_gen",
+  "images": [
+    {
+      "name": "01-town-overview",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-c9adf68e-ee00-43b6-9d94-6ea27722074b.png",
+      "file": "01-town-overview.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ebec3ccd6020a862767d2601a62cf8cb68ba95cf8755c44d4f2cfc6c4866ecd2"
+    },
+    {
+      "name": "02-main-street",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-7f80202e-6bdc-46b0-a80f-834b1a53f700.png",
+      "file": "02-main-street.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ef04df36b78d397dda1318b0b1291a887421c9fb7aafb437a14bb10617ebaa41"
+    },
+    {
+      "name": "03-residential-lane",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-f0fc6b98-920a-4b12-8f8b-ff627e0c6b31.png",
+      "file": "03-residential-lane.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ede0a30ff6953604894670c6eb0441806cab262ae9b1e88a2e42a7245c6194d3"
+    },
+    {
+      "name": "04-town-square-night",
+      "source": "/Users/nicknetraganti/.codex/generated_images/01a1ad3f-c211-7960-a9e3-a64b9ced8255/exec-26f39dce-f25a-45e1-a1f2-d2d2ef698bbb.png",
+      "file": "04-town-square-night.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "13918f37ba5d8d123bcb262eefe2d81894376981d203fe7fd8e3d085e9e9205e"
+    }
+  ]
+}

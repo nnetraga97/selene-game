@@ -1,0 +1,19 @@
+# Unreal build output and local state
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+.vs/
+.vscode/
+.idea/
+*.xcworkspace
+*.xcodeproj
+*.sln
+*.code-workspace
+
+# Delivered source copies stay in the asset-workflow archive; only shipped Content/ and provenance are committed
+SourceArt/**/*.glb
+SourceArt/**/*.fbx
+
+# OS
+.DS_Store
