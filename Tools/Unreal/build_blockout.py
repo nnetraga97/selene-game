@@ -62,6 +62,9 @@ def box(name, p, size, area, angle=0, material=None, collision=True, pitch=0):
     component = actor.static_mesh_component
     component.set_static_mesh(CUBE)
     component.set_material(0, material or MATERIALS.get(area, MATERIALS["neutral"]))
+    # Set the named profile: a bare set_collision_enabled() is overridden on reload by the
+    # component's named profile (BlockAll), so non-colliding glass came back colliding.
+    component.set_collision_profile_name("BlockAll" if collision else "NoCollision")
     component.set_collision_enabled(
         u.CollisionEnabled.QUERY_AND_PHYSICS
         if collision
