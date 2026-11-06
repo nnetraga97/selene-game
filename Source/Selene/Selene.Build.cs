@@ -17,7 +17,10 @@ public class Selene : ModuleRules
 			"AIModule",
 			"UMG",
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"RenderCore",
+			"RHI",
+			"Json"
 		});
 
 		PublicIncludePaths.Add("Selene");

@@ -22,3 +22,6 @@ SourceArt/**/*.fbx
 Packaged/
 *.blend1
 Tools/**/__pycache__/
+Build/**/*.PackageVersionCounter
+# Reference/review sheets live in the asset-workflow archive, not the game repo
+Design/*-reference-sheet.png
