@@ -4,6 +4,8 @@
 #include "SeleneCharacter.h"
 #include "SeleneCharacterSettings.h"
 #include "AnimNode_KawaiiPhysics.h"
+#include "AnimNodes/AnimNode_Slot.h"
+#include "Animation/AnimMontage.h"
 #include "Animation/AnimNodeSpaceConversions.h"
 #include "Animation/AnimSingleNodeInstanceProxy.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -66,35 +68,31 @@ struct FSeleneSecondaryProxy : public FAnimSingleNodeInstanceProxy
 
 	virtual FAnimNode_Base* GetCustomRootNode() override
 	{
-		return Chains.IsEmpty() ? nullptr : &ToLocal;
+		return Chains.IsEmpty() ? static_cast<FAnimNode_Base*>(&DefaultSlot) : &ToLocal;
 	}
 
 	virtual void GetCustomNodes(TArray<FAnimNode_Base*>& OutNodes) override
 	{
-		if (Chains.IsEmpty()) return;
-		OutNodes.Add(&ToLocal);
-		OutNodes.Add(&ToComponent);
-		for (const TUniquePtr<FAnimNode_KawaiiPhysics>& Node : Chains) OutNodes.Add(Node.Get());
+		if (!Chains.IsEmpty())
+		{
+			OutNodes.Add(&ToLocal);
+			OutNodes.Add(&ToComponent);
+			for (const TUniquePtr<FAnimNode_KawaiiPhysics>& Node : Chains) OutNodes.Add(Node.Get());
+		}
+		OutNodes.Add(&DefaultSlot);
 		OutNodes.Add(&SingleNode);
 	}
 
 	virtual bool Evaluate(FPoseContext& Output) override
 	{
 		// false -> the engine evaluates our root node graph (which pulls SingleNode through the links).
-		return Chains.IsEmpty() ? FAnimSingleNodeInstanceProxy::Evaluate(Output) : false;
+		return false;
 	}
 
 	virtual void UpdateAnimationNode(const FAnimationUpdateContext& InContext) override
 	{
-		if (Chains.IsEmpty())
-		{
-			FAnimSingleNodeInstanceProxy::UpdateAnimationNode(InContext);
-		}
-		else
-		{
-			// Updates the graph from the root (increments UpdateCounter like the single-node path does).
-			FAnimInstanceProxy::UpdateAnimationNode(InContext);
-		}
+		// Traverse the slot even without chains; the single-node shortcut would bypass its weights.
+		FAnimInstanceProxy::UpdateAnimationNode(InContext);
 	}
 
 	/** Game-thread debug read: largest |simulated - animated| bone offset per chain (racy, debug only). */
@@ -115,6 +113,10 @@ struct FSeleneSecondaryProxy : public FAnimSingleNodeInstanceProxy
 private:
 	void BuildGraph(UAnimInstance* InAnimInstance)
 	{
+		DefaultSlot.SlotName = FAnimSlotGroup::DefaultSlotName;
+		DefaultSlot.bAlwaysUpdateSourcePose = true;
+		DefaultSlot.Source.SetLinkNode(&SingleNode);
+
 		const ASeleneCharacter* Character = Cast<ASeleneCharacter>(InAnimInstance->GetOwningActor());
 		const USkeletalMeshComponent* Component = InAnimInstance->GetSkelMeshComponent();
 		const USkeletalMesh* Mesh = Component ? Component->GetSkeletalMeshAsset() : nullptr;
@@ -182,8 +184,8 @@ private:
 		}
 		if (Chains.IsEmpty()) return;
 
-		// SingleNode -> LocalToComponent -> Kawaii[0] -> ... -> Kawaii[n-1] -> ComponentToLocal (root)
-		ToComponent.LocalPose.SetLinkNode(&SingleNode);
+		// SingleNode -> DefaultSlot -> LocalToComponent -> Kawaii[] -> ComponentToLocal (root)
+		ToComponent.LocalPose.SetLinkNode(&DefaultSlot);
 		Chains[0]->ComponentPose.SetLinkNode(&ToComponent);
 		for (int32 i = 1; i < Chains.Num(); ++i) Chains[i]->ComponentPose.SetLinkNode(Chains[i - 1].Get());
 		ToLocal.ComponentPose.SetLinkNode(Chains.Last().Get());
@@ -191,6 +193,7 @@ private:
 			*Entry.Name.ToString(), Chains.Num(), Spheres.Num(), Capsules.Num());
 	}
 
+	FAnimNode_Slot DefaultSlot;
 	FAnimNode_ConvertComponentToLocalSpace ToLocal;
 	FAnimNode_ConvertLocalToComponentSpace ToComponent;
 	TArray<TUniquePtr<FAnimNode_KawaiiPhysics>> Chains;
@@ -200,6 +203,39 @@ private:
 FAnimInstanceProxy* USeleneSecondaryAnimInstance::CreateAnimInstanceProxy()
 {
 	return new FSeleneSecondaryProxy(this);
+}
+
+FVector USeleneSecondaryAnimInstance::ProbeSingleNodeComponent(USkeletalMeshComponent* Component, float DeltaSeconds)
+{
+#if WITH_EDITOR
+	if (Component)
+	{
+		if (DeltaSeconds >= 0.f)
+		{
+			Component->TickAnimation(DeltaSeconds, false);
+			Component->RefreshBoneTransforms();
+		}
+		if (const UAnimSingleNodeInstance* Instance = Component->GetSingleNodeInstance())
+		{
+			return FVector(Instance->GetCurrentTime(), Instance->GetPlayRate(), Instance->IsPlaying() ? 1.f : 0.f);
+		}
+	}
+#endif
+	return FVector::ZeroVector;
+}
+
+void USeleneSecondaryAnimInstance::Montage_Advance(float DeltaTime)
+{
+	if (Cast<UAnimMontage>(GetAnimationAsset()))
+	{
+		Super::Montage_Advance(DeltaTime);
+	}
+	else
+	{
+		// Single-node's montage-preview override copies montage time into the base player.
+		// Slot overlays must leave the sequence/blend-space clock running independently.
+		UAnimInstance::Montage_Advance(DeltaTime);
+	}
 }
 
 void USeleneSecondaryAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
