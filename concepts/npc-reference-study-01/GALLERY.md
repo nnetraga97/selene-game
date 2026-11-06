@@ -10,3 +10,12 @@ Two adult NPC concepts, pending user feedback. Generated in parallel with built-
 
 ![Transit technician](02-npc-man.png)
 
+## 3. Clock-tower and archive keeper
+
+![Clock-tower and archive keeper](03-npc-clockkeeper.png)
+
+## 4. Scooter courier
+
+![Scooter courier](04-npc-courier.png)
+
+Images 3 and 4 were generated with orchestrator generate_image in a near-A-pose at eye level with natural proportions, to suit 3D generation and rigging. Original designs. Design traits (one silhouette hook, restrained palette with a single saturated accent, one signature accessory, readable personality) were drawn from what makes the most popular Zenless Zone Zero and Honkai: Star Rail characters appealing; no existing character's look, name or outfit was copied. Pending user feedback.
