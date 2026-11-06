@@ -1,6 +1,11 @@
 #include "SelenePlayerController.h"
 
 #include "Selene.h"
+#include "SSelenePauseMenu.h"
+#include "Perf/SelenePerfRouteSubsystem.h"
+#include "Engine/GameViewportClient.h"
+#include "Engine/World.h"
+#include "HAL/IConsoleManager.h"
 #include "SeleneCharacter.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -9,6 +14,61 @@
 #include "InputActionValue.h"
 #include "InputMappingContext.h"
 #include "InputModifiers.h"
+
+namespace
+{
+	FAutoConsoleCommandWithWorldAndArgs MenuCommand(
+		TEXT("selene.Menu"), TEXT("Toggle the local pause menu."),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
+		{
+			if (!World) return;
+			for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+			{
+				ASelenePlayerController* PC = Cast<ASelenePlayerController>(It->Get());
+				if (PC && PC->IsLocalPlayerController())
+				{
+					PC->TogglePauseMenu();
+					return;
+				}
+			}
+		}), ECVF_Default);
+}
+
+void ASelenePlayerController::TogglePauseMenu()
+{
+	if (PauseMenu.IsValid())
+	{
+		ClosePauseMenu();
+		return;
+	}
+	// The subsystem is created only for PerfRoute processes; block even during warmup/startup.
+	if (!IsLocalPlayerController() || !GetWorld() ||
+		GetWorld()->GetSubsystem<USelenePerfRouteSubsystem>() || IsPaused()) return;
+	UGameViewportClient* Viewport = GetWorld()->GetGameViewport();
+	if (!Viewport || !SetPause(true)) return;
+
+	EndJump();
+	EndSprint();
+	FlushPressedKeys();
+	SAssignNew(PauseMenu, SSelenePauseMenu).Controller(this);
+	Viewport->AddViewportWidgetContent(PauseMenu.ToSharedRef(), 100);
+	bShowMouseCursor = true;
+	FInputModeUIOnly Mode;
+	Mode.SetWidgetToFocus(PauseMenu);
+	Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(Mode);
+}
+
+void ASelenePlayerController::ClosePauseMenu()
+{
+	if (!PauseMenu.IsValid()) return;
+	if (!SetPause(false)) return;
+	if (GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(PauseMenu.ToSharedRef());
+	PauseMenu.Reset();
+	bShowMouseCursor = false;
+	SetInputMode(FInputModeGameOnly());
+}
 
 void ASelenePlayerController::CreateRuntimeInput()
 {
@@ -31,6 +91,10 @@ void ASelenePlayerController::CreateRuntimeInput()
 	SprintAction = MakeAction(TEXT("Sprint"), EInputActionValueType::Boolean);
 	WalkAction = MakeAction(TEXT("WalkToggle"), EInputActionValueType::Boolean);
 	CharacterAction = MakeAction(TEXT("CharacterCycle"), EInputActionValueType::Boolean);
+	MenuAction = MakeAction(TEXT("MenuToggle"), EInputActionValueType::Boolean);
+	MenuAction->bTriggerWhenPaused = true;
+	RuntimeMappingContext->MapKey(MenuAction, EKeys::Escape);
+	RuntimeMappingContext->MapKey(MenuAction, EKeys::Gamepad_Special_Right);
 	CameraAction = MakeAction(TEXT("CameraToggle"), EInputActionValueType::Boolean);
 
 	auto MapMovementKey = [this](FKey Key, bool bNegate, bool bSwizzle)
@@ -97,6 +161,7 @@ void ASelenePlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(WalkAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleWalk);
 	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::CycleCharacter);
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
+	EnhancedInput->BindAction(MenuAction, ETriggerEvent::Started, this, &ASelenePlayerController::TogglePauseMenu);
 	AddRuntimeMappingContext();
 }
 
@@ -153,6 +218,12 @@ void ASelenePlayerController::OnUnPossess()
 
 void ASelenePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	if (PauseMenu.IsValid())
+	{
+		if (GetWorld() && GetWorld()->GetGameViewport())
+			GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(PauseMenu.ToSharedRef());
+		PauseMenu.Reset();
+	}
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{

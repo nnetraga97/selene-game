@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SelenePlayerController.generated.h"
 
+class SSelenePauseMenu;
 class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
@@ -13,6 +14,10 @@ UCLASS()
 class SELENE_API ASelenePlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	void TogglePauseMenu();
+	void ClosePauseMenu();
 
 protected:
 	virtual void BeginPlay() override;
@@ -60,6 +65,11 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> CharacterAction;
+
+	TSharedPtr<SSelenePauseMenu> PauseMenu;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> MenuAction;
 
 	bool bSprintHeld = false;
 	bool bWalkToggled = false;
