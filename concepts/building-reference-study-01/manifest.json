@@ -1,0 +1,72 @@
+{
+  "tool": "orchestrator generate_image (route image \u2192 openai.luna, gpt-6-luna)",
+  "created": "2026-11-05",
+  "status": "pending user review",
+  "images": [
+    {
+      "file": "01-corner-cafe.png",
+      "title": "Corner caf\u00e9",
+      "area": "Commercial area",
+      "width": 1312,
+      "height": 1199,
+      "sha256": "4a81f428ab0dad2200b7733d28054cb8f41192ed2037882fd145a843ae4b9afb",
+      "orch_job": "9f22cdb7b96a42319ed366e58546dedc",
+      "references": [
+        "../environment-style-B-01/01-daylight-main-street.png",
+        "../asset-reference-study-01/01-vending-machine-v2.png"
+      ]
+    },
+    {
+      "file": "02-terraced-townhouses.png",
+      "title": "Terraced townhouses",
+      "area": "Residential area (hillside)",
+      "width": 1672,
+      "height": 941,
+      "sha256": "32177bc4c6674780613a1527d74cc8b99556f9f076e3a8820a69640917b275b7",
+      "orch_job": "903ffac15f9440d8a0d0d069b7623ae8",
+      "references": [
+        "../town-style-study-01/03-residential-lane.png",
+        "../asset-reference-study-01/01-vending-machine-v2.png"
+      ]
+    },
+    {
+      "file": "03-curved-apartment.png",
+      "title": "Curved-corner apartment block",
+      "area": "Residential area (mid-rise)",
+      "width": 1178,
+      "height": 1335,
+      "sha256": "98eb3b6c396e1144f629aa04f399818ca37d1b6aac9a3e27844c4713e6e27439",
+      "orch_job": "de5cc77586d84eb7a5382ee0abb9065f",
+      "references": [
+        "../town-style-study-01/01-town-overview.png",
+        "../asset-reference-study-01/01-vending-machine-v2.png"
+      ]
+    },
+    {
+      "file": "04-workshop.png",
+      "title": "Vehicle and machine workshop",
+      "area": "Industrial area",
+      "width": 1609,
+      "height": 977,
+      "sha256": "5920776118a55ceda11f1cabca0b890597238324a6ea882871483b0f0a13084a",
+      "orch_job": "a0b26c0c0f824553b9428780601e1fb9",
+      "references": [
+        "../environment-style-B-01/01-daylight-main-street.png",
+        "../asset-reference-study-01/01-vending-machine-v2.png"
+      ]
+    },
+    {
+      "file": "05-plaza-clock-hall.png",
+      "title": "Clock tower and transit hall",
+      "area": "Central plaza landmark",
+      "width": 1312,
+      "height": 1199,
+      "sha256": "e060c27812dc9fb4903a1e682c363c30123aaf27bbc3dd5a0e05ed8cde4f3015",
+      "orch_job": "a484c1b9105c4583a59eb9954f701fb5",
+      "references": [
+        "../environment-style-B-01/02-dusk-town-square.png",
+        "../asset-reference-study-01/01-vending-machine-v2.png"
+      ]
+    }
+  ]
+}

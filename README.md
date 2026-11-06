@@ -6,6 +6,8 @@ This folder contains the game design documents and visual concepts.
 - [Art direction](docs/ART-DIRECTION.md)
 - [Reference sources](docs/REFERENCE-SOURCES.md)
 - [Latest asset concepts](concepts/asset-reference-study-01/REVISIONS.md)
+- [Building concepts](concepts/building-reference-study-01/GALLERY.md)
+- [NPC concepts](concepts/npc-reference-study-01/GALLERY.md)
 - [Environment concepts](concepts/environment-style-B-01/GALLERY.md)
 - [Character studies](concepts/character-style-study-01/GALLERY.md)
 - [Town concepts](concepts/town-style-study-01/GALLERY.md)
