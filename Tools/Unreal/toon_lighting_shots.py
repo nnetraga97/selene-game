@@ -59,8 +59,7 @@ log = []
 
 def set_hour(h):
     if tod:
-        tod.set_editor_property("hour", h)
-        tod.rerun_construction_scripts()
+        tod.set_hour(h)  # SeleneTimeOfDay::SetHour updates the lights directly
 
 
 def stage(shot):

@@ -1,0 +1,45 @@
+{
+  "asset": "wall-ac-unit-r2",
+  "run": "20261106T053329-53c0bf",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.528659+00:00",
+  "files": {
+    "glb": {
+      "file": "wall-ac-unit-r2.glb",
+      "sha256": "f260b23babd512de4c248eb6d33a3cfa52331c32b513eff03921a77b4abb4e5d",
+      "bytes": 2503008
+    }
+  },
+  "source": {
+    "source_cli_task": "ef895447-abff-4674-b024-1a015f25f663",
+    "downloaded_at": "2026-11-06T05:11:44.603561+00:00",
+    "sha256": "65f51947b122e3fadf0339f61f1e12474bc554e17c6a05ad851423f7a1b31948",
+    "bytes": 2555640,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:16.374463+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): unit, fan grille and wall brackets read correctly. Overrides Sol needs-work (warped grille/mounts, muddy vents) as close-range only for a wall-mounted prop."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T053147-a77455",
+    "change": "Normalize placement to the specified 0.6m height with base and origin at Z=0, preserving proportions and surface detail",
+    "candidate_sha256": "65497b4b3ff2997a6fe73a249e3f3369289ce2dfd47ec3700f10aa42c62452ec",
+    "candidate_name": "normalized.glb",
+    "at": "2026-11-06T05:33:29.262061+00:00",
+    "repair_files": [
+      {
+        "file": "normalize.py",
+        "sha256": "53e176c13f86c9da81afd7f9c873ff2693fed04021870e8a0399cf1cc9a1fd20"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/wall-ac-unit-r2/runs/20261106T053329-53c0bf",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

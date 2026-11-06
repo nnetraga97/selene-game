@@ -47,6 +47,7 @@ def main():
 
     mat = asset("M_Character_Toon", u.Material, u.MaterialFactoryNew())
     mel.delete_all_material_expressions(mat)
+    mat.set_editor_property("two_sided", True)  # Tripo cloth/ribbons are single sheets (glTF doubleSided)
     toon = mel.create_material_expression(mat, u.MaterialExpressionSubstrateToonBSDF, -300, 0)
     toon.set_editor_property("toon_profile", profile)
 

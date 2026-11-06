@@ -24,7 +24,7 @@ SIZES = {
     'wall-ac-unit-r2': (.62, .82, .60),
     'wall-lantern-r2': (.20, .36, .48),
     'concrete-planter': (1.2, 1.2, .6),
-    'street-tree': (5., 5., 5.),  # full crown, not merely trunk
+    'street-tree': (5., 5., 6.2),  # full assembly: trunk + leaf-card crown, 6.0 m as imported
     'bistro-table': (.75, .75, .75),
     'pendant-lamp': (.6, .6, .6),
 }

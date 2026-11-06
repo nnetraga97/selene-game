@@ -1,0 +1,45 @@
+{
+  "asset": "clock-hall",
+  "run": "20261106T081433-b94b95",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:35:20.691816+00:00",
+  "files": {
+    "glb": {
+      "file": "clock-hall.glb",
+      "sha256": "8638f0e7351b5a996fd51bf7670a6f3d9f6b8a0fc56046c0badd226c985294d1",
+      "bytes": 17785456
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/a5ede14e-b140-4871-bc4a-0b23cda11de5",
+    "downloaded_at": "2026-11-06T08:13:45.483642+00:00",
+    "sha256": "327bc003019f0b19bee54387b7c56d16ea3bc29674cd720f703bbb2c39f3750d",
+    "bytes": 17782156,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T08:35:20.618314+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K clock tower + transit hall, scale-only run (22 m, base Z=0, centred, no topology edits). Silhouette, palette, clock face, arched entrance, banners and planters match the reference. Known: raised lid on the hall roof (Sol rounds 1-2; Astra's roof repair db6aee did not improve it, so the unmodified geometry is kept); glass not separable; softened edges. Roof top barely visible from plaza eye level. Exterior shell only."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T081345-7623f2",
+    "change": "Uniform scale to 22 m height; footprint bounding-box centre pivot at origin and base at Z=0; apply transforms; no topology or material edits",
+    "candidate_sha256": "98311c167b50b53056b72a8dd8f870a68d23578091697618ef837a0fb37391d4",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T08:14:33.630632+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/clock-hall/runs/20261106T081433-b94b95",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

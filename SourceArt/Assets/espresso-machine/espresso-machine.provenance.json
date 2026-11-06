@@ -1,0 +1,45 @@
+{
+  "asset": "espresso-machine",
+  "run": "20261106T050916-a29c48",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:17:10.283439+00:00",
+  "files": {
+    "glb": {
+      "file": "espresso-machine.glb",
+      "sha256": "cd4e2472ed92449239850929db63b6a08ce52409aee37d18e7fd79dc38edcb28",
+      "bytes": 3765908
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/6d433a52-a646-4606-b462-9e891fbe43f9",
+    "downloaded_at": "2026-11-06T05:05:16.790704+00:00",
+    "sha256": "55f3c54201b05fd4552a6f9ebb7a3bf52d74ca45c7640dcf19ffaf1b9baeb07d",
+    "bytes": 3959304,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:15:14.467092+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: renders checked. Twin-group silhouette, palette, portafilters with coral handles, cup rail and cleaned steel fascia read correctly; height 0.48 m. Remaining: soft grilles/fittings/controls at close range. Overrides Sol needs-work (hero close-up precision) for stylized caf\u00e9 counter use; final judgement at R1 counter distance under caf\u00e9 lighting in the engine check."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T050651-8dd3bb",
+    "change": "Assign clean neutral steel material to 522 broad front-control-fascia faces to remove blotchy texture response; preserve geometry, normals, knobs and trim",
+    "candidate_sha256": "5806172c46fb93c0bd899c38d5c60a8bc6f57a5d2470ad947af75618e1cd77d5",
+    "candidate_name": "clean-fascia.glb",
+    "at": "2026-11-06T05:09:16.159465+00:00",
+    "repair_files": [
+      {
+        "file": "clean_fascia_steel.py",
+        "sha256": "59ad00a6dd40824e10e147616bb46739dfaed5a637ef130745606692ac158e4f"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/espresso-machine/runs/20261106T050916-a29c48",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

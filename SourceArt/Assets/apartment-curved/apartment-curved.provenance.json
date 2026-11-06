@@ -1,0 +1,45 @@
+{
+  "asset": "apartment-curved",
+  "run": "20261106T082303-60d79f",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:36:26.413935+00:00",
+  "files": {
+    "glb": {
+      "file": "apartment-curved.glb",
+      "sha256": "78de512cef6a8279181fad614f4f83bc4d8938a5ff1de7bfa89e930a132ada66",
+      "bytes": 18379756
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/b71ccf16-b0e2-4328-8031-ddffd60fe8b1",
+    "downloaded_at": "2026-11-06T08:21:41.511321+00:00",
+    "sha256": "5ff01531865c421e3e71e4b146aabc6a98d0a07b0d4d7c7d3dd0bcfa9d9284a0",
+    "bytes": 18376868,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T08:36:26.335229+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K curved-corner apartment, scale-only run (18 m, base Z=0, centred, no topology edits). Curved bays, stacked balconies, coral canopy, pipes, AC units and rooftop tanks match the reference; softened edges, glass not separate. Taken before Astra's Sol loop finished, for the playable build; may be swapped for Astra's final pick. Exterior shell only."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T082141-fab234",
+    "change": "Uniform scale to 18 m height; footprint bounding-box centre pivot at origin and base at Z=0; apply transforms; no topology or material edits",
+    "candidate_sha256": "402ef5a2aa88ad5c3f62e87bf45d9e46ca7466448b50f7c2f851e82f64dbcc75",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T08:23:03.695032+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/apartment-curved/runs/20261106T082303-60d79f",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

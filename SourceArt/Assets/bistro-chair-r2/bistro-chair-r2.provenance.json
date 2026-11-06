@@ -1,0 +1,45 @@
+{
+  "asset": "bistro-chair-r2",
+  "run": "20261106T051843-d13fb7",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.260428+00:00",
+  "files": {
+    "glb": {
+      "file": "bistro-chair-r2.glb",
+      "sha256": "35f1aa88c620054cda74465d050a1244218026296ddc81c16aef6c1876836620",
+      "bytes": 2661088
+    }
+  },
+  "source": {
+    "source_cli_task": "febf7d18-6d33-446b-9868-42748112370a",
+    "downloaded_at": "2026-11-06T05:10:41.568183+00:00",
+    "sha256": "99d183b3e7054bfeaab8b58ff3387c9596965e357b8a3aa20d361f77efa23f55",
+    "bytes": 2729808,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:16.107601+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): bent-metal coral chair reads correctly, scale/pivot fixed, within 12k tris. Sol accept-local concurs."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T051650-262c64",
+    "change": "Ground chair geometry at Z=0 and place its pivot at the floor center, preserving the corrected size and shape.",
+    "candidate_sha256": "d91b9ac01ea9ed3421bb4f2dcb3d523adff4a8b8418808cdc7672c3a4e49ef25",
+    "candidate_name": "round2-ground.glb",
+    "at": "2026-11-06T05:18:43.612056+00:00",
+    "repair_files": [
+      {
+        "file": "round2-ground.py",
+        "sha256": "f2b2f3f9b3191dc179033b5d15430a64c1a629d82e48bd8ca9f6628689fe41b1"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/bistro-chair-r2/runs/20261106T051843-d13fb7",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

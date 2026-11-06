@@ -102,19 +102,26 @@ def restore_blockout(actor):
     states = [t for t in tags if t.startswith(STATE)]
     if not states:
         return
+    actor.modify()
+    if actor.root_component: actor.root_component.modify()
     old = json.loads(states[0][len(STATE):])
     actor.set_actor_hidden_in_game(old['hidden'])
     actor.set_is_temporarily_hidden_in_editor(old['editor_hidden'])
     actor.set_actor_enable_collision(old['collision'])
+    if actor.root_component: actor.root_component.set_visibility(True, True)
     actor.tags = [u.Name(t) for t in tags if not t.startswith(STATE)]
 
 
 def hide_blockout(actor):
-    old = dict(hidden=actor.is_hidden(), editor_hidden=actor.is_temporarily_hidden_in_editor(), collision=actor.get_actor_enable_collision())
+    actor.modify()  # mark the external actor package dirty so the change is saved
+    if actor.root_component: actor.root_component.modify()
+    old = dict(hidden=bool(actor.get_editor_property('hidden')), editor_hidden=actor.is_temporarily_hidden_in_editor(), collision=actor.get_actor_enable_collision())
     actor.tags = list(actor.tags)+[u.Name(STATE+json.dumps(old,separators=(',',':')))]
     actor.set_actor_hidden_in_game(True)
     actor.set_is_temporarily_hidden_in_editor(True)
     actor.set_actor_enable_collision(False)
+    # Hidden-in-game alone is not saved for editor views; component visibility is saved and applies everywhere.
+    if actor.root_component: actor.root_component.set_visibility(False, True)
     REPORT['hidden_blockout_actors'].append(actor.get_actor_label())
 
 

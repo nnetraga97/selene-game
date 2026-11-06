@@ -1,0 +1,38 @@
+{
+  "asset": "pendant-lamp",
+  "run": "20261106T072659-f05a4a",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:07:36.619576+00:00",
+  "files": {
+    "glb": {
+      "file": "pendant-lamp.glb",
+      "sha256": "b1431b3e6cfca0b7765ba040a9e94ac3dfc4b5165e11ec7784af4b2037e5ddbd",
+      "bytes": 47164
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "pendant-lamp.blend",
+      "blend_sha256": "4fa132e099b4c361b1eac73e58cd1c072a67c07c794dc57a4b178a44bfdce3be",
+      "script": "build_pendant-lamp.py",
+      "script_sha256": "a2c1df8862d3302a358d8d3ea409f61d8fd71c35c6f02318ff3f06dc09d06fe3"
+    },
+    "downloaded_at": "2026-11-06T07:26:50.229458+00:00",
+    "sha256": "11f2a9f0c042ee6369b4f612bc4ce6c82ca06bd18ce8a031316ac7c21847afb1",
+    "bytes": 47160,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T07:32:47.528674+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero/front renders): coral enamel dome, cord and ceiling cap, 0.45 m, separate emissive slot. Sol review unavailable; Claude accepts."
+    }
+  ],
+  "lineage": null,
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/pendant-lamp/runs/20261106T072659-f05a4a",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}
