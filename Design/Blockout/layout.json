@@ -488,14 +488,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -68.113,
-          -44.243
+          -72.238,
+          -43.209
         ],
         "size": [
-          16,
-          16
+          12,
+          14
         ],
-        "rotation": 225
+        "rotation": 214.674
       },
       "storeys": 2,
       "base_z": 0,
@@ -508,16 +508,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -41.243,
-          -71.113
+          -55.237,
+          -72.061
         ],
         "size": [
           16,
-          16
+          18
         ],
-        "rotation": 225
+        "rotation": 214.674
       },
-      "storeys": 2,
+      "storeys": 3,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -528,14 +528,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -83.669,
-          -59.799
+          -91.986,
+          -55.514
         ],
         "size": [
-          16,
-          16
+          17,
+          18
         ],
-        "rotation": 225
+        "rotation": 225.0
       },
       "storeys": 3,
       "base_z": 0,
@@ -548,16 +548,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -56.799,
-          -86.669
+          -70.838,
+          -80.046
         ],
         "size": [
-          16,
-          16
+          11,
+          12
         ],
-        "rotation": 225
+        "rotation": 225.0
       },
-      "storeys": 3,
+      "storeys": 2,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -568,16 +568,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -99.225,
-          -75.355
+          -103.14,
+          -76.059
         ],
         "size": [
-          16,
-          16
+          13,
+          12
         ],
-        "rotation": 225
+        "rotation": 235.326
       },
-      "storeys": 2,
+      "storeys": 3,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -588,14 +588,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -72.355,
-          -102.225
+          -79.44,
+          -95.411
         ],
         "size": [
-          16,
+          18,
           16
         ],
-        "rotation": 225
+        "rotation": 235.326
       },
       "storeys": 2,
       "base_z": 0,
@@ -608,16 +608,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -114.782,
-          -90.912
+          -117.281,
+          -93.336
         ],
         "size": [
-          16,
+          12,
           16
         ],
-        "rotation": 225
+        "rotation": 241.423
       },
-      "storeys": 3,
+      "storeys": 2,
       "base_z": 0,
       "hero": true,
       "ground_height": 4.2,
@@ -628,14 +628,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -87.912,
-          -117.782
+          -86.685,
+          -112.843
         ],
         "size": [
-          16,
-          16
+          13,
+          20
         ],
-        "rotation": 225
+        "rotation": 241.423
       },
       "storeys": 3,
       "base_z": 0,
@@ -648,16 +648,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -130.338,
-          -106.468
+          -129.421,
+          -110.396
         ],
         "size": [
-          16,
-          16
+          11,
+          20
         ],
-        "rotation": 225
+        "rotation": 241.423
       },
-      "storeys": 2,
+      "storeys": 3,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -668,14 +668,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -103.468,
-          -133.338
+          -100.405,
+          -129.042
         ],
         "size": [
-          16,
-          16
+          17,
+          14
         ],
-        "rotation": 225
+        "rotation": 241.423
       },
       "storeys": 2,
       "base_z": 0,
@@ -688,16 +688,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -145.894,
-          -122.024
+          -135.546,
+          -128.557
         ],
         "size": [
-          16,
-          16
+          14,
+          14
         ],
-        "rotation": 225
+        "rotation": 235.326
       },
-      "storeys": 3,
+      "storeys": 2,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -708,14 +708,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -119.024,
-          -148.894
+          -109.379,
+          -149.616
         ],
         "size": [
-          16,
-          16
+          12,
+          19
         ],
-        "rotation": 225
+        "rotation": 235.326
       },
       "storeys": 3,
       "base_z": 0,
@@ -728,14 +728,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -161.451,
-          -137.58100000000002
+          -148.753,
+          -139.747
         ],
         "size": [
-          16,
-          16
+          12,
+          18
         ],
-        "rotation": 225
+        "rotation": 225.0
       },
       "storeys": 2,
       "base_z": 0,
@@ -748,16 +748,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -134.581,
-          -164.451
+          -128.03,
+          -163.854
         ],
         "size": [
           16,
-          16
+          12
         ],
-        "rotation": 225
+        "rotation": 225.0
       },
-      "storeys": 2,
+      "storeys": 3,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -768,14 +768,14 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -177.007,
-          -153.137
+          -159.886,
+          -153.037
         ],
         "size": [
           16,
-          16
+          13
         ],
-        "rotation": 225
+        "rotation": 214.674
       },
       "storeys": 3,
       "base_z": 0,
@@ -788,16 +788,16 @@
       "area": "commercial",
       "footprint": {
         "center": [
-          -150.137,
-          -180.007
+          -143.852,
+          -180.491
         ],
         "size": [
-          16,
+          14,
           16
         ],
-        "rotation": 225
+        "rotation": 214.674
       },
-      "storeys": 3,
+      "storeys": 2,
       "base_z": 0,
       "hero": false,
       "ground_height": 4.2,
@@ -1585,8 +1585,8 @@
       "id": "side_square",
       "area": "commercial",
       "center": [
-        -142,
-        -79
+        -154.92,
+        -84.67
       ],
       "size": [
         24,
@@ -1644,13 +1644,58 @@
       "area": "commercial",
       "points": [
         [
-          -37,
-          -40,
+          -37.0,
+          -40.0,
           0
         ],
         [
-          -178,
-          -181,
+          -55.256,
+          -49.944,
+          0
+        ],
+        [
+          -71.925,
+          -61.475,
+          0
+        ],
+        [
+          -86.025,
+          -75.575,
+          0
+        ],
+        [
+          -97.556,
+          -92.244,
+          0
+        ],
+        [
+          -107.5,
+          -110.5,
+          0
+        ],
+        [
+          -117.444,
+          -128.756,
+          0
+        ],
+        [
+          -128.975,
+          -145.425,
+          0
+        ],
+        [
+          -143.075,
+          -159.525,
+          0
+        ],
+        [
+          -159.744,
+          -171.056,
+          0
+        ],
+        [
+          -178.0,
+          -181.0,
           0
         ]
       ],
@@ -1662,13 +1707,58 @@
       "area": "commercial",
       "points": [
         [
-          -33.60588745030457,
-          -43.39411254969543,
+          -34.704,
+          -44.215,
           0
         ],
         [
-          -174.60588745030458,
-          -184.39411254969542,
+          -52.735,
+          -54.037,
+          0
+        ],
+        [
+          -68.838,
+          -65.176,
+          0
+        ],
+        [
+          -82.324,
+          -78.662,
+          0
+        ],
+        [
+          -93.463,
+          -94.765,
+          0
+        ],
+        [
+          -103.285,
+          -112.796,
+          0
+        ],
+        [
+          -113.351,
+          -131.277,
+          0
+        ],
+        [
+          -125.274,
+          -148.512,
+          0
+        ],
+        [
+          -139.988,
+          -163.226,
+          0
+        ],
+        [
+          -157.223,
+          -175.149,
+          0
+        ],
+        [
+          -175.704,
+          -185.215,
           0
         ]
       ],
@@ -1698,13 +1788,13 @@
       "area": "commercial",
       "points": [
         [
-          -109.12489168102785,
-          -112.12489168102785,
+          -107.5,
+          -110.5,
           0
         ],
         [
-          -142,
-          -79,
+          -154.92,
+          -84.67,
           0
         ]
       ],
@@ -2372,12 +2462,28 @@
       "id": "R2",
       "points": [
         [
-          -108,
-          -111
+          -107.5,
+          -110.5
         ],
         [
-          -37,
-          -40
+          -97.556,
+          -92.244
+        ],
+        [
+          -86.025,
+          -75.575
+        ],
+        [
+          -71.925,
+          -61.475
+        ],
+        [
+          -55.256,
+          -49.944
+        ],
+        [
+          -37.0,
+          -40.0
         ],
         [
           -30,
@@ -2555,8 +2661,24 @@
           -40
         ],
         [
-          -108,
-          -111
+          -55.256,
+          -49.944
+        ],
+        [
+          -71.925,
+          -61.475
+        ],
+        [
+          -86.025,
+          -75.575
+        ],
+        [
+          -97.556,
+          -92.244
+        ],
+        [
+          -107.5,
+          -110.5
         ]
       ],
       "length_range": [
@@ -2567,55 +2689,55 @@
         {
           "tag": "exterior_main_street",
           "start_index": 0,
-          "end_index": 5,
+          "end_index": 9,
           "category": "exterior"
         },
         {
           "tag": "doorway_transit_hall_entry",
-          "start_index": 5,
-          "end_index": 6,
+          "start_index": 9,
+          "end_index": 10,
           "category": "doorway"
         },
         {
           "tag": "interior_transit_hall",
-          "start_index": 6,
-          "end_index": 7,
+          "start_index": 10,
+          "end_index": 11,
           "category": "interior"
         },
         {
           "tag": "doorway_transit_hall_exit",
-          "start_index": 7,
-          "end_index": 8,
+          "start_index": 11,
+          "end_index": 12,
           "category": "doorway"
         },
         {
           "tag": "exterior_workshop_approach",
-          "start_index": 8,
-          "end_index": 12,
+          "start_index": 12,
+          "end_index": 16,
           "category": "exterior"
         },
         {
           "tag": "doorway_workshop_entry",
-          "start_index": 12,
-          "end_index": 13,
-          "category": "doorway"
-        },
-        {
-          "tag": "interior_workshop",
-          "start_index": 13,
-          "end_index": 15,
-          "category": "interior"
-        },
-        {
-          "tag": "doorway_workshop_exit",
-          "start_index": 15,
+          "start_index": 16,
           "end_index": 17,
           "category": "doorway"
         },
         {
-          "tag": "exterior_hill_loop",
+          "tag": "interior_workshop",
           "start_index": 17,
-          "end_index": 42,
+          "end_index": 19,
+          "category": "interior"
+        },
+        {
+          "tag": "doorway_workshop_exit",
+          "start_index": 19,
+          "end_index": 21,
+          "category": "doorway"
+        },
+        {
+          "tag": "exterior_hill_loop",
+          "start_index": 21,
+          "end_index": 50,
           "category": "exterior"
         }
       ]
