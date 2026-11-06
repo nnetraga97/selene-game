@@ -17,6 +17,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "KawaiiPhysics",
+			"Enabled": true
+		},
+		{
 			"Name": "PythonScriptPlugin",
 			"Enabled": true
 		},

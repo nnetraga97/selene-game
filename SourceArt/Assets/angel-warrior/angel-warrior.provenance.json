@@ -1,14 +1,14 @@
 {
   "asset": "angel-warrior",
-  "run": "20261106T065901-a84846",
-  "run_state": "needs_review",
-  "draft": true,
-  "delivered_at": "2026-11-06T07:07:13.511703+00:00",
+  "run": "20261106T093651-f4fa54",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T09:37:15.378637+00:00",
   "files": {
     "glb": {
       "file": "angel-warrior.glb",
-      "sha256": "0b6e57079b8a157763ac39074945dfe096c633d3e8875a3e499686ea138bc534",
-      "bytes": 18532676
+      "sha256": "572d704b5c32707b6dcecd7fd082889aa5289f98b349f564c3d12fc34b84916a",
+      "bytes": 18545284
     }
   },
   "source": {
@@ -18,22 +18,28 @@
     "bytes": 18983824,
     "license": "Retain account/plan evidence; download time does not establish generation-time license"
   },
-  "reviews": [],
+  "reviews": [
+    {
+      "at": "2026-11-06T09:37:15.280006+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: angel clone plus 50 secondary bones (6 dress panels, 2 wings, 4 hair chains) for Kawaii Physics; halo rigid on Head. Fixed Astra's weight-removal bug myself (stale weights, 7 influences); weights now max 4, normalized; original bones bit-identical; 17 um rest float noise (tolerance 20 um). Dress, wing and hair swing renders are clean; walk-clearance render shows dress clear of the forward boot. Kawaii colliders still needed in engine."
+    }
+  ],
   "lineage": {
-    "parent_run": "20261106T065851-0ab075",
-    "change": "Normalize for Unreal: remove importer bone-display helper, apply all node transforms, scale 0.997->1.80 m, feet at Z=0, facing -Y (Unreal +Y like Manny). No geometry/weight/UV/material edits.",
-    "candidate_sha256": "2400e05371a1b6fdad9eccdc1767a07683757ad13a8510243a53dbdf45e05d27",
-    "candidate_name": "angel-normalized.glb",
-    "at": "2026-11-06T06:59:01.388009+00:00",
+    "parent_run": "20261106T065901-a84846",
+    "change": "Add 50 secondary bones for Kawaii Physics: 6 dress panel chains (24), 2 wing chains (10), 4 hair chains (16); halo weighted 100% to Head. Original 52 bones bit-identical; weights outside regions unchanged; region weights max 4 influences, normalized. Claude fix: weight-group removal bug in Astra's script (stale weights).",
+    "candidate_sha256": "baa66c3836b772eb58683bcb0421b15f2aa7386483c2e8bb3350ae708cc0f989",
+    "candidate_name": "angel-secondary.glb",
+    "at": "2026-11-06T09:36:51.080763+00:00",
     "repair_files": [
       {
-        "file": "normalize_character.py",
-        "sha256": "5296cc0e94d886fb75a87a8598f0f7cbf2466195104576e1f689d0cd4f7f32b5"
+        "file": "add_secondary_chains.py",
+        "sha256": "004c2eb16139506f74f3f49f94a805fb72dd9fcb1db7a992f8d02bb3a5d73a8e"
       }
     ]
   },
   "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
-  "run_path": "assets/angel-warrior/runs/20261106T065901-a84846",
+  "run_path": "assets/angel-warrior/runs/20261106T093651-f4fa54",
   "game_ready": false,
   "engine_validation": "not_run"
 }

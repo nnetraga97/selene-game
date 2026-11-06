@@ -21,7 +21,9 @@ public class Selene : ModuleRules
 			"SlateCore",
 			"RenderCore",
 			"RHI",
-			"Json"
+			"Json",
+			"AnimGraphRuntime",
+			"KawaiiPhysics"
 		});
 
 		PublicIncludePaths.Add("Selene");

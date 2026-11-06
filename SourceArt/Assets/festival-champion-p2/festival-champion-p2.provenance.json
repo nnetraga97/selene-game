@@ -1,14 +1,14 @@
 {
   "asset": "festival-champion-p2",
-  "run": "20261106T074911-d8e6df",
+  "run": "20261106T091812-d9f306",
   "run_state": "accepted_local",
   "draft": false,
-  "delivered_at": "2026-11-06T07:49:32.577497+00:00",
+  "delivered_at": "2026-11-06T09:25:10.688855+00:00",
   "files": {
     "glb": {
       "file": "festival-champion-p2.glb",
-      "sha256": "8d8141f5dcef5f43dffa68333d95425258f2b089150ec1ae784f1b5dc9bb8488",
-      "bytes": 6991220
+      "sha256": "8d60377945d1fc87eb88b01aa925a3231ad17a3670b0b231ff10c33a53f2ef96",
+      "bytes": 7006168
     }
   },
   "source": {
@@ -20,26 +20,26 @@
   },
   "reviews": [
     {
-      "at": "2026-11-06T07:49:32.515429+00:00",
+      "at": "2026-11-06T09:25:10.628404+00:00",
       "decision": "accept-local",
-      "notes": "Claude final review: P2 candidate 1 (Texture 20 + Auto Rig 20) normalized facing -Y. Clearly better than v1 (d1b8c2): sharper hair strands, cleaner face, same outfit. Sol needs-work items (armpit gaps on arm raise, braid shift on right-arm raise, angular fingertips, flat gold, skirt flecks) accepted as known defects for the demo; idle/walk do not raise arms overhead. Engine test (import, retarget, walk) next. Not game-ready."
+      "notes": "Claude final review: P2 champion plus 13 secondary chains (braid, 6 skirt panels, 2 arm ribbons, 3 hair locks, hip tassel; 52 bones) for Kawaii Physics. Swing and arm-raise renders show clean segmented bending; braid independent of the right arm; weights outside regions unchanged. Known: backward swings penetrate the body without colliders (Kawaii colliders), 7.94 um export drift (float noise)."
     }
   ],
   "lineage": {
-    "parent_run": "20261106T073730-365edd",
-    "change": "Normalize for Unreal with facing -Y (Manny-compatible; attempt 5 used the obsolete +X setting). Source already faced -Y so no yaw; helper removed, scale to 1.72 m, feet at Z=0. No geometry/weight/UV/material edits.",
-    "candidate_sha256": "a8f23c9fccc2fd86f3af13acc1224fd95f73b988d483cc37c5b1c84cc62a00a2",
-    "candidate_name": "normalized-negY.glb",
-    "at": "2026-11-06T07:49:11.213134+00:00",
+    "parent_run": "20261106T074911-d8e6df",
+    "change": "Secondary chain rig round 2: refine skirt selection to restore shorts hem original weights and include isolated cream/teal ruffle islands; same 52-chain-bone design and unchanged geometry/UV/body skeleton",
+    "candidate_sha256": "9bcdc7b6c93a1b1d8ac741ea6b3b7b0bda0c654648ee3b2a1be3994626370f72",
+    "candidate_name": "secondary-chains.glb",
+    "at": "2026-11-06T09:18:12.445110+00:00",
     "repair_files": [
       {
-        "file": "normalize_character.py",
-        "sha256": "ff25e3f766a1b30f4680d2634a2ec069f9590296c5696f76d727df8fd7345301"
+        "file": "add_secondary_chains.py",
+        "sha256": "4fe4cb2231c90391ce4ddfe83e555b32f1e483a42441fc8474279ad0a0a0090c"
       }
     ]
   },
   "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
-  "run_path": "assets/festival-champion-p2/runs/20261106T074911-d8e6df",
+  "run_path": "assets/festival-champion-p2/runs/20261106T091812-d9f306",
   "game_ready": false,
   "engine_validation": "not_run"
 }

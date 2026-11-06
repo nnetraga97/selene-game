@@ -1,6 +1,7 @@
 #include "SeleneCharacter.h"
 
 #include "Selene.h"
+#include "Animation/SeleneSecondaryAnimInstance.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimSingleNodeInstance.h"
 #include "Animation/AnimSequence.h"
@@ -330,6 +331,18 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 		Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 		Mesh->SetAnimInstanceClass(AnimClass);
 		SetActorTickEnabled(false);
+	}
+	else if (!Entry.SecondaryChains.IsEmpty())
+	{
+		// Same single-node locomotion, plus Kawaii Physics chains (hair/braid/skirt/wings) in a native graph.
+		// ActiveCharacter is already set: the instance reads its chains from GetActiveCharacterEntry().
+		Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+		Mesh->SetAnimInstanceClass(USeleneSecondaryAnimInstance::StaticClass());
+		SingleNodePhase = ESingleNodePhase::Ground;
+		bWasFalling = GetCharacterMovement()->IsFalling();
+		ConfigureBlendAxes();
+		UpdateSingleNodeAnimation(0.f);
+		SetActorTickEnabled(true);
 	}
 	else
 	{

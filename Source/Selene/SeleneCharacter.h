@@ -42,6 +42,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Selene|Character")
 	FName GetActiveCharacterName() const { return ActiveCharacterName; }
 
+	/** Roster entry of the active character (read by USeleneSecondaryAnimInstance when it builds its graph). */
+	const FSelenePlayableCharacter& GetActiveCharacterEntry() const { return ActiveCharacter; }
+
 	UFUNCTION(BlueprintCallable, Category = "Selene|Camera")
 	void SetCameraMode(ESeleneCameraMode NewMode);
 

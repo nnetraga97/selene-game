@@ -32,6 +32,23 @@ def fresh(name, cls, factory):
     return asset
 
 
+MIXAMO_CHAINS = [("Spine", "Spine", "Spine2"), ("Neck", "Neck", "Neck"), ("Head", "Head", "Head")] + [
+    (side + chain, side_bone + start, side_bone + end)
+    for side, side_bone in (("Left", "Left"), ("Right", "Right"))
+    for chain, start, end in (
+        ("Leg", "UpLeg", "Foot"), ("Foot", "ToeBase", "ToeBase"), ("Clavicle", "Shoulder", "Shoulder"),
+        ("Arm", "Arm", "Hand"), ("Thumb", "HandThumb1", "HandThumb3"), ("Index", "HandIndex1", "HandIndex3"),
+        ("Middle", "HandMiddle1", "HandMiddle3"), ("Ring", "HandRing1", "HandRing3"), ("Pinky", "HandPinky1", "HandPinky3"))]
+
+
+def mixamo_chains(c):
+    if not c.set_retarget_root("mixamorig_Hips"):
+        return False
+    for chain, start, end in MIXAMO_CHAINS:
+        c.add_retarget_chain(chain, "mixamorig_" + start, "mixamorig_" + end, "")
+    return len(c.get_retarget_chains()) == len(MIXAMO_CHAINS)
+
+
 def ik_rig(name, mesh):
     rig = fresh(name, u.IKRigDefinition, u.IKRigDefinitionFactory())
     c = u.IKRigController.get_controller(rig)
@@ -40,8 +57,15 @@ def ik_rig(name, mesh):
     while c.get_num_solvers() > 0:  # reruns: avoid stacking a second auto FBIK solver
         c.remove_solver(0)
     if not c.apply_auto_generated_retarget_definition():
-        raise RuntimeError(name + ": auto retarget definition failed (skeleton not recognised)")
-    c.apply_auto_fbik()
+        # Extra secondary-physics bones (braid/skirt/hair chains) stop the template matcher recognising the
+        # Mixamo skeleton, so define the body chains by bone name (same map the auto rig produced for Angel).
+        if not mixamo_chains(c):
+            raise RuntimeError(name + ": auto retarget definition failed and the skeleton is not Mixamo")
+        report.setdefault("manual_chains", []).append(name)
+    try:
+        c.apply_auto_fbik()
+    except Exception as exc:  # FK retargeting still works without the FBIK solver
+        report.setdefault("warnings", []).append("%s: auto FBIK failed: %s" % (name, exc))
     names = [ch.chain_name for ch in c.get_retarget_chains()]
     chains = [(str(n), str(c.get_retarget_chain_start_bone(n)), str(c.get_retarget_chain_end_bone(n))) for n in names]
     report[name] = {"retarget_root": str(c.get_retarget_root()), "chains": chains}

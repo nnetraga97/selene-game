@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "map": "/Game/Selene/Maps/Town",
+  "asset_root": "/Game/Selene/Materials/Ground",
+  "notes": [
+    "TileSizeMetres is the width of one complete source image, independent of actor scale or UVs.",
+    "Paving has about five slabs per image: 3 m gives approximately 0.6 m slabs. Cobble has about five stones per image: 1 m gives approximately 0.2 m stones.",
+    "Terrain stays grass in its existing material slots; no terrain mask or geometry edits.",
+    "ground_tiles_13 is available for future borders; no dedicated border ground actors exist in layout.json.",
+    "Height textures are imported as linear data but not connected: no displacement of blockout ground."
+  ],
+  "materials": {
+    "ground_tiles_27": {
+      "scalars": {"TileSizeMetres": 3.0, "Saturation": 0.55, "NormalStrength": 0.32, "RoughnessScale": 1.05, "MacroStrength": 0.09, "MacroSizeMetres": 13.0},
+      "tint_linear": [1.2, 1.12, 0.96],
+      "purpose": "warm cream paving"
+    },
+    "ground_tiles_17": {
+      "scalars": {"TileSizeMetres": 1.0, "Saturation": 0.65, "NormalStrength": 0.3, "RoughnessScale": 1.1, "MacroStrength": 0.1, "MacroSizeMetres": 9.0},
+      "tint_linear": [0.82, 1.0, 1.03],
+      "purpose": "petrol grey street cobble"
+    },
+    "grass_07": {
+      "scalars": {"TileSizeMetres": 2.0, "Saturation": 0.55, "NormalStrength": 0.22, "RoughnessScale": 1.1, "MacroStrength": 0.16, "MacroSizeMetres": 17.0},
+      "tint_linear": [1.05, 1.12, 0.9],
+      "purpose": "soft green terrain and garden"
+    },
+    "ground_tiles_13": {
+      "scalars": {"TileSizeMetres": 2.4, "Saturation": 0.65, "NormalStrength": 0.25, "RoughnessScale": 1.05, "MacroStrength": 0.1, "MacroSizeMetres": 11.0},
+      "tint_linear": [1.1, 1.08, 0.94],
+      "purpose": "optional grass and stone borders"
+    }
+  },
+  "assignment": {
+    "required_tag": "SeleneBlockout",
+    "slab_kinds": {"paving": "ground_tiles_27", "garden": "grass_07", "overlook": "ground_tiles_27"},
+    "streets": "ground_tiles_17",
+    "terrain": {"label": "SeleneTerrain", "area": "terrain", "material": "grass_07"}
+  }
+}
