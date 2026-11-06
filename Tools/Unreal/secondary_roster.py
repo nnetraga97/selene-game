@@ -11,14 +11,14 @@ G = -490.0
 # name, damping, stiffness, world_loc, world_rot, radius, limit_angle, gravity
 CHAMPION = (
     [("braid_00", .18, .10, .65, .70, 1.8, 50, G)]
-    + [(n, .20, .12, .70, .75, .8, 35, G) for n in ("skirt_front_l_00", "skirt_front_r_00", "skirt_back_l_00")]
-    + [(n, .20, .12, .70, .75, 1.0, 35, G) for n in ("skirt_side_front_r_00", "skirt_side_back_r_00", "skirt_back_r_00")]
+    + [(n, .18, .08, .60, .68, .8, 45, G) for n in ("skirt_front_l_00", "skirt_front_r_00", "skirt_back_l_00")]
+    + [(n, .18, .08, .60, .68, 1.0, 45, G) for n in ("skirt_side_front_r_00", "skirt_side_back_r_00", "skirt_back_r_00")]
     + [(n, .12, .05, .55, .60, .4, 70, G) for n in ("ribbon_r1_00", "ribbon_r2_00")]
     + [(n, .20, .10, .60, .65, .35, 25, G * .5) for n in ("hair_front_r_00", "hair_front_l_00", "hair_front_c_00")]
     + [("tassel_hip_r_00", .15, .08, .60, .65, .5, 45, G)]
 )
 ANGEL = (
-    [(f"dress_{n}_00", .20, .12, .70, .75, 2, 35, G) for n in ("front_c", "front_l", "back_l", "back_c", "back_r", "front_r")]
+    [(f"dress_{n}_00", .18, .09, .62, .70, 2, 40, G) for n in ("front_c", "front_l", "back_l", "back_c", "back_r", "front_r")]
     + [(f"wing_{s}_00", .30, .25, .60, .70, 3, 20, G * .3) for s in "lr"]
     + [(f"hair_{n}_00", .18, .10, .65, .70, 1.5, 40, G) for n in ("side_l", "back_l", "back_r", "side_r")]
 )
