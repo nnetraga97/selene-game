@@ -279,9 +279,10 @@ def validate(d):
             f"E–W walk {seconds:.1f}s must be 300–360 s",
         )
         check(
-            abs(walk["points"][0][0] - bounds[0]) < 1
-            and abs(walk["points"][-1][0] - bounds[2]) < 1,
-            "E–W walk does not span town",
+            # Ends may sit up to 5 m inside the terrain edge so the walk clears boundary railings.
+            0 <= walk["points"][0][0] - bounds[0] <= 5
+            and 0 <= bounds[2] - walk["points"][-1][0] <= 5,
+            "E–W walk does not span town (ends must be within 5 m of the terrain edges)",
         )
         check(
             point(d["player_start"]["position"], 3)
