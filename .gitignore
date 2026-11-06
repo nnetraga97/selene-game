@@ -17,3 +17,8 @@ SourceArt/**/*.fbx
 
 # OS
 .DS_Store
+
+# Packaged builds and transient tool output (raw perf captures are archived in the asset-workflow evidence folder)
+Packaged/
+*.blend1
+Tools/**/__pycache__/
