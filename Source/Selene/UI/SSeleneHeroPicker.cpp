@@ -26,7 +26,7 @@ void SSeleneHeroPicker::Construct(const FArguments& InArgs)
 	Controller = InArgs._Controller;
 	for (const FSelenePlayableCharacter& Entry : GetDefault<USeleneCharacterSettings>()->Roster)
 	{
-		if (!Entry.Name.IsNone()) Names.Add(Entry.Name);
+		if (!Entry.Name.IsNone() && Entry.bPlayable) Names.Add(Entry.Name);
 	}
 	const ASeleneCharacter* Character = Controller.IsValid() ? Cast<ASeleneCharacter>(Controller->GetPawn()) : nullptr;
 	Selected = Character ? FMath::Max(0, Names.IndexOfByKey(Character->GetActiveCharacterName())) : 0;

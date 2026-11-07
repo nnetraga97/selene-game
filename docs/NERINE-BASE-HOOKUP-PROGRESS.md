@@ -114,3 +114,19 @@ ORCH_OUTCOME {"version":1,"state":"delivered","reason":"Both playable roster ent
 ## User play test — 2026-11-07
 
 Nerine is not finished: bald on one side (hair cap does not cover the head), skirt clips through the legs, hands do not come out through the sleeves. Parked; committed as a playable draft to fix later in Blender. Base accepted as the reusable body.
+
+## Nerine v2 on the base body — 2026-11-07 (Claude, not delegated)
+
+Same hair/jacket/skirt (v1 session-2 fit) moved onto `base-female-v2` by a v1→base bone map, re-weighted from the base body, 0 credits.
+Pipeline `nerine-v2` run `20261107T104227-1a93f5` (draft), 121k tris, 5 materials (body, hair-coloured scalp, hair, jacket, skirt).
+Scripts: `<WF>/work/repairs/nerine-v2/{fit_v2,build_v2,pose_v2,sheet_v2}.py`; hookup `Tools/Unreal/nerinev2_{retarget,roster}.py`; roster entry `NerineV2` after Nerine (no slide fields yet).
+Evidence: `Saved/NerineV2Hookup/v1-v2-ysolde-{front,side,back}.jpg`, `<WF>/work/repairs/nerine-v2/compare-{front,side}.png`, `details-v2.png`.
+
+Verdict (Claude + Sonnet second opinion): Ysolde > v1 ≈ v2 in game. v2 fixes the sleeves (forearm now bends inside them) and the head is covered, but the skirt still opens around the legs at run/sprint, and the bikini base shows much more skin than v1's bodysuit. The base body is not a better foundation for this outfit; the skirt weighting is the weak link in both modular builds.
+
+**Outcome (user, 2026-11-07):** v1 is better; v2 deleted (roster line, content, scripts and pipeline record moved to the Trash).
+
+## Nerine v1 hair fix and NPC — 2026-11-07 (Claude)
+
+Session 3 (`<WF>/work/repairs/nerine/session3/build_hairfix.py`): cap centred +13 mm X (no clearance push: it crumples the cap over the body's baked hair volume); 13,674 scalp and dark baked-stubble body faces moved to the Hair material with UVs pinned to a flat cap-coloured patch. Still 4 materials, same skeleton and weights. Candidate run `20261107T111329-cbeedd` (parent `20261107T095808-f8653b`), re-delivered draft and re-imported in place. Evidence: `session3/head-before.png`, `head-after.png`; in game `Saved/NerineHookup/session-1/Nerine/hairfix-before-after.jpg`.
+Nerine is now an NPC: roster `bPlayable=False` (hidden from the C picker and C-cycling), and `+Npcs=(Character="Nerine",Offset=(X=500,Y=150,Z=0),Yaw=180)` spawns her idle 5 m ahead of the PlayerStart, facing the player (`ASeleneGameMode::SpawnNpcs`). Verified by log: spawned on the ground at the plaza start.

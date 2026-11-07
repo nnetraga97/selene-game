@@ -28,9 +28,16 @@ public:
 	bool TryWallJump();
 	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
 	bool IsMantling() const { return MovementMode == MOVE_Custom && CustomMovementMode == 3; }
+	UFUNCTION(BlueprintCallable, Category="Selene|Slide")
 	bool TrySlide();
+	UFUNCTION(BlueprintCallable, Category="Selene|Slide")
 	void StopSlide();
+	/** Visual root compensation for hips-root slides; never moves the capsule. */
+	UFUNCTION(BlueprintCallable, Category="Selene|Slide")
+	static FTransform GetSlideMeshCompensation(class USkeletalMeshComponent* Mesh, class UAnimSequence* Clip, float Seconds);
 	bool IsSliding() const { return MovementMode == MOVE_Custom && CustomMovementMode == 2; }
+	/** True while the slide's Out clip still owns DefaultSlot after the physical slide ended. */
+	bool IsSlideExitPlaying() const { return bSlideExit; }
 	virtual bool CanCrouchInCurrentState() const override;
 	bool IsDashing() const { return MovementMode == MOVE_Custom && CustomMovementMode == 1; }
 	float GetStamina() const { return Stamina; }
@@ -118,6 +125,9 @@ private:
 	void FinishDash();
 	void PhysSlide(float DeltaTime, int32 Iterations);
 	void PlaySlidePose(bool bPlay);
+	void TickSlidePose(float DeltaTime);
+	void RemoveSlideMeshCompensation();
+	void LoadSlideClips();
 	void PlayJumpOverlay();
 	bool TryMantle();
 	void PhysMantle(float DeltaTime, int32 Iterations);
@@ -131,6 +141,16 @@ private:
 	float OriginalCrouchHalfHeight = 40.f;
 	bool bOriginalCanCrouch = false;
 	TWeakObjectPtr<class UAnimMontage> SlidePose;
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<class UAnimSequence>> SlideClips;
+	UPROPERTY(Transient)
+	TObjectPtr<class UAnimSequence> SlidePhaseClip;
+	FTransform CurrentSlideCompensation = FTransform::Identity;
+	FTransform AppliedSlideCompensation = FTransform::Identity;
+	FName SlideClipHero;
+	bool bSlideInto = false;
+	bool bSlideExit = false;
+	float AppliedSlideMeshDrop = 0.f;
 	float Stamina = 3.f;
 	float RegenDelayRemaining = 0.f;
 	float DashRemaining = 0.f;

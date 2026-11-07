@@ -190,7 +190,13 @@ void ASeleneCharacter::BeginPlay()
 	SetCameraMode(CameraMode);
 	SetMovementPace(MovementPace);
 	const USeleneCharacterSettings* Settings = GetDefault<USeleneCharacterSettings>();
-	if (!Settings->Roster.IsEmpty())
+	if (IsNpc())
+	{
+		// Unpossessed townsperson: keep gravity and floor snapping without a controller.
+		GetCharacterMovement()->bRunPhysicsWithNoController = true;
+		SelectCharacter(NpcCharacter);
+	}
+	else if (!Settings->Roster.IsEmpty())
 	{
 		const bool bHasDefault = Settings->Roster.ContainsByPredicate([Settings](const FSelenePlayableCharacter& Entry)
 		{
@@ -308,7 +314,16 @@ void ASeleneCharacter::CycleCharacter()
 	{
 		return Entry.Name == From;
 	});
-	SelectCharacter(Roster[(Index + 1) % Roster.Num()].Name);
+	// Skip NPC-only entries.
+	for (int32 Step = 1; Step <= Roster.Num(); ++Step)
+	{
+		const FSelenePlayableCharacter& Next = Roster[(Index + Step + Roster.Num()) % Roster.Num()];
+		if (Next.bPlayable)
+		{
+			SelectCharacter(Next.Name);
+			return;
+		}
+	}
 }
 
 void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uint64 RequestId)
@@ -455,7 +470,7 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 	UAnimSingleNodeInstance* Instance = GetMesh()->GetSingleNodeInstance();
 	if (!Instance) return;
 	// AdvancedMovement hook: the slide owns DefaultSlot; base changes otherwise cancel or retime its held pose.
-	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && Advanced->IsSliding())
+	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && (Advanced->IsSliding() || Advanced->IsSlideExitPlaying()))
 	{
 		PrevSpeed = GetVelocity().Size2D();
 		bHadInput = Advanced->GetCurrentAcceleration().SizeSquared2D() > 1.f;

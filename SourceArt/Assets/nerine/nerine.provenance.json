@@ -1,19 +1,14 @@
 {
   "asset": "nerine",
-  "run": "20261107T095808-f8653b",
+  "run": "20261107T111329-cbeedd",
   "run_state": "needs_review",
   "draft": true,
-  "delivered_at": "2026-11-07T09:58:29.741659+00:00",
+  "delivered_at": "2026-11-07T11:15:29.050463+00:00",
   "files": {
     "glb": {
       "file": "nerine.glb",
-      "sha256": "b09c035e33707fdd31716ce8eeec4c57e6dcea5b208b8d2c32709585d56ab69f",
-      "bytes": 9181356
-    },
-    "fbx": {
-      "file": "nerine.fbx",
-      "sha256": "a4ab2fbb8282d98548804f89a04f5a74d877f734a054444afaccf5e77caa2acc",
-      "bytes": 10222060
+      "sha256": "cf232d14f07702fa4156216a35f1717392194653b5d45ec9232391b4eccda03c",
+      "bytes": 10073512
     }
   },
   "source": {
@@ -30,17 +25,11 @@
   },
   "reviews": [],
   "lineage": {
-    "parent_run": "20261107T092057-b55a69",
-    "change": "Session 2 fixes: skirt panels get blended thigh weight; body's baked hair hidden under the hair piece (export A); sleeve/underarm weights copied from the body arm; finger joints re-fitted to Nerine's own fingers and weighted per finger by connectivity; front jacket-skirt gap closed by a garment-only fit.",
-    "candidate_sha256": "e6a0746f7939735efbe64172c0beb92f752d4cf2ceb74db5e2a4029b9563bfe1",
+    "parent_run": "20261107T095808-f8653b",
+    "change": "Session 3 hair fix (user play test: bald on one side): hair cap centred on the head (+13 mm X, no clearance push); every scalp and dark baked-stubble face recoloured to the hair's cap colour via the Hair material (no faces deleted). Still 4 materials, same skeleton and weights.",
+    "candidate_sha256": "838b0ba8a88101a033ea82c5ecbc894706d21feb28972b39d8f2bbf610b4017e",
     "candidate_name": "nerine-assembled.glb",
-    "at": "2026-11-07T09:58:08.786528+00:00",
-    "reevaluation": {
-      "reason": "evaluator gained --refit-bones for deliberately re-fitted finger joints",
-      "previously_evaluated_in": [
-        "20261107T094654-711b28"
-      ]
-    },
+    "at": "2026-11-07T11:13:29.511065+00:00",
     "refit_bones": [
       "index_01_l",
       "index_01_r",
@@ -83,13 +72,13 @@
     ],
     "repair_files": [
       {
-        "file": "build_candidate.py",
-        "sha256": "524d7bd7b766b98d1d98a424ad420d0a1bd02bec15127e52ba796fb9aca822a3"
+        "file": "build_hairfix.py",
+        "sha256": "735b8240542191b4b35d25ddb6459194311e33e1049451e7595bd9fdd567814c"
       }
     ]
   },
   "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
-  "run_path": "assets/nerine/runs/20261107T095808-f8653b",
+  "run_path": "assets/nerine/runs/20261107T111329-cbeedd",
   "game_ready": false,
   "engine_validation": "not_run"
 }

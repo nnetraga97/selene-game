@@ -40,6 +40,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Selene|Character")
 	void CycleCharacter();
 
+	/** Set before BeginPlay to make this an unpossessed NPC wearing that roster entry. */
+	void SetNpcCharacter(FName Name) { NpcCharacter = Name; }
+	bool IsNpc() const { return !NpcCharacter.IsNone(); }
+
 	UFUNCTION(BlueprintPure, Category = "Selene|Character")
 	FName GetActiveCharacterName() const { return ActiveCharacterName; }
 
@@ -108,6 +112,7 @@ private:
 	FSelenePlayableCharacter ActiveCharacter;
 	FName ActiveCharacterName;
 	FName PendingCharacterName;
+	FName NpcCharacter;
 	uint64 CharacterRequestId = 0;
 	int32 SpeedAxis = 0;
 	int32 DirectionAxis = INDEX_NONE;

@@ -11,4 +11,9 @@ class SELENE_API ASeleneGameMode : public AGameModeBase
 
 public:
 	ASeleneGameMode();
+	virtual void StartPlay() override;
+
+private:
+	/** Spawns the configured idle NPCs (USeleneCharacterSettings::Npcs) around the first PlayerStart. */
+	void SpawnNpcs();
 };
