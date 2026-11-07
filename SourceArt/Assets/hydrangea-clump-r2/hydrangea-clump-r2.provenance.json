@@ -1,0 +1,45 @@
+{
+  "asset": "hydrangea-clump-r2",
+  "run": "20261106T051711-08b078",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.422976+00:00",
+  "files": {
+    "glb": {
+      "file": "hydrangea-clump-r2.glb",
+      "sha256": "955e9790f7d8b5866249695c7e2d02b431a536be15fa64611f6a07e8c3033aef",
+      "bytes": 3445548
+    }
+  },
+  "source": {
+    "source_cli_task": "cbb0721e-504f-4092-86ee-31a222de8b6a",
+    "downloaded_at": "2026-11-06T05:11:41.123607+00:00",
+    "sha256": "79f6fe2f685d4a34265b90816c349a82adf3019ab9d141b3efc93bda01554c5a",
+    "bytes": 3530216,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:16.267347+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): blue/violet heads and leaves read as stylized hydrangea at planter distance. Overrides Sol needs-work (fused foliage, coarse petals); no wind on solid mesh, accepted for static planter dressing."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T051517-e22f64",
+    "change": "Normalize placement to the specified 0.65m height with base and origin at Z=0, preserving proportions and surface detail",
+    "candidate_sha256": "470feac2c78c49b04354d0f182be87d7e439a4d1713c02097ae465a848a17c7b",
+    "candidate_name": "normalized.glb",
+    "at": "2026-11-06T05:17:11.529207+00:00",
+    "repair_files": [
+      {
+        "file": "normalize.py",
+        "sha256": "53e176c13f86c9da81afd7f9c873ff2693fed04021870e8a0399cf1cc9a1fd20"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/hydrangea-clump-r2/runs/20261106T051711-08b078",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

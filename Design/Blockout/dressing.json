@@ -1,0 +1,970 @@
+{
+  "schema_version": 1,
+  "units": "metres",
+  "axes": "east,north,up",
+  "yaw_convention": "Unreal yaw degrees: 0 = mesh +X north, 90 = mesh +X east. Footprints use imported UE X/Y dimensions.",
+  "notes": [
+    "Pending assets use conservative plan envelopes in validate_dressing.py; runtime rejects oversized props.",
+    "Hydrangeas nest in planter bowls at 0.48m; review bowl depth after import.",
+    "Bench front and curved building corner orientation require visual review of imported meshes.",
+    "Height fit targets lot ground_height + (storeys-1)*floor_height, including clock hall (7.7m); blockout tower ornament is not the lot height.",
+    "Bench authored front assumes local -Y: yaws aim this axis at clock_hall centre. Confirm mesh front in Unreal."
+  ],
+  "placements": [
+    {
+      "id": "plaza_bench_1",
+      "asset": "/Game/Assets/plaza-bench/plaza-bench/StaticMeshes/plaza-bench",
+      "position": [
+        -31,
+        -18,
+        0
+      ],
+      "yaw_deg": 116.94,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "bench_bin_1",
+      "asset": "/Game/Assets/trash-bin-r2/trash-bin-r2/StaticMeshes/trash-bin-r2",
+      "position": [
+        -29.5,
+        -18,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "plaza_bench_2",
+      "asset": "/Game/Assets/plaza-bench/plaza-bench/StaticMeshes/plaza-bench",
+      "position": [
+        -31,
+        -10,
+        0
+      ],
+      "yaw_deg": 120.32,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "bench_bin_2",
+      "asset": "/Game/Assets/trash-bin-r2/trash-bin-r2/StaticMeshes/trash-bin-r2",
+      "position": [
+        -29.5,
+        -10,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "plaza_bench_3",
+      "asset": "/Game/Assets/plaza-bench/plaza-bench/StaticMeshes/plaza-bench",
+      "position": [
+        -10,
+        -17,
+        0
+      ],
+      "yaw_deg": 99.46,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "bench_bin_3",
+      "asset": "/Game/Assets/trash-bin-r2/trash-bin-r2/StaticMeshes/trash-bin-r2",
+      "position": [
+        -8.5,
+        -17,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "plaza_bench_4",
+      "asset": "/Game/Assets/plaza-bench/plaza-bench/StaticMeshes/plaza-bench",
+      "position": [
+        -10,
+        -8,
+        0
+      ],
+      "yaw_deg": 101.09,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "bench_bin_4",
+      "asset": "/Game/Assets/trash-bin-r2/trash-bin-r2/StaticMeshes/trash-bin-r2",
+      "position": [
+        -8.5,
+        -8,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "planter_1",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -34,
+        -18,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_1",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -34,
+        -18,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "planter_2",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -34,
+        -10,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_2",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -34,
+        -10,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "planter_3",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -14,
+        -17,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_3",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -14,
+        -17,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "planter_4",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -14,
+        -8,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_4",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -14,
+        -8,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "planter_5",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -28,
+        -22,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_5",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -28,
+        -22,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "planter_6",
+      "asset": "/Game/Assets/concrete-planter",
+      "position": [
+        -9,
+        -22,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "hydrangea_6",
+      "asset": "/Game/Assets/hydrangea-clump-r2/hydrangea-clump-r2/StaticMeshes/hydrangea-clump-r2",
+      "position": [
+        -9,
+        -22,
+        0.48
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "plaza_sw",
+      "scale": 0.85
+    },
+    {
+      "id": "plaza_tree_1",
+      "asset": "/Game/Assets/street-tree",
+      "position": [
+        -33,
+        -1,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "plaza_tree_2",
+      "asset": "/Game/Assets/street-tree",
+      "position": [
+        -12,
+        -1,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "plaza_tree_3",
+      "asset": "/Game/Assets/street-tree",
+      "position": [
+        -6,
+        -25,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "plaza_sw"
+    },
+    {
+      "id": "cafe_vending",
+      "asset": "/Game/Assets/vending-machine/vending-machine/StaticMeshes/SM_tripo_node_fa921383-a098-4b28-8c83-744ce6957882",
+      "position": [
+        -47,
+        -23.645,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_wall"
+    },
+    {
+      "id": "cafe_vending_glass",
+      "asset": "/Game/Assets/vending-machine/vending-machine/StaticMeshes/SM_DisplayGlass",
+      "position": [
+        -47,
+        -23.645,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "cafe_wall"
+    },
+    {
+      "id": "parked_delivery_scooter",
+      "asset": "/Game/Assets/delivery-scooter/delivery-scooter/StaticMeshes/delivery-scooter",
+      "position": [
+        -35,
+        -32,
+        0
+      ],
+      "yaw_deg": 20,
+      "collision": "simple",
+      "group": "route_r1"
+    },
+    {
+      "id": "terrace_table_1",
+      "asset": "/Game/Assets/bistro-table",
+      "position": [
+        -50.5,
+        -21.3,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_1_1",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -50.5,
+        -22.080000000000002,
+        0
+      ],
+      "yaw_deg": 0,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_1_2",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -50.5,
+        -20.52,
+        0
+      ],
+      "yaw_deg": 180,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_table_2",
+      "asset": "/Game/Assets/bistro-table",
+      "position": [
+        -48.2,
+        -18.5,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_2_1",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -48.2,
+        -19.28,
+        0
+      ],
+      "yaw_deg": 0,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_2_2",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -48.2,
+        -17.72,
+        0
+      ],
+      "yaw_deg": 180,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_table_3",
+      "asset": "/Game/Assets/bistro-table",
+      "position": [
+        -41.5,
+        -21.3,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_3_1",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -41.5,
+        -22.080000000000002,
+        0
+      ],
+      "yaw_deg": 0,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_3_2",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -41.5,
+        -20.52,
+        0
+      ],
+      "yaw_deg": 180,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_table_4",
+      "asset": "/Game/Assets/bistro-table",
+      "position": [
+        -39,
+        -18.5,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_4_1",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -39,
+        -19.28,
+        0
+      ],
+      "yaw_deg": 0,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_chair_4_2",
+      "asset": "/Game/Assets/bistro-chair-r2/bistro-chair-r2/StaticMeshes/bistro-chair-r2",
+      "position": [
+        -39,
+        -17.72,
+        0
+      ],
+      "yaw_deg": 180,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_pot_1",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -52,
+        -17.5,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "terrace_pot_2",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -38,
+        -22.5,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_terrace"
+    },
+    {
+      "id": "door_lantern",
+      "asset": "/Game/Assets/wall-lantern-r2/wall-lantern-r2/StaticMeshes/wall-lantern-r2",
+      "position": [
+        -43,
+        -23.82,
+        2.25
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "cafe_wall"
+    },
+    {
+      "id": "upper_wall_ac",
+      "asset": "/Game/Assets/wall-ac-unit-r2/wall-ac-unit-r2/StaticMeshes/wall-ac-unit-r2",
+      "position": [
+        -37.59,
+        -33,
+        4.8
+      ],
+      "yaw_deg": 0,
+      "collision": "none",
+      "group": "cafe_wall"
+    },
+    {
+      "id": "counter_espresso",
+      "asset": "/Game/Assets/espresso-machine/espresso-machine/StaticMeshes/espresso-machine",
+      "position": [
+        -48,
+        -32,
+        1.1
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "cafe_interior"
+    },
+    {
+      "id": "counter_pendant",
+      "asset": "/Game/Assets/pendant-lamp",
+      "position": [
+        -48,
+        -32,
+        3.5
+      ],
+      "yaw_deg": 90,
+      "collision": "none",
+      "group": "cafe_interior"
+    },
+    {
+      "id": "interior_pot_1",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -50.8,
+        -34.8,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_interior"
+    },
+    {
+      "id": "interior_pot_2",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -39,
+        -34.8,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "cafe_interior"
+    },
+    {
+      "id": "route_pot_1",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -24,
+        -14,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "route_r1"
+    },
+    {
+      "id": "route_pot_2",
+      "asset": "/Game/Assets/potted-plant-r2/potted-plant-r2/StaticMeshes/potted-plant-r2",
+      "position": [
+        -40,
+        -10,
+        0
+      ],
+      "yaw_deg": 90,
+      "collision": "simple",
+      "group": "route_r1"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "clock_hall_art",
+      "asset": "/Game/Assets/clock-hall",
+      "lot": "clock_hall",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "apartment_art_0",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "plaza_front_00",
+      "fit": "native",
+      "yaw_deg": 45
+    },
+    {
+      "id": "apartment_art_1",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "plaza_front_01",
+      "fit": "native",
+      "yaw_deg": 135
+    },
+    {
+      "id": "apartment_art_2",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "plaza_front_02",
+      "fit": "native",
+      "yaw_deg": -45
+    },
+    {
+      "id": "apartment_art_3",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "plaza_front_03",
+      "fit": "native",
+      "yaw_deg": -135
+    },
+    {
+      "id": "shop_00_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_00_w",
+      "fit": "native",
+      "yaw_deg": 145.33
+    },
+    {
+      "id": "shop_00_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_00_e",
+      "fit": "native",
+      "yaw_deg": -34.67
+    },
+    {
+      "id": "shop_01_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_01_w",
+      "fit": "native",
+      "yaw_deg": 135.0
+    },
+    {
+      "id": "shop_01_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_01_e",
+      "fit": "native",
+      "yaw_deg": -45.0
+    },
+    {
+      "id": "shop_02_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_02_w",
+      "fit": "native",
+      "yaw_deg": 124.67
+    },
+    {
+      "id": "shop_02_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_02_e",
+      "fit": "native",
+      "yaw_deg": -55.33
+    },
+    {
+      "id": "shop_03_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_03_w",
+      "fit": "native",
+      "yaw_deg": 118.58
+    },
+    {
+      "id": "shop_03_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_03_e",
+      "fit": "native",
+      "yaw_deg": -61.42
+    },
+    {
+      "id": "shop_04_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_04_w",
+      "fit": "native",
+      "yaw_deg": 118.58
+    },
+    {
+      "id": "shop_04_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_04_e",
+      "fit": "native",
+      "yaw_deg": -61.42
+    },
+    {
+      "id": "shop_05_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_05_w",
+      "fit": "native",
+      "yaw_deg": 124.67
+    },
+    {
+      "id": "shop_05_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_05_e",
+      "fit": "native",
+      "yaw_deg": -55.33
+    },
+    {
+      "id": "shop_06_w_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_06_w",
+      "fit": "native",
+      "yaw_deg": 135.0
+    },
+    {
+      "id": "shop_06_e_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_06_e",
+      "fit": "native",
+      "yaw_deg": -45.0
+    },
+    {
+      "id": "shop_07_w_art",
+      "asset": "/Game/Assets/shop-bakery-corner",
+      "lot": "shop_07_w",
+      "fit": "native",
+      "yaw_deg": 145.33
+    },
+    {
+      "id": "shop_07_e_art",
+      "asset": "/Game/Assets/shop-tool-repair",
+      "lot": "shop_07_e",
+      "fit": "native",
+      "yaw_deg": -34.67
+    },
+    {
+      "id": "terrace_0_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_0_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_0_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_1_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_1_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_2_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_2_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_0_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_0",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_3_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_3_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_1_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_1",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_2_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_2",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "terrace_4_3_art",
+      "asset": "/Game/Assets/townhouse-terrace",
+      "lot": "terrace_4_3",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_00_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_00",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_01_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_01",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_02_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_02",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_03_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_03",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "shed_04_art",
+      "asset": "/Game/Assets/workshop-garage",
+      "lot": "shed_04",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_00_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_00",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_01_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_01",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_02_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_02",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_03_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_03",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_04_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_04",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_05_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_05",
+      "fit": "native",
+      "yaw_deg": 90
+    },
+    {
+      "id": "midrise_06_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_06",
+      "fit": "native",
+      "yaw_deg": 180
+    },
+    {
+      "id": "midrise_07_art",
+      "asset": "/Game/Assets/apartment-curved",
+      "lot": "midrise_07",
+      "fit": "native",
+      "yaw_deg": 90
+    }
+  ]
+}

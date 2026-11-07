@@ -1,0 +1,26 @@
+# GASP migration — standing brief for every Astra session
+
+You are Astra (xhigh), implementing the Game Animation Sample (GASP) motion-matching locomotion for Selene's two heroes in bounded sessions. **Each session is killed at 30 minutes.** Read this file, then `docs/GASP-INTEGRATION.md` (the plan; follow its numbered chunks), then `docs/GASP-PROGRESS.md` (what previous sessions did). Continue with the next unfinished chunk, do as many chunks as fit in ~25 minutes, and stop at a **verified checkpoint**.
+
+## Projects and paths
+- Selene (target): `/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game` (UE 5.8.4 C++, Substrate Blendable GBuffer, Kawaii Physics 1.21 plugin installed and building).
+- GASP (read-only source): `/Users/nicknetraganti/Documents/Unreal Projects/GameAnimationSample/GameAnimationSample.uproject`.
+- Staging project (chunks 2–8): `/Users/nicknetraganti/Documents/Unreal Projects/SeleneGASPStaging/` (create it there; never inside either repo).
+- Engine: `/Users/Shared/Epic Games/UE_5.8`. Headless: `UnrealEditor-Cmd <uproject> -run=pythonscript -script=<abs path without spaces> -unattended -nop4 -nosplash -nullrhi`, always wrapped in `perl -e 'alarm 900; exec @ARGV' ...`; write results to files (Python log output does not reach stdout). Build: `.../Engine/Build/BatchFiles/Mac/Build.sh SeleneEditor Mac Development -Project="$PWD/Selene.uproject" -WaitMutex` (and `Selene Mac Shipping`).
+
+## Decisions already made (by the controller, Claude, 2026-11-06)
+1. **Option A**: keep `ASeleneCharacter` (C++) as the pawn. Hidden UEFN source mesh runs the copied CMC motion-matching AnimBP; the visible hero is a follower mesh. Keep Selene's PlayerController, input, cameras (V), roster switching (C, `selene.Character`), pause menu (Esc), perf runner.
+2. **Follower animation is native C++, no follower AnimBP.** Selene already has `Source/Selene/Animation/SeleneSecondaryAnimInstance.{h,cpp}`: a native anim instance whose proxy builds `SingleNode -> LocalToComponent -> one FAnimNode_KawaiiPhysics per roster chain (with capsule/sphere colliders from the reference pose) -> ComponentToLocal`. For GASP, extend it (or add a sibling class) so the pose source is **`FAnimNode_RetargetPoseFromMesh`** (IKRig module; source = the hidden UEFN mesh component, retargeter = the hero's `RTG_UEFN_To_<Hero>` from the roster) instead of `FAnimNode_SingleNode`. Kawaii stays after retargeting exactly as now. This replaces plan chunks 17 and 24 (no AnimGraph authoring). Keep the existing debug cvars (`selene.SecondaryDebug`, `selene.AutoWalk`, `selene.AutoShots`) working — they are how motion is measured.
+3. The Kawaii chain tuning lives in `Tools/Unreal/secondary_roster.py` → `Config/DefaultGame.ini` (`SecondaryChains`, `SecondaryColliders`). Keep those fields; add new roster fields (follower retargeter, etc.) beside them.
+4. The roster's "Manny" entry becomes simply "show the source mannequin" (no follower). Champion stays the default character.
+5. Character meshes: Champion `/Game/Assets/festival-champion-p2/festival-champion-p2/SkeletalMeshes/festival-champion-p2` (Mixamo, 1.72 m, 52 extra secondary bones), Angel `/Game/Assets/angel-warrior/angel-warrior/SkeletalMeshes/angel-warrior` (Mixamo, 1.80 m with wings, 50 extra bones). Their IK rigs `/Game/Selene/Characters/<Hero>/IK_<Hero>` were made by `Tools/Unreal/character_retarget.py` (note its Mixamo-by-name chain fallback: the auto template no longer recognises these skeletons).
+6. Materials: the toon parent and imported glTF parents now carry skeletal-mesh/Nanite usage flags (`Tools/Unreal/fix_material_usage.py`). Any material you create or copy must have the usage flags it needs for game runs (check `-game` logs for "missing usage flag").
+
+## Rules
+- Unreal concurrency lock for the **Selene** project: before every Selene Unreal launch `until mkdir /tmp/selene-unreal.lock 2>/dev/null; do sleep 15; done`, `rmdir` it right after (also on failure). Never launch Selene while `pgrep -f "UnrealEditor.*Selene.uproject"` shows one (the user may be playing — then stop and report).
+- No git commits (the controller reviews and commits after each session). No packaging unless the chunk requires it and you have time. No downloads, no browser, no paid services.
+- Do not edit GASP's project files; Saved/Intermediate churn from commandlets is fine.
+- Touch only: Selene `Source/Selene/**`, `Config/DefaultGame.ini`, `Config/DefaultEngine.ini` (only lines the plan requires; never commit-style edit the AndroidFileServer block), `Selene.uproject` (plugin entries), `Tools/Unreal/**` (new scripts), `Content/` (migrated/created assets), `docs/GASP-PROGRESS.md`, and the staging project.
+- Stop-and-report rule (the user's): if something fails, stop that chunk and report; do not retry variations. One targeted fix of an obvious, diagnosed cause (e.g. a missing folder, a wrong path) is allowed if you record it.
+- **Before you stop**, append to `docs/GASP-PROGRESS.md`: date/time, chunks completed with their verification evidence (log paths, counts, screenshots), what is half-done, exact next step, open risks. Keep it factual; the next session starts cold from it.
+- Final reply: chunks done and verified, what failed, next chunk.

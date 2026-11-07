@@ -1,0 +1,255 @@
+[
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=3P",
+      "-PerfHour=12",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0001",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944187.473115,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 4.792931079864502,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0001/20261106T054952-D26DF33F_R1_3P_12.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0001/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0001/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=3P",
+      "-PerfHour=17.5",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0002",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944192.302173,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.341271162033081,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0002/20261106T054953-C96791EB_R1_3P_17.5.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0002/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0002/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=3P",
+      "-PerfHour=19",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944193.681783,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.410593032836914,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003/20261106T054955-90D2E8F2_R1_3P_19.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=3P",
+      "-PerfHour=22",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0004",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944195.131043,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.4076640605926514,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0004/20261106T054956-B3837DE2_R1_3P_22.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0004/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0004/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=1P",
+      "-PerfHour=12",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0005",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944196.578368,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.4243710041046143,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0005/20261106T054957-4BD0F1EC_R1_1P_12.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0005/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0005/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=1P",
+      "-PerfHour=17.5",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0006",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944198.0438762,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.4165008068084717,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0006/20261106T054959-443F3FCC_R1_1P_17.5.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0006/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0006/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=1P",
+      "-PerfHour=19",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0007",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944199.499667,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.4190950393676758,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0007/20261106T055000-F278C9E8_R1_1P_19.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0007/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0007/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=1P",
+      "-PerfHour=22",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0008",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944200.959392,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.380876064300537,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0008/20261106T055002-AEAE4A4E_R1_1P_22.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0008/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0008/process.log"
+    ]
+  },
+  {
+    "command": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Packaged/Shipping/Mac/Selene-Mac-Shipping.app/Contents/MacOS/Selene-Mac-Shipping",
+      "/Game/Selene/Maps/Town",
+      "-fullscreen",
+      "-ResX=3024",
+      "-ResY=1964",
+      "-unattended",
+      "-PerfRoute=R1",
+      "-PerfCam=3P",
+      "-PerfHour=12",
+      "-PerfLaps=1",
+      "-PerfWarmup=15",
+      "-PerfSpeed=150",
+      "-PerfOut=/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0009",
+      "-PerfTimeFlow=60",
+      "-nosound"
+    ],
+    "timeout_seconds": 337.0,
+    "started_unix": 1793944202.377973,
+    "returncode": 2,
+    "frame_logs": [],
+    "elapsed_seconds": 1.3374288082122803,
+    "artifacts": [
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0009/20261106T055003-0566AC82_R1_3P_12.0.meta.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0009/launch.json",
+      "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0009/process.log"
+    ]
+  }
+]

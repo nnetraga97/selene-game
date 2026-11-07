@@ -1,0 +1,55 @@
+{
+  "asset": "trash-bin-r2",
+  "run": "20261106T053314-f9c3b3",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.370007+00:00",
+  "files": {
+    "glb": {
+      "file": "trash-bin-r2.glb",
+      "sha256": "464d63ac6bcb49923ba7d14fc42a1b2145ef0f20477e86bc5a81ae929f91c021",
+      "bytes": 2308008
+    }
+  },
+  "source": {
+    "source_cli_task": "d70f3fc4-7061-4ed9-9a2e-e87b3ac1def1",
+    "downloaded_at": "2026-11-06T05:12:34.068678+00:00",
+    "sha256": "7186815f439a970a2e32cbf929511f311eac17a65a2cd24c6ba3fcdf5f897a77",
+    "bytes": 2355676,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:24.095198+00:00",
+      "decision": "accept-local",
+      "notes": "test"
+    },
+    {
+      "at": "2026-11-06T05:38:16.216832+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): silhouette, palette, grounded base correct. Overrides Sol needs-work (groove shading spike, uneven surfaces) as close-range only for a street dressing prop."
+    },
+    {
+      "at": "2026-11-06T05:38:31.109982+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): silhouette, palette, grounded base correct. Overrides Sol needs-work (groove shading spike, uneven surfaces) as close-range only for a street dressing prop. Supersedes the placeholder note 'test' recorded by a diagnostic rerun at 05:38."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T053126-54ec4a",
+    "change": "Ground bin geometry at Z=0 and establish a floor-centered pivot while preserving the corrected 0.95 m height.",
+    "candidate_sha256": "e1a64903ce704c58a3b145521b42f611d6e6bf442c3280a62908cf2222fbbcc2",
+    "candidate_name": "round2-ground.glb",
+    "at": "2026-11-06T05:33:14.637254+00:00",
+    "repair_files": [
+      {
+        "file": "round2-ground.py",
+        "sha256": "f2b2f3f9b3191dc179033b5d15430a64c1a629d82e48bd8ca9f6628689fe41b1"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/trash-bin-r2/runs/20261106T053314-f9c3b3",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

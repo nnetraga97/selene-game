@@ -1,0 +1,27 @@
+{
+  "url": "https://overpass-api.de/api/interpreter",
+  "request_method": "POST",
+  "query_file": "sanur.json.overpassql",
+  "retrieved_utc": "2026-11-07T01:35:23.947576+00:00",
+  "bbox_s_w_n_e": [
+    -8.685205013550135,
+    115.26383690740307,
+    -8.682494986449864,
+    115.26656309259691
+  ],
+  "display_size_m": 300,
+  "centre": {
+    "name": "Sanur | Sindhu beach centre",
+    "lat": -8.68385,
+    "lon": 115.2652
+  },
+  "sha256": "baa18b4c66b9900d7f6b6918fc8f0eb048dd1118a915ee1aad46fe3ed0973be0",
+  "bytes": 48998,
+  "response_headers": {
+    "Server": "nginx",
+    "Date": "Sat, 07 Nov 2026 01:35:23 GMT",
+    "Content-Type": "application/json",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  }
+}

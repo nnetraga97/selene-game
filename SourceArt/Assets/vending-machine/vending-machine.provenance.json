@@ -1,0 +1,45 @@
+{
+  "asset": "vending-machine",
+  "run": "20261106T043923-5f54f2",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:17:10.061571+00:00",
+  "files": {
+    "glb": {
+      "file": "vending-machine.glb",
+      "sha256": "a3dc262a54cec8ae6d81d151b3ad8bd0c77a1ac3332ead7cec2ee57c700b9e54",
+      "bytes": 3782876
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/e5c7e8f8-4a33-435b-b1b4-756f8f027194",
+    "downloaded_at": "2026-11-06T04:33:41.366497+00:00",
+    "sha256": "a2a4d4e1158bbcff64be3518cbf69c6d08813ac9010e32e08d966f321c8bd548",
+    "bytes": 3964688,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:13:14.609376+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: front/back/side/hero after renders checked. Silhouette, palette (cream/petrol/coral) and can rows match the approved reference; added 3 mm glass pane reads correctly; height 1.90 m. Minor white texture smear on back-left edge, acceptable at gameplay distance. Night emissive for the display to be done with an engine material mask (not in this run). Sol accept-local concurs."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T043650-de53ba",
+    "change": "Add one fitted 3 mm clear glass display pane with its own transmission material to enclose the open drink recess; preserve original cabinet and dim light",
+    "candidate_sha256": "bb9e9cf77acda27fd24577c8bdc910ffe190ea7bce93c88c3eac07fe2875a37a",
+    "candidate_name": "glass.glb",
+    "at": "2026-11-06T04:39:23.314690+00:00",
+    "repair_files": [
+      {
+        "file": "add_glass.py",
+        "sha256": "834c4ebaf0e891f727fdb467a2aa29481a9d85a1c039ac717d3db035a7af56e8"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/vending-machine/runs/20261106T043923-5f54f2",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

@@ -1,0 +1,44 @@
+{
+  "asset": "council-envoy",
+  "run": "20261107T053653-5ba909",
+  "run_state": "needs_review",
+  "draft": true,
+  "delivered_at": "2026-11-07T05:49:46.360836+00:00",
+  "files": {
+    "glb": {
+      "file": "council-envoy.glb",
+      "sha256": "89c27a121a3c97696e216026dd22931cc5a62d88aeb896a8fce46501cd1f75d6",
+      "bytes": 6689244
+    },
+    "fbx": {
+      "file": "council-envoy.fbx",
+      "sha256": "f562a31c8c0d10c511cf396f147d763d0022727b88d0d2e7093937add5fa7aed",
+      "bytes": 5891788
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/female-mage-in-white-and-blue-robes-with-gold-trim-standing-in-front-8032f0ed-682a-4819-874a-d6e4fc2e3b01",
+    "downloaded_at": "2026-11-07T05:21:45.161618+00:00",
+    "sha256": "8c51ec228f55ec088d56eaf0e4173bdcece6ef727e19735f8bda97602912b294",
+    "bytes": 3773528,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [],
+  "lineage": {
+    "parent_run": "20261107T053207-06eb54",
+    "change": "One diagnosed part-ownership correction from arms90 and hip90 renders: assign sleeve trim and arm skin to their arm hosts, hip fabric to coat chain, and trouser/boot parts to explicit leg sides in the stepped stance; no geometry or texture change",
+    "candidate_sha256": "315909eafd9126e49c896fcc4d67237bf6c17d89a41a40fe9a2f7cd1734a9d7e",
+    "candidate_name": "ysolde-rig-r2.glb",
+    "at": "2026-11-07T05:36:53.492206+00:00",
+    "repair_files": [
+      {
+        "file": "fix_attachment.py",
+        "sha256": "7ce20f3aee65eb3c71f24ad0dddfafadbbc4abc4ff5bada0f512d9b02932aa02"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/council-envoy/runs/20261107T053653-5ba909",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

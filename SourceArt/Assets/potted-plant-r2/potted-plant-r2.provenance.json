@@ -1,0 +1,45 @@
+{
+  "asset": "potted-plant-r2",
+  "run": "20261106T052536-8d72bb",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.477130+00:00",
+  "files": {
+    "glb": {
+      "file": "potted-plant-r2.glb",
+      "sha256": "d59ac85cd760a6e6ac2828adafef5363a15697898f91922a143864e584cbd2b1",
+      "bytes": 2764400
+    }
+  },
+  "source": {
+    "source_cli_task": "f7c02b2e-fd44-4986-a5bf-4b381cdbe825",
+    "downloaded_at": "2026-11-06T05:11:05.453818+00:00",
+    "sha256": "566b23038a5456babe6ae20f9d76d05fddcb5d1730e5a5e0e2280a1738555f12",
+    "bytes": 2854604,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:16.317969+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): fiddle-leaf plant in cream pot reads well, 1.25 m. Overrides Sol needs-work (flattened crown, pot blemishes) as close-range only."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T052319-3cb3b0",
+    "change": "Normalize placement to the specified 1.25m height with base and origin at Z=0, preserving proportions and surface detail",
+    "candidate_sha256": "dd28662034d1c51c9be28ca280883a8f2400a16ccebd7878cfc70995cb6218ce",
+    "candidate_name": "normalized.glb",
+    "at": "2026-11-06T05:25:36.452423+00:00",
+    "repair_files": [
+      {
+        "file": "normalize.py",
+        "sha256": "53e176c13f86c9da81afd7f9c873ff2693fed04021870e8a0399cf1cc9a1fd20"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/potted-plant-r2/runs/20261106T052536-8d72bb",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

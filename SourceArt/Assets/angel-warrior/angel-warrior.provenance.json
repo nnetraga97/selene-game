@@ -1,0 +1,45 @@
+{
+  "asset": "angel-warrior",
+  "run": "20261106T093651-f4fa54",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T09:37:15.378637+00:00",
+  "files": {
+    "glb": {
+      "file": "angel-warrior.glb",
+      "sha256": "572d704b5c32707b6dcecd7fd082889aa5289f98b349f564c3d12fc34b84916a",
+      "bytes": 18545284
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/3d-model/angelic-winged-warrior-wearing-ornate-white-and-gold-armor-with-expans-af824379-ec8c-4918-a65f-1ad06f8e7500",
+    "downloaded_at": "2026-11-06T06:58:04.585195+00:00",
+    "sha256": "ebeacb8870dd4cbbd1d227fd3807f3d006ddacd07598acdb05ccffdc8be208c4",
+    "bytes": 18983824,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T09:37:15.280006+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: angel clone plus 50 secondary bones (6 dress panels, 2 wings, 4 hair chains) for Kawaii Physics; halo rigid on Head. Fixed Astra's weight-removal bug myself (stale weights, 7 influences); weights now max 4, normalized; original bones bit-identical; 17 um rest float noise (tolerance 20 um). Dress, wing and hair swing renders are clean; walk-clearance render shows dress clear of the forward boot. Kawaii colliders still needed in engine."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T065901-a84846",
+    "change": "Add 50 secondary bones for Kawaii Physics: 6 dress panel chains (24), 2 wing chains (10), 4 hair chains (16); halo weighted 100% to Head. Original 52 bones bit-identical; weights outside regions unchanged; region weights max 4 influences, normalized. Claude fix: weight-group removal bug in Astra's script (stale weights).",
+    "candidate_sha256": "baa66c3836b772eb58683bcb0421b15f2aa7386483c2e8bb3350ae708cc0f989",
+    "candidate_name": "angel-secondary.glb",
+    "at": "2026-11-06T09:36:51.080763+00:00",
+    "repair_files": [
+      {
+        "file": "add_secondary_chains.py",
+        "sha256": "004c2eb16139506f74f3f49f94a805fb72dd9fcb1db7a992f8d02bb3a5d73a8e"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/angel-warrior/runs/20261106T093651-f4fa54",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

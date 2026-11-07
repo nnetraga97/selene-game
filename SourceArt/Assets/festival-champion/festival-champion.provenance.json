@@ -1,0 +1,39 @@
+{
+  "asset": "festival-champion",
+  "run": "20261106T065934-d1b8c2",
+  "run_state": "needs_review",
+  "draft": true,
+  "delivered_at": "2026-11-06T07:07:13.629115+00:00",
+  "files": {
+    "glb": {
+      "file": "festival-champion.glb",
+      "sha256": "4ba55e29762b6c975f6c4b34c8a3d1e62c39d42a77fb98a9c079de45de52f9e5",
+      "bytes": 12709904
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/d7db39ff-2cc8-4616-aebc-1f5f828b9c61",
+    "downloaded_at": "2026-11-06T04:33:45.652477+00:00",
+    "sha256": "8b03e762c2e219a38518a05bd987f9660e0dacf7f5d1887f6f6c7373b89c575e",
+    "bytes": 12192520,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [],
+  "lineage": {
+    "parent_run": "20261106T051924-e5ac15",
+    "change": "Normalize for Unreal: remove importer bone-display helper, face -Y (Unreal +Y like Manny; mesh faced -X which made retargeted walks swing sideways), feet at Z=0, height 1.72 m kept. No geometry/weight/UV/material edits.",
+    "candidate_sha256": "f35fa10a6c12e43635bc82e3da23cfb26f657a5496331aed1ff436565ea41953",
+    "candidate_name": "champion-normalized.glb",
+    "at": "2026-11-06T06:59:34.106594+00:00",
+    "repair_files": [
+      {
+        "file": "normalize_character.py",
+        "sha256": "5296cc0e94d886fb75a87a8598f0f7cbf2466195104576e1f689d0cd4f7f32b5"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/festival-champion/runs/20261106T065934-d1b8c2",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

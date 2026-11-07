@@ -1,0 +1,45 @@
+{
+  "asset": "plaza-bench",
+  "run": "20261106T051718-87e29a",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.201161+00:00",
+  "files": {
+    "glb": {
+      "file": "plaza-bench.glb",
+      "sha256": "8be6781e04abc841ae5989cc4820f92504964f790f39efc3af034f8ea07a7aad",
+      "bytes": 3050748
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/f3fd80b9-a892-47b2-8613-9067182dba64",
+    "downloaded_at": "2026-11-06T04:42:05.484267+00:00",
+    "sha256": "d933486b0ccf2d73008a11de5583766dcf6d4b5d8ce393a1fece3717c4d5045b",
+    "bytes": 3169832,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:22:28.179012+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: back view now reads warm wood (747 rear slat faces, sampled wood material); front/side/hero unchanged from scale-fixed parent 20261106T044350-1d8a68; height 0.9 m. Remaining: thin blue-grey strip at lower slat edge, flat rear grain, soft hardware; acceptable at plaza distance. Sol accept-local job e9c1baa6cb7e4abcbb1d25d4d53ae53f concurs."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T044350-1d8a68",
+    "change": "Assign sampled warm-wood material to rear faces of backrest slats only",
+    "candidate_sha256": "92370ff2561c33ce8446f64ee79c1f00be30fa1d9819924c0c92e746dd4e18d5",
+    "candidate_name": "sampled-rear-wood.glb",
+    "at": "2026-11-06T05:17:18.574667+00:00",
+    "repair_files": [
+      {
+        "file": "sampled_rear_wood.py",
+        "sha256": "072c813013f4a79e164f73d882b5de5e04ec95436d086b47b53e0e9e4e6dc3a6"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/plaza-bench/runs/20261106T051718-87e29a",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

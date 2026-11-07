@@ -1,0 +1,19 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N19_00_W156_00_DEM/Copernicus_DSM_COG_10_N19_00_W156_00_DEM.tif",
+  "retrieved_utc": "2026-11-07T01:36:41.806612+00:00",
+  "bytes": 31714695,
+  "sha256": "a1881be4ef3710ebf3d0e59a7a22e77ca79e2a6a3f51cdbadb74209e0698e00d",
+  "response_headers": {
+    "x-amz-request-id": "H569XVGYRNS8F6WP",
+    "x-amz-id-2": "F+q3Pjkm2sCBr7+l8JCEBD8Snv44+A94uljEEAqtZSBrvSDbmMLhD7h2GgyWeIrS4kSwJsTf5WE=",
+    "Content-Length": "31714695",
+    "Accept-Ranges": "bytes",
+    "Date": "Sat, 07 Nov 2026 01:36:39 GMT",
+    "Server": "AmazonS3",
+    "Last-Modified": "Mon, 09 May 2022 14:07:59 GMT",
+    "ETag": "\"fdb32790bff90edb21c3c396abeb7625\"",
+    "x-amz-version-id": "null",
+    "Content-Type": "image/tiff",
+    "Connection": "close"
+  }
+}

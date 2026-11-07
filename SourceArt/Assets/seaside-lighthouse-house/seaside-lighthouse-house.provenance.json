@@ -1,0 +1,50 @@
+{
+  "asset": "seaside-lighthouse-house",
+  "run": "20261107T073436-5d23bd",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:35:44.760543+00:00",
+  "files": {
+    "glb": {
+      "file": "seaside-lighthouse-house.glb",
+      "sha256": "acc8329736bae1142e458eb920ec19eed62126ab534f1612c5fa72e047a56c7c",
+      "bytes": 15367172
+    },
+    "fbx": {
+      "file": "seaside-lighthouse-house.fbx",
+      "sha256": "33acfbdba7b9bd13fadd3835fb3fd490f0670584f52a6aa9d41b4d8dd8dba6ba",
+      "bytes": 13418284
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/c6082dcf-e6d1-4c95-a3b4-a0e0c7486368",
+    "downloaded_at": "2026-11-07T07:33:22.799946+00:00",
+    "sha256": "482d2e7a79aaaa3f560a68b04c109a59d2641b9424bd6130ed8c1b9d0d2f9beb",
+    "bytes": 15358624,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:35:44.672981+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed front, 3/4, side and back renders of the source: clean, closed building in the Selene palette; candidate only bakes a uniform scale to the spec height with the base at Z=0. Tripo non-manifold seams are expected. ~250-280k triangles is above our older buildings (10-20k) but within the 300k spec; Nanite in engine."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T073322-228acf",
+    "change": "Uniform scale to the spec height of 14 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "737efee385d6c6035ccc96b92d242b6b0ca451f92f261747ecf91ce78dab0bcb",
+    "candidate_name": "seaside-lighthouse-house-scaled.glb",
+    "at": "2026-11-07T07:34:36.482085+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/seaside-lighthouse-house/runs/20261107T073436-5d23bd",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

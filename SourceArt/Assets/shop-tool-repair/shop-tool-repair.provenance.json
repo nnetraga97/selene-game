@@ -1,0 +1,45 @@
+{
+  "asset": "shop-tool-repair",
+  "run": "20261106T104017-5e18cf",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T10:50:30.191552+00:00",
+  "files": {
+    "glb": {
+      "file": "shop-tool-repair.glb",
+      "sha256": "944b246795bc49792820f6fc93b5501c34a5e4d62d7663eb4f94a5df60d408d1",
+      "bytes": 16275484
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/7abb0665-4234-4250-976d-055874924ea9",
+    "downloaded_at": "2026-11-06T10:39:14.081037+00:00",
+    "sha256": "5b8211597b83983297a6cb100be651016a474f3c10c0ce23622f9472ae5055d4",
+    "bytes": 16220632,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T10:50:30.116785+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K scale-only run; curved cornice, coral awning, roller shutter, wrench sign and vine match the approved reference. Sol needs-work on an uneven foundation and cloudy windows, not visible at street scale; Astra's repair candidate did not improve so the scale-only run is kept. Exterior shell for 2-storey main-street lots."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T103920-607021",
+    "change": "Uniform scale to 9.5 m height, base Z=0, footprint-centred origin, applied transforms; no topology or material edits",
+    "candidate_sha256": "7747290c005e39969c9f426df1deeaef331e1d06c319fda0d247f1c7045e3544",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T10:40:17.451025+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/shop-tool-repair/runs/20261106T104017-5e18cf",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

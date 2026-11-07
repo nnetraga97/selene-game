@@ -1,0 +1,2802 @@
+{
+  "schema_version": 2,
+  "name": "Selene checkpoint 1",
+  "units": "metres",
+  "axes": "east,north,up",
+  "terrain": {
+    "bounds": [
+      -240,
+      -200,
+      240,
+      200
+    ],
+    "grid": 2.5,
+    "height_model": {
+      "type": "north_ramp",
+      "start_y": 65,
+      "end_y": 185,
+      "rise": 28
+    },
+    "pads": [
+      {
+        "center": [
+          -150,
+          120
+        ],
+        "size": [
+          150,
+          120
+        ],
+        "z": 4,
+        "blend": 12
+      },
+      {
+        "center": [
+          0,
+          0
+        ],
+        "size": [
+          75,
+          60
+        ],
+        "z": 0,
+        "blend": 3
+      },
+      {
+        "center": [
+          -45,
+          -20
+        ],
+        "size": [
+          16,
+          7
+        ],
+        "z": 0,
+        "blend": 3
+      },
+      {
+        "center": [
+          -142,
+          -79
+        ],
+        "size": [
+          24,
+          24
+        ],
+        "z": 0,
+        "blend": 3
+      },
+      {
+        "center": [
+          -150,
+          120
+        ],
+        "size": [
+          55,
+          45
+        ],
+        "z": 4,
+        "blend": 3
+      },
+      {
+        "center": [
+          156,
+          22
+        ],
+        "size": [
+          155,
+          35
+        ],
+        "z": 0,
+        "blend": 3
+      },
+      {
+        "center": [
+          39,
+          187
+        ],
+        "size": [
+          35,
+          15
+        ],
+        "z": 28,
+        "blend": 3
+      },
+      {
+        "center": [
+          104,
+          80
+        ],
+        "size": [
+          102,
+          16
+        ],
+        "z": 8,
+        "blend": 2
+      },
+      {
+        "center": [
+          104,
+          103
+        ],
+        "size": [
+          102,
+          16
+        ],
+        "z": 13,
+        "blend": 2
+      },
+      {
+        "center": [
+          104,
+          126
+        ],
+        "size": [
+          102,
+          16
+        ],
+        "z": 18,
+        "blend": 2
+      },
+      {
+        "center": [
+          104,
+          149
+        ],
+        "size": [
+          102,
+          16
+        ],
+        "z": 23,
+        "blend": 2
+      },
+      {
+        "center": [
+          104,
+          172
+        ],
+        "size": [
+          102,
+          16
+        ],
+        "z": 28,
+        "blend": 2
+      }
+    ]
+  },
+  "areas": [
+    {
+      "id": "plaza",
+      "center": [
+        0,
+        5
+      ],
+      "size": [
+        140,
+        110
+      ],
+      "color": "#d5b98a",
+      "label": "Clock plaza"
+    },
+    {
+      "id": "commercial",
+      "center": [
+        -115,
+        -108
+      ],
+      "size": [
+        220,
+        180
+      ],
+      "color": "#d78e79",
+      "label": "Main street"
+    },
+    {
+      "id": "residential_a",
+      "center": [
+        95,
+        125
+      ],
+      "size": [
+        160,
+        140
+      ],
+      "color": "#90ad86",
+      "label": "Hillside terraces"
+    },
+    {
+      "id": "residential_b",
+      "center": [
+        -150,
+        120
+      ],
+      "size": [
+        150,
+        120
+      ],
+      "color": "#85a7ba",
+      "label": "Mid-rise garden"
+    },
+    {
+      "id": "industrial",
+      "center": [
+        155,
+        7
+      ],
+      "size": [
+        170,
+        120
+      ],
+      "color": "#b2a1b9",
+      "label": "Workshop / depot"
+    }
+  ],
+  "lots": [
+    {
+      "id": "clock_hall",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          0,
+          43
+        ],
+        "size": [
+          34,
+          22
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "landmark": "clock_tower",
+      "interior": {
+        "clear_height": 7,
+        "wall_thickness": 0.25,
+        "optional": false,
+        "openings": [
+          {
+            "wall": "south",
+            "offset": 0,
+            "width": 5,
+            "height": 4.5,
+            "sill": 0,
+            "kind": "door"
+          },
+          {
+            "wall": "east",
+            "offset": 0,
+            "width": 4,
+            "height": 4.5,
+            "sill": 0,
+            "kind": "door"
+          },
+          {
+            "wall": "south",
+            "offset": -10,
+            "width": 9,
+            "height": 5,
+            "sill": 1,
+            "kind": "window"
+          },
+          {
+            "wall": "south",
+            "offset": 10,
+            "width": 9,
+            "height": 5,
+            "sill": 1,
+            "kind": "window"
+          }
+        ],
+        "props": [
+          {
+            "id": "ticket_gate",
+            "center": [
+              -8,
+              0
+            ],
+            "size": [
+              1,
+              3,
+              1.1
+            ]
+          },
+          {
+            "id": "ticket_gate_2",
+            "center": [
+              -5,
+              0
+            ],
+            "size": [
+              1,
+              3,
+              1.1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cafe",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          -45,
+          -30
+        ],
+        "size": [
+          14,
+          12
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "interior": {
+        "clear_height": 4.2,
+        "wall_thickness": 0.25,
+        "optional": false,
+        "openings": [
+          {
+            "wall": "north",
+            "offset": 0,
+            "width": 2.4,
+            "height": 3,
+            "sill": 0,
+            "kind": "door"
+          },
+          {
+            "wall": "north",
+            "offset": -4.8,
+            "width": 3.2,
+            "height": 2.8,
+            "sill": 0.7,
+            "kind": "window"
+          },
+          {
+            "wall": "north",
+            "offset": 4.8,
+            "width": 3.2,
+            "height": 2.8,
+            "sill": 0.7,
+            "kind": "window"
+          },
+          {
+            "wall": "east",
+            "offset": 0,
+            "width": 8,
+            "height": 2.8,
+            "sill": 0.7,
+            "kind": "window"
+          }
+        ],
+        "props": [
+          {
+            "id": "counter",
+            "center": [
+              -3,
+              -2
+            ],
+            "size": [
+              5,
+              1,
+              1.1
+            ]
+          },
+          {
+            "id": "window_seat",
+            "center": [
+              5,
+              2
+            ],
+            "size": [
+              1,
+              3,
+              0.45
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "plaza_front_00",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          -53,
+          8
+        ],
+        "size": [
+          18,
+          22
+        ],
+        "rotation": 0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "plaza_front_01",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          53,
+          8
+        ],
+        "size": [
+          18,
+          22
+        ],
+        "rotation": 0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "plaza_front_02",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          -30,
+          48
+        ],
+        "size": [
+          16,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "plaza_front_03",
+      "area": "plaza",
+      "footprint": {
+        "center": [
+          54,
+          46
+        ],
+        "size": [
+          16,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_00_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -72.238,
+          -43.209
+        ],
+        "size": [
+          12,
+          14
+        ],
+        "rotation": 214.674
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_00_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -55.237,
+          -72.061
+        ],
+        "size": [
+          16,
+          18
+        ],
+        "rotation": 214.674
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_01_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -91.986,
+          -55.514
+        ],
+        "size": [
+          17,
+          18
+        ],
+        "rotation": 225.0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_01_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -70.838,
+          -80.046
+        ],
+        "size": [
+          11,
+          12
+        ],
+        "rotation": 225.0
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_02_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -103.14,
+          -76.059
+        ],
+        "size": [
+          13,
+          12
+        ],
+        "rotation": 235.326
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_02_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -79.44,
+          -95.411
+        ],
+        "size": [
+          18,
+          16
+        ],
+        "rotation": 235.326
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_03_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -117.281,
+          -93.336
+        ],
+        "size": [
+          12,
+          16
+        ],
+        "rotation": 241.423
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_03_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -86.685,
+          -112.843
+        ],
+        "size": [
+          13,
+          20
+        ],
+        "rotation": 241.423
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_04_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -129.421,
+          -110.396
+        ],
+        "size": [
+          11,
+          20
+        ],
+        "rotation": 241.423
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_04_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -100.405,
+          -129.042
+        ],
+        "size": [
+          17,
+          14
+        ],
+        "rotation": 241.423
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_05_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -135.546,
+          -128.557
+        ],
+        "size": [
+          14,
+          14
+        ],
+        "rotation": 235.326
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_05_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -109.379,
+          -149.616
+        ],
+        "size": [
+          12,
+          19
+        ],
+        "rotation": 235.326
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_06_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -148.753,
+          -139.747
+        ],
+        "size": [
+          12,
+          18
+        ],
+        "rotation": 225.0
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_06_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -128.03,
+          -163.854
+        ],
+        "size": [
+          16,
+          12
+        ],
+        "rotation": 225.0
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_07_w",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -159.886,
+          -153.037
+        ],
+        "size": [
+          16,
+          13
+        ],
+        "rotation": 214.674
+      },
+      "storeys": 3,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shop_07_e",
+      "area": "commercial",
+      "footprint": {
+        "center": [
+          -143.852,
+          -180.491
+        ],
+        "size": [
+          14,
+          16
+        ],
+        "rotation": 214.674
+      },
+      "storeys": 2,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_0_0",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          65,
+          80
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 8,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_0_1",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          91,
+          80
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 8,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_0_2",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          117,
+          80
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 8,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_0_3",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          143,
+          80
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 8,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_1_0",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          65,
+          103
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 13,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_1_1",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          91,
+          103
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 13,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_1_2",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          117,
+          103
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 13,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_1_3",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          143,
+          103
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 13,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_2_0",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          65,
+          126
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 18,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_2_1",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          91,
+          126
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 18,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_2_2",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          117,
+          126
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 18,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_2_3",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          143,
+          126
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 18,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_3_0",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          65,
+          149
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 23,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_3_1",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          91,
+          149
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 23,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_3_2",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          117,
+          149
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 23,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_3_3",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          143,
+          149
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 23,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_4_0",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          65,
+          172
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 28,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "interior": {
+        "clear_height": 4.2,
+        "wall_thickness": 0.25,
+        "optional": true,
+        "openings": [
+          {
+            "wall": "south",
+            "offset": 0,
+            "width": 2,
+            "height": 3,
+            "sill": 0,
+            "kind": "door"
+          }
+        ],
+        "props": []
+      }
+    },
+    {
+      "id": "terrace_4_1",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          91,
+          172
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 28,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_4_2",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          117,
+          172
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 28,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "terrace_4_3",
+      "area": "residential_a",
+      "footprint": {
+        "center": [
+          143,
+          172
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 2,
+      "base_z": 28,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "midrise_00",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -200,
+          80
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 4,
+      "base_z": 4,
+      "hero": true,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_01",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -150,
+          80
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 5,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_02",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -100,
+          80
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 4,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_03",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -200,
+          120
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 5,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_04",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -100,
+          120
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 4,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_05",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -200,
+          160
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 5,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_06",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -150,
+          160
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 4,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "midrise_07",
+      "area": "residential_b",
+      "footprint": {
+        "center": [
+          -100,
+          160
+        ],
+        "size": [
+          28,
+          25
+        ],
+        "rotation": 0
+      },
+      "storeys": 5,
+      "base_z": 4,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5,
+      "corner_radius": 4
+    },
+    {
+      "id": "workshop",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          105,
+          -36
+        ],
+        "size": [
+          20,
+          14
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 6,
+      "floor_height": 3.5,
+      "interior": {
+        "clear_height": 6,
+        "wall_thickness": 0.25,
+        "optional": false,
+        "openings": [
+          {
+            "wall": "south",
+            "offset": 0,
+            "width": 6,
+            "height": 5,
+            "sill": 0,
+            "kind": "door"
+          },
+          {
+            "wall": "west",
+            "offset": 0,
+            "width": 3,
+            "height": 3,
+            "sill": 0,
+            "kind": "door"
+          }
+        ],
+        "props": []
+      }
+    },
+    {
+      "id": "shed_00",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          150,
+          -40
+        ],
+        "size": [
+          24,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shed_01",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          185,
+          -40
+        ],
+        "size": [
+          24,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shed_02",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          220,
+          -40
+        ],
+        "size": [
+          24,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shed_03",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          150,
+          -5
+        ],
+        "size": [
+          24,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "shed_04",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          190,
+          -5
+        ],
+        "size": [
+          24,
+          18
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": false,
+      "ground_height": 4.2,
+      "floor_height": 3.5
+    },
+    {
+      "id": "rail_depot",
+      "area": "industrial",
+      "footprint": {
+        "center": [
+          180,
+          60
+        ],
+        "size": [
+          70,
+          12
+        ],
+        "rotation": 0
+      },
+      "storeys": 1,
+      "base_z": 0,
+      "hero": true,
+      "ground_height": 6,
+      "floor_height": 3.5
+    }
+  ],
+  "slabs": [
+    {
+      "id": "central_plaza",
+      "area": "plaza",
+      "center": [
+        0,
+        0
+      ],
+      "size": [
+        75,
+        60
+      ],
+      "z": 0,
+      "kind": "paving"
+    },
+    {
+      "id": "cafe_terrace",
+      "area": "plaza",
+      "center": [
+        -45,
+        -20
+      ],
+      "size": [
+        16,
+        7
+      ],
+      "z": 0,
+      "kind": "paving"
+    },
+    {
+      "id": "side_square",
+      "area": "commercial",
+      "center": [
+        -154.92,
+        -84.67
+      ],
+      "size": [
+        24,
+        24
+      ],
+      "z": 0,
+      "kind": "paving"
+    },
+    {
+      "id": "courtyard",
+      "area": "residential_b",
+      "center": [
+        -150,
+        120
+      ],
+      "size": [
+        55,
+        45
+      ],
+      "z": 4,
+      "kind": "garden"
+    },
+    {
+      "id": "industrial_yard",
+      "area": "industrial",
+      "center": [
+        156,
+        22
+      ],
+      "size": [
+        155,
+        35
+      ],
+      "z": 0,
+      "kind": "paving"
+    },
+    {
+      "id": "overlook",
+      "area": "residential_a",
+      "center": [
+        39,
+        187
+      ],
+      "size": [
+        35,
+        15
+      ],
+      "z": 28,
+      "kind": "overlook"
+    }
+  ],
+  "streets": [
+    {
+      "id": "main_street",
+      "area": "commercial",
+      "points": [
+        [
+          -37.0,
+          -40.0,
+          0
+        ],
+        [
+          -55.256,
+          -49.944,
+          0
+        ],
+        [
+          -71.925,
+          -61.475,
+          0
+        ],
+        [
+          -86.025,
+          -75.575,
+          0
+        ],
+        [
+          -97.556,
+          -92.244,
+          0
+        ],
+        [
+          -107.5,
+          -110.5,
+          0
+        ],
+        [
+          -117.444,
+          -128.756,
+          0
+        ],
+        [
+          -128.975,
+          -145.425,
+          0
+        ],
+        [
+          -143.075,
+          -159.525,
+          0
+        ],
+        [
+          -159.744,
+          -171.056,
+          0
+        ],
+        [
+          -178.0,
+          -181.0,
+          0
+        ]
+      ],
+      "width": 14,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "service_lane",
+      "area": "commercial",
+      "points": [
+        [
+          -34.704,
+          -44.215,
+          0
+        ],
+        [
+          -52.735,
+          -54.037,
+          0
+        ],
+        [
+          -68.838,
+          -65.176,
+          0
+        ],
+        [
+          -82.324,
+          -78.662,
+          0
+        ],
+        [
+          -93.463,
+          -94.765,
+          0
+        ],
+        [
+          -103.285,
+          -112.796,
+          0
+        ],
+        [
+          -113.351,
+          -131.277,
+          0
+        ],
+        [
+          -125.274,
+          -148.512,
+          0
+        ],
+        [
+          -139.988,
+          -163.226,
+          0
+        ],
+        [
+          -157.223,
+          -175.149,
+          0
+        ],
+        [
+          -175.704,
+          -185.215,
+          0
+        ]
+      ],
+      "width": 3,
+      "kind": "service"
+    },
+    {
+      "id": "east_west",
+      "area": "plaza",
+      "points": [
+        [
+          -240,
+          -20,
+          0
+        ],
+        [
+          240,
+          -20,
+          0
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "side_square_link",
+      "area": "commercial",
+      "points": [
+        [
+          -107.5,
+          -110.5,
+          0
+        ],
+        [
+          -154.92,
+          -84.67,
+          0
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "hall_to_yard",
+      "area": "industrial",
+      "points": [
+        [
+          19,
+          43,
+          0
+        ],
+        [
+          19,
+          30,
+          0
+        ],
+        [
+          70,
+          30,
+          0
+        ],
+        [
+          70,
+          -49,
+          0
+        ],
+        [
+          105,
+          -49,
+          0
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "workshop_approach",
+      "area": "industrial",
+      "points": [
+        [
+          105,
+          -43,
+          0
+        ],
+        [
+          105,
+          -49,
+          0
+        ],
+        [
+          88,
+          -49,
+          0
+        ],
+        [
+          88,
+          25,
+          0
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "midrise_access",
+      "area": "residential_b",
+      "points": [
+        [
+          -75,
+          0,
+          0
+        ],
+        [
+          -65,
+          45,
+          0
+        ],
+        [
+          -65,
+          140,
+          4
+        ],
+        [
+          -150,
+          140,
+          4
+        ],
+        [
+          -150,
+          120,
+          4
+        ]
+      ],
+      "width": 6,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "courtyard_south",
+      "area": "residential_b",
+      "points": [
+        [
+          -220,
+          100,
+          4
+        ],
+        [
+          -80,
+          100,
+          4
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "courtyard_north",
+      "area": "residential_b",
+      "points": [
+        [
+          -220,
+          140,
+          4
+        ],
+        [
+          -80,
+          140,
+          4
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "terrace_lane_0",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          69,
+          8
+        ],
+        [
+          168,
+          69,
+          8
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "switchback_0",
+      "area": "residential_a",
+      "points": [
+        [
+          168,
+          69,
+          8
+        ],
+        [
+          168,
+          92,
+          13
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "terrace_lane_1",
+      "area": "residential_a",
+      "points": [
+        [
+          168,
+          92,
+          13
+        ],
+        [
+          38,
+          92,
+          13
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "switchback_1",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          92,
+          13
+        ],
+        [
+          38,
+          115,
+          18
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "terrace_lane_2",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          115,
+          18
+        ],
+        [
+          168,
+          115,
+          18
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "switchback_2",
+      "area": "residential_a",
+      "points": [
+        [
+          168,
+          115,
+          18
+        ],
+        [
+          168,
+          138,
+          23
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "terrace_lane_3",
+      "area": "residential_a",
+      "points": [
+        [
+          168,
+          138,
+          23
+        ],
+        [
+          38,
+          138,
+          23
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "switchback_3",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          138,
+          23
+        ],
+        [
+          38,
+          161,
+          28
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "terrace_lane_4",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          161,
+          28
+        ],
+        [
+          168,
+          161,
+          28
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "summit_link",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          161,
+          28
+        ],
+        [
+          38,
+          187,
+          28
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "overlook_to_midrise",
+      "area": "residential_b",
+      "points": [
+        [
+          38,
+          187,
+          28
+        ],
+        [
+          18,
+          187,
+          28
+        ],
+        [
+          -65,
+          187,
+          4
+        ],
+        [
+          -65,
+          140,
+          4
+        ],
+        [
+          -150,
+          140,
+          4
+        ],
+        [
+          -150,
+          120,
+          4
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "under_viaduct_to_stairs",
+      "area": "residential_a",
+      "points": [
+        [
+          70,
+          62,
+          0
+        ],
+        [
+          38,
+          62,
+          6.564102564102564
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    },
+    {
+      "id": "plaza_to_main",
+      "area": "commercial",
+      "points": [
+        [
+          -30,
+          -20,
+          0
+        ],
+        [
+          -30,
+          -40,
+          0
+        ],
+        [
+          -37,
+          -40,
+          0
+        ]
+      ],
+      "width": 5,
+      "kind": "pedestrian"
+    }
+  ],
+  "stairs": [
+    {
+      "id": "hill_stair_0",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          30,
+          0
+        ],
+        [
+          38,
+          69,
+          8
+        ]
+      ],
+      "width": 5,
+      "max_riser": 0.17
+    },
+    {
+      "id": "hill_stair_1",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          69,
+          8
+        ],
+        [
+          38,
+          92,
+          13
+        ]
+      ],
+      "width": 5,
+      "max_riser": 0.17
+    },
+    {
+      "id": "hill_stair_2",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          92,
+          13
+        ],
+        [
+          38,
+          115,
+          18
+        ]
+      ],
+      "width": 5,
+      "max_riser": 0.17
+    },
+    {
+      "id": "hill_stair_3",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          115,
+          18
+        ],
+        [
+          38,
+          138,
+          23
+        ]
+      ],
+      "width": 5,
+      "max_riser": 0.17
+    },
+    {
+      "id": "hill_stair_4",
+      "area": "residential_a",
+      "points": [
+        [
+          38,
+          138,
+          23
+        ],
+        [
+          38,
+          161,
+          28
+        ]
+      ],
+      "width": 5,
+      "max_riser": 0.17
+    }
+  ],
+  "viaduct": {
+    "id": "monorail",
+    "area": "industrial",
+    "points": [
+      [
+        -240,
+        62,
+        12
+      ],
+      [
+        240,
+        62,
+        12
+      ]
+    ],
+    "width": 7,
+    "deck_thickness": 1.2,
+    "pier_spacing": 32,
+    "pier_size": 1.8,
+    "exclude_piers": [
+      [
+        -70,
+        -60
+      ],
+      [
+        32,
+        72
+      ],
+      [
+        145,
+        215
+      ]
+    ]
+  },
+  "boundaries": [
+    {
+      "id": "south",
+      "points": [
+        [
+          -240,
+          -198,
+          0
+        ],
+        [
+          240,
+          -198,
+          0
+        ]
+      ],
+      "embankment_depth": 12
+    },
+    {
+      "id": "west",
+      "points": [
+        [
+          -238,
+          -198,
+          0
+        ],
+        [
+          -238,
+          200,
+          28
+        ]
+      ],
+      "embankment_depth": 12
+    }
+  ],
+  "backdrop": {
+    "center": [
+      0,
+      -700,
+      -14
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "kind": "bay",
+    "collision": false,
+    "west_extension": {
+      "center": [
+        -700,
+        0,
+        -14
+      ],
+      "size": [
+        900,
+        1400
+      ]
+    }
+  },
+  "player_start": {
+    "position": [
+      -37,
+      -28,
+      1.1
+    ],
+    "look_at": [
+      0,
+      43,
+      5
+    ]
+  },
+  "routes": [
+    {
+      "id": "R1",
+      "points": [
+        [
+          -37,
+          -28
+        ],
+        [
+          -20,
+          -25
+        ],
+        [
+          -20,
+          -5
+        ],
+        [
+          -45,
+          -5
+        ],
+        [
+          -45,
+          -20
+        ],
+        [
+          -45,
+          -23
+        ],
+        [
+          -45,
+          -25
+        ],
+        [
+          -45,
+          -30
+        ],
+        [
+          -40,
+          -30
+        ]
+      ],
+      "length_range": [
+        85,
+        100
+      ],
+      "segments": [
+        {
+          "tag": "exterior_cafe_approach",
+          "start_index": 0,
+          "end_index": 5,
+          "category": "exterior"
+        },
+        {
+          "tag": "doorway_cafe",
+          "start_index": 5,
+          "end_index": 6,
+          "category": "doorway"
+        },
+        {
+          "tag": "interior_cafe",
+          "start_index": 6,
+          "end_index": 8,
+          "category": "interior"
+        }
+      ],
+      "look_at": [
+        0,
+        43,
+        10
+      ]
+    },
+    {
+      "id": "R2",
+      "points": [
+        [
+          -107.5,
+          -110.5
+        ],
+        [
+          -97.556,
+          -92.244
+        ],
+        [
+          -86.025,
+          -75.575
+        ],
+        [
+          -71.925,
+          -61.475
+        ],
+        [
+          -55.256,
+          -49.944
+        ],
+        [
+          -37.0,
+          -40.0
+        ],
+        [
+          -30,
+          -40
+        ],
+        [
+          -30,
+          -20
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ],
+        [
+          0,
+          34
+        ],
+        [
+          0,
+          43
+        ],
+        [
+          19,
+          43
+        ],
+        [
+          19,
+          30
+        ],
+        [
+          70,
+          30
+        ],
+        [
+          70,
+          -49
+        ],
+        [
+          105,
+          -49
+        ],
+        [
+          105,
+          -41
+        ],
+        [
+          105,
+          -36
+        ],
+        [
+          96,
+          -36
+        ],
+        [
+          93,
+          -36
+        ],
+        [
+          88,
+          -36
+        ],
+        [
+          88,
+          25
+        ],
+        [
+          70,
+          25
+        ],
+        [
+          70,
+          62
+        ],
+        [
+          38,
+          62,
+          6.55
+        ],
+        [
+          38,
+          69,
+          8.0
+        ],
+        [
+          38,
+          92,
+          13.0
+        ],
+        [
+          38,
+          115,
+          18.0
+        ],
+        [
+          38,
+          138,
+          23.0
+        ],
+        [
+          38,
+          161,
+          28.0
+        ],
+        [
+          38,
+          187,
+          28.0
+        ],
+        [
+          18,
+          187,
+          28.0
+        ],
+        [
+          -65,
+          187,
+          4.0
+        ],
+        [
+          -65,
+          140,
+          4.0
+        ],
+        [
+          -150,
+          140,
+          4.0
+        ],
+        [
+          -150,
+          120,
+          4.0
+        ],
+        [
+          -150,
+          140,
+          4.0
+        ],
+        [
+          -65,
+          140,
+          4.0
+        ],
+        [
+          -65,
+          45,
+          0.0
+        ],
+        [
+          -75,
+          0
+        ],
+        [
+          -75,
+          -20
+        ],
+        [
+          -37,
+          -20
+        ],
+        [
+          -30,
+          -20
+        ],
+        [
+          -30,
+          -40
+        ],
+        [
+          -37,
+          -40
+        ],
+        [
+          -55.256,
+          -49.944
+        ],
+        [
+          -71.925,
+          -61.475
+        ],
+        [
+          -86.025,
+          -75.575
+        ],
+        [
+          -97.556,
+          -92.244
+        ],
+        [
+          -107.5,
+          -110.5
+        ]
+      ],
+      "length_range": [
+        1350,
+        1450
+      ],
+      "segments": [
+        {
+          "tag": "exterior_main_street",
+          "start_index": 0,
+          "end_index": 9,
+          "category": "exterior"
+        },
+        {
+          "tag": "doorway_transit_hall_entry",
+          "start_index": 9,
+          "end_index": 10,
+          "category": "doorway"
+        },
+        {
+          "tag": "interior_transit_hall",
+          "start_index": 10,
+          "end_index": 11,
+          "category": "interior"
+        },
+        {
+          "tag": "doorway_transit_hall_exit",
+          "start_index": 11,
+          "end_index": 12,
+          "category": "doorway"
+        },
+        {
+          "tag": "exterior_workshop_approach",
+          "start_index": 12,
+          "end_index": 16,
+          "category": "exterior"
+        },
+        {
+          "tag": "doorway_workshop_entry",
+          "start_index": 16,
+          "end_index": 17,
+          "category": "doorway"
+        },
+        {
+          "tag": "interior_workshop",
+          "start_index": 17,
+          "end_index": 19,
+          "category": "interior"
+        },
+        {
+          "tag": "doorway_workshop_exit",
+          "start_index": 19,
+          "end_index": 21,
+          "category": "doorway"
+        },
+        {
+          "tag": "exterior_hill_loop",
+          "start_index": 21,
+          "end_index": 50,
+          "category": "exterior"
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "points": [
+        [
+          26,
+          187,
+          28.0
+        ],
+        [
+          38,
+          187,
+          28.0
+        ],
+        [
+          51,
+          187,
+          28.0
+        ]
+      ],
+      "length_range": [
+        20,
+        35
+      ],
+      "segments": [
+        {
+          "tag": "exterior_overlook",
+          "start_index": 0,
+          "end_index": 2,
+          "category": "exterior"
+        }
+      ],
+      "look_at": [
+        0,
+        0,
+        4
+      ]
+    }
+  ],
+  "east_west_walk": {
+    "points": [
+      [
+        -236,
+        -20,
+        0
+      ],
+      [
+        240,
+        -20,
+        0
+      ]
+    ],
+    "speed": 1.5,
+    "expected_minutes": [
+      5,
+      6
+    ]
+  }
+}

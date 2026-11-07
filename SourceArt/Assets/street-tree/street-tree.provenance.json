@@ -1,0 +1,38 @@
+{
+  "asset": "street-tree",
+  "run": "20261106T072713-bd0f86",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:07:36.342460+00:00",
+  "files": {
+    "glb": {
+      "file": "street-tree.glb",
+      "sha256": "76f110cd2ee408cab59922ebfd0e14f80ca166d5e5251d7242556a6ebffd7de3",
+      "bytes": 491020
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "street-tree.blend",
+      "blend_sha256": "91267d8dba8579aa2b0a089dd98d348a99e479725ed00a28d9475143b9e61c43",
+      "script": "build_street-tree.py",
+      "script_sha256": "f4fca6adbafccc3d76596e1467363f52809af730d98f314bc83aea1d16437817"
+    },
+    "downloaded_at": "2026-11-06T07:27:13.054058+00:00",
+    "sha256": "fb3ea6d02a771777d877ad55ee63ff68aa18cd9af6b5160466c7410ad8a71cbf",
+    "bytes": 481692,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T07:32:47.132225+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero/front renders): leaf-card canopy with trunk, 6 m, 5.8k tris; canopy a little small for the height, acceptable as a route placeholder pending engine wind check. Sol accept-local concurs."
+    }
+  ],
+  "lineage": null,
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/street-tree/runs/20261106T072713-bd0f86",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

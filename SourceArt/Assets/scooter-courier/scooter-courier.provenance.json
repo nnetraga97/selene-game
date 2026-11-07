@@ -1,0 +1,45 @@
+{
+  "asset": "scooter-courier",
+  "run": "20261106T185044-a38d64",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T18:51:10.647828+00:00",
+  "files": {
+    "glb": {
+      "file": "scooter-courier.glb",
+      "sha256": "78d882ca479dfa8d4ad9bc0682c42862816c862927b8e62d9448a6e3093d9395",
+      "bytes": 12142676
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/4dc9eb82-a0ae-46c6-b4c3-2567e0ec243d",
+    "downloaded_at": "2026-11-06T18:24:49.801378+00:00",
+    "sha256": "95e6a46a5eb01b6906e0561f9c82c78031a1e34241eb193d87af722e0a0b746f",
+    "bytes": 12803276,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T18:51:10.594182+00:00",
+      "decision": "accept-local",
+      "notes": "Claude 2026-11-06: engine-compat candidate of the accepted run; root scale baked (no non-unit glTF node), dims match spec, triangles unchanged, single mesh, no importer helper. Same visual asset."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T183307-af1e9d",
+    "change": "Engine-compat: bake the Node_0 root scale into the rig/mesh so no glTF node keeps a non-unit scale (UE 5.8 Interchange double-applies a scaled root; see festival-champion). No geometry, weight, UV or material edits.",
+    "candidate_sha256": "4aeaaf065774b0bf8a0be203d70547d984cff74b9a59dbf859e2a980a78ffff2",
+    "candidate_name": "scooter-courier-baked.glb",
+    "at": "2026-11-06T18:50:44.943263+00:00",
+    "repair_files": [
+      {
+        "file": "bake_root_scale.py",
+        "sha256": "ebcd533500e28d161c5ff6ec8b25b91be59b70e6d8c33ab29d824b6eb726cb31"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/scooter-courier/runs/20261106T185044-a38d64",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

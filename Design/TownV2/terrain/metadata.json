@@ -1,0 +1,297 @@
+{
+  "source_tile": "Copernicus_DSM_COG_10_N19_00_W156_00_DEM.tif",
+  "source_sha256": "a1881be4ef3710ebf3d0e59a7a22e77ca79e2a6a3f51cdbadb74209e0698e00d",
+  "source_geotiff_tags": {
+    "33922": [
+      0.0,
+      0.0,
+      0.0,
+      -156.0,
+      20.0,
+      0.0
+    ],
+    "33550": [
+      0.0002777777777777778,
+      0.0002777777777777778,
+      0.0
+    ],
+    "34735": [
+      1,
+      1,
+      0,
+      7,
+      1024,
+      0,
+      1,
+      2,
+      1025,
+      0,
+      1,
+      2,
+      2048,
+      0,
+      1,
+      4326,
+      2049,
+      34737,
+      7,
+      0,
+      2054,
+      0,
+      1,
+      9102,
+      2057,
+      34736,
+      1,
+      1,
+      2059,
+      34736,
+      1,
+      0
+    ],
+    "34737": "WGS 84|"
+  },
+  "bounds_m": [
+    -590,
+    -750,
+    910,
+    750
+  ],
+  "crop_centre_offset_east_m": 160,
+  "crop_reason": "Shift 160 m east to retain 1.5 km coverage inside the single authorized tile; core remains surrounded by 590 m west and 910 m east backdrop",
+  "size": [
+    1009,
+    1009
+  ],
+  "spacing_m": 1.4880952380952381,
+  "vertical_datum": "EGM2008 orthometric metres",
+  "sea_level_m": 0,
+  "source_type": "Copernicus GLO-30 digital surface model including vegetation and structures; not surveyed bare earth",
+  "source_resolution_approx_m": 30,
+  "smoothing_sigma_m": 9,
+  "pad_blend_m": 7,
+  "shore_blend_m": 12,
+  "seabed": "synthetic depth min(8 m, distance to coast * 0.20), no bathymetric claim",
+  "missing_tile_pixels": 0,
+  "missing_land_pixels": 0,
+  "height_range_m": [
+    -8.0,
+    82.16913904636135
+  ],
+  "encoding": "uint16 = round(32768 + elevation_m * 128); little-endian r16",
+  "quantization_m": 0.0078125,
+  "ue_landscape": {
+    "section_size_quads": 63,
+    "sections_per_component": 1,
+    "components": [
+      16,
+      16
+    ],
+    "scale_xyz_cm": [
+      148.8095238095238,
+      148.8095238095238,
+      100
+    ],
+    "actor_location_cm": [
+      -75000,
+      -59000,
+      0
+    ],
+    "height_file": "heightmap-ue.png",
+    "orientation": "columns north increasing; rows east increasing; X=north,Y=east"
+  },
+  "pads": [
+    {
+      "id": "way/198653703",
+      "kind": "building",
+      "target_z_m": 5.61090399003591,
+      "blend_m": 7
+    },
+    {
+      "id": "way/260244425",
+      "kind": "building",
+      "target_z_m": 13.55545016601474,
+      "blend_m": 7
+    },
+    {
+      "id": "way/289193785",
+      "kind": "building",
+      "target_z_m": 8.260796622997859,
+      "blend_m": 7
+    },
+    {
+      "id": "way/289193787",
+      "kind": "building",
+      "target_z_m": 8.467788601169813,
+      "blend_m": 7
+    },
+    {
+      "id": "way/289193790",
+      "kind": "building",
+      "target_z_m": 13.34031210902643,
+      "blend_m": 7
+    },
+    {
+      "id": "way/455896316",
+      "kind": "building",
+      "target_z_m": 7.450382288992472,
+      "blend_m": 7
+    },
+    {
+      "id": "way/494460070",
+      "kind": "building",
+      "target_z_m": 11.434710586627842,
+      "blend_m": 7
+    },
+    {
+      "id": "way/552608374",
+      "kind": "building",
+      "target_z_m": 8.62686970449598,
+      "blend_m": 7
+    },
+    {
+      "id": "way/552608375",
+      "kind": "building",
+      "target_z_m": 5.531272816672333,
+      "blend_m": 7
+    },
+    {
+      "id": "way/663900821",
+      "kind": "building",
+      "target_z_m": 5.724176622805807,
+      "blend_m": 7
+    },
+    {
+      "id": "way/663900822",
+      "kind": "building",
+      "target_z_m": 5.707961760506666,
+      "blend_m": 7
+    },
+    {
+      "id": "way/663900823",
+      "kind": "building",
+      "target_z_m": 6.679941686250603,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831071357",
+      "kind": "building",
+      "target_z_m": 6.944867223013932,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831071358",
+      "kind": "building",
+      "target_z_m": 7.92977134963547,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831071359",
+      "kind": "building",
+      "target_z_m": 8.541079028535945,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077550",
+      "kind": "building",
+      "target_z_m": 6.397820769457483,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077551",
+      "kind": "building",
+      "target_z_m": 7.56154659949211,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077552",
+      "kind": "building",
+      "target_z_m": 8.2402007958867,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077554",
+      "kind": "building",
+      "target_z_m": 6.396503812126745,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077555",
+      "kind": "building",
+      "target_z_m": 7.176479713856308,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077556",
+      "kind": "building",
+      "target_z_m": 7.963453433222285,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077557",
+      "kind": "building",
+      "target_z_m": 8.586754926592654,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077558",
+      "kind": "building",
+      "target_z_m": 9.649034845159603,
+      "blend_m": 7
+    },
+    {
+      "id": "way/831077559",
+      "kind": "building",
+      "target_z_m": 10.347223300547014,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1296717080",
+      "kind": "building",
+      "target_z_m": 7.738359001499983,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1296717081",
+      "kind": "building",
+      "target_z_m": 5.600655580125594,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1296717082",
+      "kind": "building",
+      "target_z_m": 5.494897219079412,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1331478424",
+      "kind": "building",
+      "target_z_m": 7.5799432989988205,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1452659412",
+      "kind": "building",
+      "target_z_m": 5.754769854327261,
+      "blend_m": 7
+    },
+    {
+      "id": "way/1452659413",
+      "kind": "building",
+      "target_z_m": 5.353507415469728,
+      "blend_m": 7
+    },
+    {
+      "id": "relation/11356594",
+      "kind": "building",
+      "target_z_m": 12.057870329431974,
+      "blend_m": 7
+    },
+    {
+      "id": "design/plaza",
+      "kind": "plaza",
+      "target_z_m": 6.258679263915216,
+      "blend_m": 7
+    }
+  ]
+}

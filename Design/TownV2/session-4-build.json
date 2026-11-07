@@ -1,0 +1,1132 @@
+{
+  "placements": [
+    {
+      "lot": "way/198653703",
+      "hero": false,
+      "actor": "V2_Lot_way_198653703",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -18.66392905010745,
+        -17.23290282368915,
+        5.8309999999999995
+      ],
+      "scale": 1.128,
+      "yaw": -29.002880230506165,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        29.63072193678615,
+        15.124858296226083
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/260244425",
+      "hero": false,
+      "actor": "V2_Lot_way_260244425",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        118.12483275942253,
+        74.66131965071334,
+        13.775
+      ],
+      "scale": 1.128,
+      "yaw": 180.0,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        30.69928358822235,
+        13.750334481154937
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/289193785",
+      "hero": false,
+      "actor": "V2_Lot_way_289193785",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -117.78977499678268,
+        114.50268312806726,
+        8.481
+      ],
+      "scale": 1.128,
+      "yaw": 399.9947267337262,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        31.923832222337666,
+        9.375952982427037
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/289193790",
+      "hero": false,
+      "actor": "V2_Lot_way_289193790",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        97.2544246385757,
+        45.22543066968894,
+        13.56
+      ],
+      "scale": 1.128,
+      "yaw": 328.19772156634446,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        28.02759834840748,
+        54.87724351252753
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/455896316",
+      "hero": "clock-hall",
+      "actor": "V2_Hero_clock-hall",
+      "asset": "/Game/Assets/clock-hall/clock-hall/StaticMeshes/clock-hall.clock-hall",
+      "building": "clock-hall",
+      "center_m": [
+        51.12009708175176,
+        12.719409627534128,
+        7.67
+      ],
+      "scale": 0.7017417905777176,
+      "yaw": 177.88455200174567,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        38.04611580841983,
+        15.79286071160712
+      ],
+      "building_dimensions_m": [
+        17.890985759671405,
+        14.52943185467855
+      ]
+    },
+    {
+      "lot": "way/494460070",
+      "hero": false,
+      "actor": "V2_Lot_way_494460070",
+      "asset": "/Game/Assets/apartment-curved/apartment-curved/StaticMeshes/apartment-curved.apartment-curved",
+      "building": "apartment-curved",
+      "center_m": [
+        23.924463794178642,
+        120.58933576809005,
+        11.655000000000001
+      ],
+      "scale": 1.128,
+      "yaw": 55.75070729071464,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        31.4024439483522,
+        22.56883689265962
+      ],
+      "building_dimensions_m": [
+        13.878916406249997,
+        14.15430427734375
+      ]
+    },
+    {
+      "lot": "way/552608374",
+      "hero": false,
+      "actor": "V2_Lot_way_552608374",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        59.295746583549416,
+        -40.815024628316614,
+        8.847000000000001
+      ],
+      "scale": 1.128,
+      "yaw": 146.71917583516358,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        43.47152731127835,
+        12.001420085635559
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/552608375",
+      "hero": false,
+      "actor": "V2_Lot_way_552608375",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner.shop-bakery-corner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        47.31431169830003,
+        -93.08636101052404,
+        5.7509999999999994
+      ],
+      "scale": 1.128,
+      "yaw": 360.0,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        50.43082095629663,
+        63.82727797895191
+      ],
+      "building_dimensions_m": [
+        11.889953056640623,
+        9.239814682617187
+      ]
+    },
+    {
+      "lot": "way/663900821",
+      "hero": "bakery",
+      "actor": "V2_Hero_bakery",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner.shop-bakery-corner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        -60.26892582792169,
+        58.384365738296914,
+        5.944
+      ],
+      "scale": 1.12,
+      "yaw": 138.46441650017937,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        22.710875247313226,
+        22.171785819594852
+      ],
+      "building_dimensions_m": [
+        11.8056271484375,
+        9.174284082031251
+      ]
+    },
+    {
+      "lot": "way/663900822",
+      "hero": false,
+      "actor": "V2_Lot_way_663900822",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -75.3038688786201,
+        69.097232529198,
+        5.928
+      ],
+      "scale": 1.128,
+      "yaw": 44.466387248653604,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        29.474233621570214,
+        15.841717224418815
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/663900823",
+      "hero": false,
+      "actor": "V2_Lot_way_663900823",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner.shop-bakery-corner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        -90.5509557117795,
+        84.02670041589137,
+        6.8999999999999995
+      ],
+      "scale": 1.128,
+      "yaw": 44.40196778319266,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        30.965254980087103,
+        21.12897311354861
+      ],
+      "building_dimensions_m": [
+        11.889953056640623,
+        9.239814682617187
+      ]
+    },
+    {
+      "lot": "way/831071357",
+      "hero": false,
+      "actor": "V2_Lot_way_831071357",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        88.12061310160756,
+        -89.64451420951112,
+        7.165
+      ],
+      "scale": 1.128,
+      "yaw": 75.35574136861486,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        23.626172288537816,
+        11.57453776852364
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/831071358",
+      "hero": false,
+      "actor": "V2_Lot_way_831071358",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        87.10889641747596,
+        -77.79336227572881,
+        8.15
+      ],
+      "scale": 1.052250676912689,
+      "yaw": 255.37895605537193,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        19.120597078109014,
+        12.159274484932354
+      ],
+      "building_dimensions_m": [
+        17.97336125342247,
+        7.1462053063812245
+      ]
+    },
+    {
+      "lot": "way/831071359",
+      "hero": false,
+      "actor": "V2_Lot_way_831071359",
+      "asset": "/Game/Assets/workshop-garage/workshop-garage/StaticMeshes/workshop-garage.workshop-garage",
+      "building": "workshop-garage",
+      "center_m": [
+        111.29216912221479,
+        -75.18926895879773,
+        8.761000000000001
+      ],
+      "scale": 1.128,
+      "yaw": 254.78971262180687,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        27.8838571674181,
+        28.79403641647464
+      ],
+      "building_dimensions_m": [
+        18.569856972656247,
+        17.018136826171876
+      ]
+    },
+    {
+      "lot": "way/831077550",
+      "hero": false,
+      "actor": "V2_Lot_way_831077550",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        98.83113479938056,
+        -114.84975089744925,
+        6.617999999999999
+      ],
+      "scale": 0.9371198570928618,
+      "yaw": 434.94815466228295,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        17.028538536026517,
+        8.731730677378636
+      ],
+      "building_dimensions_m": [
+        16.006826223864923,
+        6.364311320873495
+      ]
+    },
+    {
+      "lot": "way/831077551",
+      "hero": false,
+      "actor": "V2_Lot_way_831077551",
+      "asset": "/Game/Assets/apartment-curved/apartment-curved/StaticMeshes/apartment-curved.apartment-curved",
+      "building": "apartment-curved",
+      "center_m": [
+        114.06578083786243,
+        -111.33081168371967,
+        7.782
+      ],
+      "scale": 0.4994575340921072,
+      "yaw": 432.47290425218074,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        8.937178576218429,
+        6.537582394122637
+      ],
+      "building_dimensions_m": [
+        6.145327450475279,
+        6.2672641056307405
+      ]
+    },
+    {
+      "lot": "way/831077552",
+      "hero": false,
+      "actor": "V2_Lot_way_831077552",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        121.65939835599426,
+        -109.16131629119518,
+        8.46
+      ],
+      "scale": 0.6091823866806024,
+      "yaw": 0.0,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        11.069540004455703,
+        6.681203288011503
+      ],
+      "building_dimensions_m": [
+        10.40536760418836,
+        4.137172348535463
+      ]
+    },
+    {
+      "lot": "way/831077554",
+      "hero": false,
+      "actor": "V2_Lot_way_831077554",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        94.22901779462168,
+        -100.84298016138328,
+        6.617
+      ],
+      "scale": 0.9632057960006071,
+      "yaw": 73.70041649607595,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        17.502549851203412,
+        8.545464035516957
+      ],
+      "building_dimensions_m": [
+        16.45239686013121,
+        6.54147012830844
+      ]
+    },
+    {
+      "lot": "way/831077555",
+      "hero": false,
+      "actor": "V2_Lot_way_831077555",
+      "asset": "/Game/Assets/apartment-curved/apartment-curved/StaticMeshes/apartment-curved.apartment-curved",
+      "building": "apartment-curved",
+      "center_m": [
+        107.03860294605502,
+        -97.74794343910963,
+        7.396
+      ],
+      "scale": 0.4467875593298202,
+      "yaw": 431.3530221227715,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        9.404029345043398,
+        5.848165824742566
+      ],
+      "building_dimensions_m": [
+        5.497275875258011,
+        5.606353778445079
+      ]
+    },
+    {
+      "lot": "way/831077556",
+      "hero": false,
+      "actor": "V2_Lot_way_831077556",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        118.85437145376436,
+        -92.3665122848967,
+        8.183
+      ],
+      "scale": 0.8573670773977855,
+      "yaw": 73.74407838294366,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        15.579339405185493,
+        9.52113596095731
+      ],
+      "building_dimensions_m": [
+        14.644579040874362,
+        5.822682077994045
+      ]
+    },
+    {
+      "lot": "way/831077557",
+      "hero": false,
+      "actor": "V2_Lot_way_831077557",
+      "asset": "/Game/Assets/apartment-curved/apartment-curved/StaticMeshes/apartment-curved.apartment-curved",
+      "building": "apartment-curved",
+      "center_m": [
+        55.518276971160155,
+        41.65544938359065,
+        8.807
+      ],
+      "scale": 1.128,
+      "yaw": 148.37534779790022,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        29.03679733645219,
+        24.149145605339793
+      ],
+      "building_dimensions_m": [
+        13.878916406249997,
+        14.15430427734375
+      ]
+    },
+    {
+      "lot": "way/831077558",
+      "hero": false,
+      "actor": "V2_Lot_way_831077558",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        76.3746561163912,
+        23.467185558890908,
+        9.869
+      ],
+      "scale": 1.128,
+      "yaw": 146.911385432266,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        30.312218797047365,
+        11.322338630030146
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ]
+    },
+    {
+      "lot": "way/831077559",
+      "hero": false,
+      "actor": "V2_Lot_way_831077559",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        83.03902084549489,
+        6.288103495043963,
+        10.567
+      ],
+      "scale": 1.0344354935885436,
+      "yaw": 418.02778200374496,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        18.796874841870533,
+        9.853087504954615
+      ],
+      "building_dimensions_m": [
+        17.669062351358303,
+        7.025216115878926
+      ]
+    },
+    {
+      "lot": "way/1296717081",
+      "hero": "cafe",
+      "actor": "V2_Cafe_cafe",
+      "asset": "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair.shop-tool-repair",
+      "building": "shop-tool-repair",
+      "center_m": [
+        -24.34087123219862,
+        63.63350544999865,
+        5.821
+      ],
+      "scale": 1.12,
+      "yaw": 90,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        35.33014345312119,
+        26.937168361614425
+      ],
+      "building_dimensions_m": [
+        10.303605566406251,
+        10.95494462890625
+      ]
+    },
+    {
+      "lot": "way/1296717082",
+      "hero": "tool-shop",
+      "actor": "V2_Hero_tool-shop",
+      "asset": "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair.shop-tool-repair",
+      "building": "shop-tool-repair",
+      "center_m": [
+        15.94627699194959,
+        44.22105702926436,
+        5.715
+      ],
+      "scale": 1.12,
+      "yaw": 58.748714442216475,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        37.711629436935105,
+        19.406866859716104
+      ],
+      "building_dimensions_m": [
+        10.303605566406251,
+        10.95494462890625
+      ]
+    },
+    {
+      "lot": "way/1331478424",
+      "hero": false,
+      "actor": "V2_Lot_way_1331478424",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        42.467228781804444,
+        59.55096961811151,
+        7.8
+      ],
+      "scale": 0.9236548178977027,
+      "yaw": 428.1511925661356,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        16.783863388991236,
+        9.770961692564605
+      ],
+      "building_dimensions_m": [
+        15.776831585651763,
+        6.272865492746874
+      ]
+    },
+    {
+      "lot": "way/1452659412",
+      "hero": false,
+      "actor": "V2_Lot_way_1452659412",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner.shop-bakery-corner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        10.713824204990111,
+        -44.5511436428223,
+        5.975
+      ],
+      "scale": 1.128,
+      "yaw": 244.1958007307794,
+      "palette": "cream",
+      "tint": [
+        1,
+        0.96,
+        0.86
+      ],
+      "lot_dimensions_m": [
+        19.106667535635808,
+        12.840997509336425
+      ],
+      "building_dimensions_m": [
+        11.889953056640623,
+        9.239814682617187
+      ]
+    },
+    {
+      "lot": "way/1452659413",
+      "hero": false,
+      "actor": "V2_Lot_way_1452659413",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner.shop-bakery-corner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        25.715875825352555,
+        -55.28696453524826,
+        5.574
+      ],
+      "scale": 1.128,
+      "yaw": 242.37689904835867,
+      "palette": "sand",
+      "tint": [
+        0.91,
+        0.86,
+        0.73
+      ],
+      "lot_dimensions_m": [
+        15.549979388698269,
+        10.828203571080337
+      ],
+      "building_dimensions_m": [
+        11.889953056640623,
+        9.239814682617187
+      ]
+    },
+    {
+      "lot": "relation/11356594",
+      "hero": false,
+      "actor": "V2_Lot_relation_11356594",
+      "asset": "/Game/Assets/workshop-garage/workshop-garage/StaticMeshes/workshop-garage.workshop-garage",
+      "building": "workshop-garage",
+      "center_m": [
+        107.29975444431271,
+        -29.434579895870108,
+        12.278
+      ],
+      "scale": 1.128,
+      "yaw": 417.2118158755744,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        73.75180684837179,
+        49.33133111928262
+      ],
+      "building_dimensions_m": [
+        18.569856972656247,
+        17.018136826171876
+      ]
+    }
+  ],
+  "counts": {
+    "townhouse-terrace": 15,
+    "clock-hall": 1,
+    "apartment-curved": 4,
+    "shop-bakery-corner": 5,
+    "workshop-garage": 2,
+    "shop-tool-repair": 2
+  },
+  "ground": {
+    "V4Roads": {
+      "vertices": 17730,
+      "faces": 5910
+    },
+    "V4Paving": {
+      "vertices": 100575,
+      "faces": 33525
+    },
+    "V4Parking": {
+      "vertices": 7107,
+      "faces": 2369
+    },
+    "V4Curbs": {
+      "vertices": 41370,
+      "faces": 16548
+    },
+    "roads": [
+      {
+        "id": "way/45656109/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/45698506/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/45719442/0",
+        "kind": "unclassified",
+        "source_width_m": 5.5,
+        "width_m": 5.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/193079275/0",
+        "kind": "unclassified",
+        "source_width_m": 5.5,
+        "width_m": 5.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/198492807/0",
+        "kind": "tertiary",
+        "source_width_m": 6.5,
+        "width_m": 7.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/391145739/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/391145740/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/893891908/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/893891909/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478365/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1331478366/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1331478367/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1331478369/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478370/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478372/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478376/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478376/1",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1331478422/0",
+        "kind": "unclassified",
+        "source_width_m": 5.5,
+        "width_m": 5.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1374003450/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1374003461/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1464303595/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1499001569/0",
+        "kind": "service",
+        "source_width_m": 3.5,
+        "width_m": 4.5,
+        "sidewalk_each_m": 2.5
+      },
+      {
+        "id": "way/1553100350/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1553100351/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1553100352/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      },
+      {
+        "id": "way/1553100353/0",
+        "kind": "footway",
+        "source_width_m": 1.8,
+        "width_m": 2.5,
+        "sidewalk_each_m": null
+      }
+    ],
+    "sidewalk_width_m": 2.5,
+    "city_boundary": [
+      [
+        -125,
+        64
+      ],
+      [
+        -57,
+        27
+      ],
+      [
+        -39,
+        -2
+      ],
+      [
+        -25,
+        -28
+      ],
+      [
+        26,
+        -67
+      ],
+      [
+        64,
+        -125
+      ],
+      [
+        128,
+        -125
+      ],
+      [
+        128,
+        128
+      ],
+      [
+        -125,
+        128
+      ]
+    ],
+    "park_islands": [
+      [
+        4,
+        -17,
+        9,
+        5
+      ],
+      [
+        57,
+        86,
+        10,
+        7
+      ],
+      [
+        91,
+        107,
+        7,
+        5
+      ]
+    ],
+    "method": "Shared constrained planar triangulation, explicit original terrain triangle constraints to eliminate grass breakthroughs, rounded 5-point curb profile; original heightmap unchanged"
+  },
+  "source": "session-3 checkpoint targeted building and ground replacement",
+  "courtyard_groups": [
+    {
+      "center_m": [
+        5,
+        35
+      ],
+      "road_clearance_m": 11.925816191936352
+    },
+    {
+      "center_m": [
+        33,
+        72
+      ],
+      "road_clearance_m": 24.22194294927086
+    },
+    {
+      "center_m": [
+        72,
+        65
+      ],
+      "road_clearance_m": 37.833183349211275
+    },
+    {
+      "center_m": [
+        4,
+        78
+      ],
+      "road_clearance_m": 22.202939458259735
+    },
+    {
+      "center_m": [
+        -10,
+        85
+      ],
+      "road_clearance_m": 24.317601584841082
+    },
+    {
+      "center_m": [
+        82,
+        -46
+      ],
+      "road_clearance_m": 16.172105016828848
+    }
+  ],
+  "visual_correction": "Constrain paving against original terrain triangle edges; grouped court/park planting and cafe counter"
+}

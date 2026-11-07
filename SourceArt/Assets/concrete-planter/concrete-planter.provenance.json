@@ -1,0 +1,38 @@
+{
+  "asset": "concrete-planter",
+  "run": "20261106T072603-d5bbef",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:07:36.227637+00:00",
+  "files": {
+    "glb": {
+      "file": "concrete-planter.glb",
+      "sha256": "db13b5a541026dfe62cfe032c387bd0f85af0d064c96ba61f7b3465a7c29d71f",
+      "bytes": 30984
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "concrete-planter.blend",
+      "blend_sha256": "7e6b0ffbe7f425e901bca8b4065031b26672e78af91b759c65a441e4af61a687",
+      "script": "build_concrete-planter.py",
+      "script_sha256": "017f546547e9cdc3a007c180231b39c4433f0dbe188c1467cb795c7c6cf07a56"
+    },
+    "downloaded_at": "2026-11-06T07:26:03.650673+00:00",
+    "sha256": "a3ade521b25711f600615f9a3b795c920a2646eb3ab532da1abab98500dfd39e",
+    "bytes": 29960,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T07:32:46.953291+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero/front renders): clean pale concrete box with recessed soil, 0.6 m; plain but correct for planter use. Sol accept-local concurs."
+    }
+  ],
+  "lineage": null,
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/concrete-planter/runs/20261106T072603-d5bbef",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

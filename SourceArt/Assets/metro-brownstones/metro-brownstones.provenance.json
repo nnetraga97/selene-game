@@ -1,0 +1,50 @@
+{
+  "asset": "metro-brownstones",
+  "run": "20261107T074318-7d4f80",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:43:30.526632+00:00",
+  "files": {
+    "glb": {
+      "file": "metro-brownstones.glb",
+      "sha256": "b6d6f03dc5b0c70ee315e6900a0b6791c9f888adb232235d705ec78a237aee30",
+      "bytes": 12169912
+    },
+    "fbx": {
+      "file": "metro-brownstones.fbx",
+      "sha256": "c8e0628350e53a9d9127258614e63520a019cb7c44f655e340a32a2bf7c598ce",
+      "bytes": 9503724
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:43:06.860198+00:00",
+    "sha256": "8c421116abf3cde803b46c3e2585056e42a18ec0ebfe341aa78e1f7349eddc1d",
+    "bytes": 12169656,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:43:30.442989+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed the split piece renders (q34 and back): clean, closed building in the Selene palette; split from the sheet by connected parts at measured height gaps; candidate only bakes a uniform scale to spec height, base at Z=0."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T074306-e37b73",
+    "change": "Uniform scale to the spec height of 13 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "9282e34518d5b541e60f24f6db9284027aac2136f14084d7b6ea6ff2f8fa7e81",
+    "candidate_name": "metro-brownstones-scaled.glb",
+    "at": "2026-11-07T07:43:18.736452+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/metro-brownstones/runs/20261107T074318-7d4f80",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

@@ -1,0 +1,50 @@
+{
+  "asset": "seaside-guesthouse",
+  "run": "20261107T073421-7729af",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:35:44.593357+00:00",
+  "files": {
+    "glb": {
+      "file": "seaside-guesthouse.glb",
+      "sha256": "a7feedbda63757970f9e4c37613b4c4c1fcf0a6833990c4ab88907e078895d2d",
+      "bytes": 18508280
+    },
+    "fbx": {
+      "file": "seaside-guesthouse.fbx",
+      "sha256": "863c2c03fc4f2d54cabc66a98f2ab40028a9ab9d4e867cb120293ab1b07f984b",
+      "bytes": 14600956
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/c6082dcf-e6d1-4c95-a3b4-a0e0c7486368",
+    "downloaded_at": "2026-11-07T07:33:08.299351+00:00",
+    "sha256": "0a651539d4b613cb3db0ddc5809c0a5c1cb4bcb5fd8ab00ca117304492e4669d",
+    "bytes": 18501292,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:35:44.503124+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed front, 3/4, side and back renders of the source: clean, closed building in the Selene palette; candidate only bakes a uniform scale to the spec height with the base at Z=0. Tripo non-manifold seams are expected. ~250-280k triangles is above our older buildings (10-20k) but within the 300k spec; Nanite in engine."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T073308-380d1d",
+    "change": "Uniform scale to the spec height of 15 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "724f6c92f5ccc69cc81afea6c31f65c7aa8d7b1c1754eceaced06ded9a14dbb2",
+    "candidate_name": "seaside-guesthouse-scaled.glb",
+    "at": "2026-11-07T07:34:21.538385+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/seaside-guesthouse/runs/20261107T073421-7729af",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

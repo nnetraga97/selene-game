@@ -1,0 +1,27 @@
+{
+  "url": "https://overpass-api.de/api/interpreter",
+  "request_method": "POST",
+  "query_file": "kona.json.overpassql",
+  "retrieved_utc": "2026-11-07T01:29:55.235694+00:00",
+  "bbox_s_w_n_e": [
+    19.638294986449864,
+    -155.9969806974629,
+    19.641005013550135,
+    -155.99411930253711
+  ],
+  "display_size_m": 300,
+  "centre": {
+    "name": "Kailua-Kona | palace / church seafront",
+    "lat": 19.63965,
+    "lon": -155.99555
+  },
+  "sha256": "48bf7c65297b8b363028964b838ea2f8908a62f76b7ef5485b2e251650b6d91b",
+  "bytes": 191726,
+  "response_headers": {
+    "Server": "nginx",
+    "Date": "Sat, 07 Nov 2026 01:29:54 GMT",
+    "Content-Type": "application/json",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  }
+}

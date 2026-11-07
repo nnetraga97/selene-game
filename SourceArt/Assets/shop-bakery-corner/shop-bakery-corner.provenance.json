@@ -1,0 +1,45 @@
+{
+  "asset": "shop-bakery-corner",
+  "run": "20261106T103323-e8fbf2",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T10:50:30.039749+00:00",
+  "files": {
+    "glb": {
+      "file": "shop-bakery-corner.glb",
+      "sha256": "6f3e5a24163ea790b4d04868930c03840a881b55aefede29fec0f5ded1dc9c77",
+      "bytes": 18509276
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/698d549d-3d1c-4826-bec5-1e0668697f80",
+    "downloaded_at": "2026-11-06T10:32:22.874349+00:00",
+    "sha256": "9b8790a8f4e423dbc54dcee1adbdd1bca186c307e817476b5f1ba3573ec35c48",
+    "bytes": 18504120,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T10:50:29.963534+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: H3.1 4K scale-only run; silhouette, palette, coral awning, croissant sign and flower balconies match the approved reference. Sol accept-local; soft details. Exterior shell for 3-storey main-street lots."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T103226-9689ad",
+    "change": "Uniform scale to 13 m height, base Z=0, footprint-centred origin, applied transforms; no topology or material edits",
+    "candidate_sha256": "9139026917b3c5b366ebfd756d3f0a73b75299276cb66d4bcb9ef35c14be34f0",
+    "candidate_name": "scaled-grounded.glb",
+    "at": "2026-11-06T10:33:23.641874+00:00",
+    "repair_files": [
+      {
+        "file": "scale_ground.py",
+        "sha256": "8823727b8d6cce3cb331bd6c35a6962e0b6eba0adaa1fc2b2a8aa69ca03ccb68"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/shop-bakery-corner/runs/20261106T103323-e8fbf2",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

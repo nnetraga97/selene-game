@@ -1,0 +1,50 @@
+{
+  "asset": "metro-lane-houses",
+  "run": "20261107T074404-adcc3b",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:44:15.434529+00:00",
+  "files": {
+    "glb": {
+      "file": "metro-lane-houses.glb",
+      "sha256": "96bc751b99780ee7b4ca0f3b4718b80a2fdf6b6920ef694858c537c09724f7cf",
+      "bytes": 12548032
+    },
+    "fbx": {
+      "file": "metro-lane-houses.fbx",
+      "sha256": "22a4e468c7336150d9031dd4a295e560d2a16f0b6a5e4c35980caefe1a4c1443",
+      "bytes": 9952636
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:43:53.090087+00:00",
+    "sha256": "536f7407ee29d493f0bebd532911c2d38a4093cb81e0c7ac6a9b8667abce0783",
+    "bytes": 12547876,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:44:15.356598+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed the split piece renders (q34 and back): clean, closed building in the Selene palette; split from the sheet by connected parts at measured height gaps; candidate only bakes a uniform scale to spec height, base at Z=0."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T074353-3930be",
+    "change": "Uniform scale to the spec height of 9 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "d8d10257f5fcce37de7e08c74595e0b63d6e750d2714c7cb143f332f78c3c66d",
+    "candidate_name": "metro-lane-houses-scaled.glb",
+    "at": "2026-11-07T07:44:04.910358+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/metro-lane-houses/runs/20261107T074404-adcc3b",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

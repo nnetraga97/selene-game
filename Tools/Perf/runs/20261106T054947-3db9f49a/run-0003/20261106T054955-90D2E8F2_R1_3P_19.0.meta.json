@@ -1,0 +1,21 @@
+{
+	"schema_version": 1,
+	"build_config": "Shipping",
+	"engine_version": "5.8.4-58902052+++UE5+Release-5.8",
+	"map": "/Temp/Untitled_0",
+	"route": "R1",
+	"camera": "3P",
+	"hour": 19,
+	"time_flow_enabled": false,
+	"time_flow_speed": 0,
+	"warm_laps": 1,
+	"warmup_seconds": 15,
+	"speed_cm_s": 150,
+	"command_line": " /Game/Selene/Maps/Town -fullscreen -ResX=3024 -ResY=1964 -unattended -PerfRoute=R1 -PerfCam=3P -PerfHour=19 -PerfLaps=1 -PerfWarmup=15 -PerfSpeed=150 -PerfOut=\"/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003\" -nosound -installed",
+	"saved_dir": "/Users/nicknetraganti/Library/Application Support/Epic/Selene/Saved/",
+	"frame_log": "/Users/nicknetraganti/Desktop/Developer Stuff/Misc/selene-game/Tools/Perf/runs/20261106T054947-3db9f49a/run-0003/20261106T054955-90D2E8F2_R1_3P_19.0.frames.csv",
+	"status": "error",
+	"timer_notes": "delta_ms is monotonic begin-frame interval, not clamped game delta. GT/RT exclude engine idle accounting; GPU is latest completed GPU busy interval. Diagnostic timers may lag/repeat across frames; zero cycles are empty, never interpreted as zero cost. COLD is first recorded traversal after warm-up, not a cleared shader/OS cache.",
+	"warnings": [],
+	"error": "World destroyed before capture completed"
+}

@@ -1,0 +1,27 @@
+{
+  "url": "https://overpass-api.de/api/interpreter",
+  "request_method": "POST",
+  "query_file": "hilo.json.overpassql",
+  "retrieved_utc": "2026-11-07T01:32:20.200165+00:00",
+  "bbox_s_w_n_e": [
+    19.723894986449864,
+    -155.08743146225197,
+    19.726605013550135,
+    -155.08456853774805
+  ],
+  "display_size_m": 300,
+  "centre": {
+    "name": "Hilo | bayfront / Kalakaua Park",
+    "lat": 19.72525,
+    "lon": -155.086
+  },
+  "sha256": "e9de9baa528203df62222a136d2fa152a08e701fa51c9f27b7994b34ace93a6f",
+  "bytes": 206565,
+  "response_headers": {
+    "Server": "nginx",
+    "Date": "Sat, 07 Nov 2026 01:32:19 GMT",
+    "Content-Type": "application/json",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  }
+}

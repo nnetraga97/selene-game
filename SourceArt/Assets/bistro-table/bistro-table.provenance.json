@@ -1,0 +1,38 @@
+{
+  "asset": "bistro-table",
+  "run": "20261106T072833-057c32",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T08:07:36.494165+00:00",
+  "files": {
+    "glb": {
+      "file": "bistro-table.glb",
+      "sha256": "0e7330dc2bad163ba51b86d368ebba3fa044af2a62946c71a08c9289fc22c185",
+      "bytes": 81184
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "bistro-table.blend",
+      "blend_sha256": "306fa6d03c18af975845915a28559ad5db2a4a3ec8c9883c2b53c3ef329f0df9",
+      "script": "build_bistro-table.py",
+      "script_sha256": "398b122744e3217186328840deadc429d0e2117c9332271117df58ba77002ab3"
+    },
+    "downloaded_at": "2026-11-06T07:28:28.565494+00:00",
+    "sha256": "625475563a55441bf15eb37b1ce6de8318622f665678fe26d6651162d70ac1ce",
+    "bytes": 81184,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T07:32:47.311054+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero/front renders): round pale top, coral bent-metal base with foot ring matching bistro-chair-r2, 0.75 m. Sol review unavailable (connection failed); Claude accepts for simple-shape use."
+    }
+  ],
+  "lineage": null,
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/bistro-table/runs/20261106T072833-057c32",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

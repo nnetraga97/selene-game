@@ -1,0 +1,27 @@
+{
+  "kona": {
+    "name": "Kailua-Kona | palace / church seafront",
+    "lat": 19.63965,
+    "lon": -155.99555
+  },
+  "kona-core": {
+    "name": "Kailua-Kona | refined palace / church core",
+    "lat": 19.6395,
+    "lon": -155.9942
+  },
+  "hilo": {
+    "name": "Hilo | bayfront / Kalakaua Park",
+    "lat": 19.72525,
+    "lon": -155.086
+  },
+  "haleiwa": {
+    "name": "Haleiwa | bridge / harbour edge",
+    "lat": 21.59295,
+    "lon": -158.1035
+  },
+  "sanur": {
+    "name": "Sanur | Sindhu beach centre",
+    "lat": -8.68385,
+    "lon": 115.2652
+  }
+}

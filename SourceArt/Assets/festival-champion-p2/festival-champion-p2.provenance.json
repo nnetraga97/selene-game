@@ -1,0 +1,45 @@
+{
+  "asset": "festival-champion-p2",
+  "run": "20261106T091812-d9f306",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T09:25:10.688855+00:00",
+  "files": {
+    "glb": {
+      "file": "festival-champion-p2.glb",
+      "sha256": "8d60377945d1fc87eb88b01aa925a3231ad17a3670b0b231ff10c33a53f2ef96",
+      "bytes": 7006168
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/rigging/female-warrior-3d-model-781ff1fb-ceff-412c-a988-427b590919dd",
+    "downloaded_at": "2026-11-06T07:37:13.945069+00:00",
+    "sha256": "aff2fd9d2ceaa8f698b53c85b930bb4adeac810b99be112f709cd0c46109fbf2",
+    "bytes": 7485896,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T09:25:10.628404+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: P2 champion plus 13 secondary chains (braid, 6 skirt panels, 2 arm ribbons, 3 hair locks, hip tassel; 52 bones) for Kawaii Physics. Swing and arm-raise renders show clean segmented bending; braid independent of the right arm; weights outside regions unchanged. Known: backward swings penetrate the body without colliders (Kawaii colliders), 7.94 um export drift (float noise)."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T074911-d8e6df",
+    "change": "Secondary chain rig round 2: refine skirt selection to restore shorts hem original weights and include isolated cream/teal ruffle islands; same 52-chain-bone design and unchanged geometry/UV/body skeleton",
+    "candidate_sha256": "9bcdc7b6c93a1b1d8ac741ea6b3b7b0bda0c654648ee3b2a1be3994626370f72",
+    "candidate_name": "secondary-chains.glb",
+    "at": "2026-11-06T09:18:12.445110+00:00",
+    "repair_files": [
+      {
+        "file": "add_secondary_chains.py",
+        "sha256": "4fe4cb2231c90391ce4ddfe83e555b32f1e483a42441fc8474279ad0a0a0090c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/festival-champion-p2/runs/20261106T091812-d9f306",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

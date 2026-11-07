@@ -1,0 +1,45 @@
+{
+  "asset": "wall-lantern-r2",
+  "run": "20261106T052806-599804",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:38:43.316589+00:00",
+  "files": {
+    "glb": {
+      "file": "wall-lantern-r2.glb",
+      "sha256": "261dbc36a4e1cca7d71d8867bb9e48d8c76ec256378e1efc23caa503f54fd071",
+      "bytes": 2960624
+    }
+  },
+  "source": {
+    "source_cli_task": "1e233f76-96d0-4ca1-ad56-e1b17a317f90",
+    "downloaded_at": "2026-11-06T05:11:01.972450+00:00",
+    "sha256": "21f298175ee716cb3c2bbfaf0f01822378dd1f880dd01253ca61ff73e03cca70",
+    "bytes": 3014948,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:38:16.165053+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review (hero+back renders and Sol report): bracket + lantern silhouette and petrol/cream palette correct. Glass reads opaque; night glow via engine emissive material. Sol accept-local concurs."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T052538-706a60",
+    "change": "Narrow lower lantern housing and cage radius 20 percent with a smooth transition below the suspension to improve chamber height-to-width ratio while preserving overall height, bracket, and mounting pivot.",
+    "candidate_sha256": "e3d0b930f34546780a0bfb128598c7d57940fc4840d10bd420fd618a4e77844e",
+    "candidate_name": "round3-proportion.glb",
+    "at": "2026-11-06T05:28:06.276114+00:00",
+    "repair_files": [
+      {
+        "file": "round3-proportion.py",
+        "sha256": "b5d82586c8851991790d5df3e79e4fed222d8a79c6be3d6708c0a2fd166bda91"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/wall-lantern-r2/runs/20261106T052806-599804",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

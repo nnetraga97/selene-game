@@ -1,0 +1,45 @@
+{
+  "asset": "delivery-scooter",
+  "run": "20261106T045628-0dbf7d",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T05:17:10.180921+00:00",
+  "files": {
+    "glb": {
+      "file": "delivery-scooter.glb",
+      "sha256": "af815a1e084579ea2bc81c2e2b5be3f2a710cf81bc3b60e2fd71f4854e6e529f",
+      "bytes": 23348388
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/b847cd8d-0416-4dd1-a187-9a9fd6ca9ca8",
+    "downloaded_at": "2026-11-06T04:49:00.732588+00:00",
+    "sha256": "70780727f906d3356237667d351ed2dff3f7bbd710d0e924ec96fc7fbcd453db",
+    "bytes": 10220464,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T05:15:14.408587+00:00",
+      "decision": "accept-local",
+      "notes": "Claude final review: all 8 renders checked. Silhouette, cream/petrol/coral palette, cargo box (repainted coral + cream stripes) and wheels read correctly at gameplay distance; height 1.35 m. Remaining: opaque headlamp (to be an engine emissive material), soft mechanical detail. Overrides Sol needs-work, which judged hero close-up precision; route use is mid-distance. Headlamp experiment run 20261106T050103-2fb3b6 not used."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T045204-923d92",
+    "change": "Repaint only right cargo face base-color atlas pixels to clean coral with two crisp cream diagonal accents; preserve original UVs, geometry, hardware and other maps",
+    "candidate_sha256": "dbbaf490f352ba8ad98acce0b8e0c7eb1e136d23df497b5342b4e479aedf905d",
+    "candidate_name": "cargo.glb",
+    "at": "2026-11-06T04:56:28.043578+00:00",
+    "repair_files": [
+      {
+        "file": "repaint_cargo.py",
+        "sha256": "a258e8c23c3071019ce18b0339f4f9d47b3387600e5713057660bed38ab246a6"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/delivery-scooter/runs/20261106T045628-0dbf7d",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}
