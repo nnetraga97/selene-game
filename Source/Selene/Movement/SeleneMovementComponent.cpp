@@ -16,6 +16,8 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimSequence.h"
 #include "Animation/AnimMontage.h"
+#include "Animation/AnimSingleNodeInstance.h"
+#include "Engine/SkeletalMesh.h"
 
 namespace
 {
@@ -45,7 +47,10 @@ void USeleneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 		if (RegenDelayRemaining == 0.f) Stamina = FMath::Min(float(StaminaCharges), Stamina + DeltaTime / FMath::Max(0.1f, ChargeRegenSeconds));
 	}
 	LandingCarryRemaining = IsAdvancedMovementEnabled() ? FMath::Max(0.f, LandingCarryRemaining - DeltaTime) : 0.f;
+	LoadSlideClips();
+	RemoveSlideMeshCompensation();
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	TickSlidePose(DeltaTime);
 	TickFeedback(DeltaTime);
 	if (TestDriver) TestDriver->AfterMovement();
 	FSeleneMovementTestDriver::FinishRegressionWhenCaptured(Cast<ASeleneCharacter>(CharacterOwner));
@@ -250,6 +255,7 @@ bool USeleneMovementComponent::TrySlide()
 {
 	// Slow crouch intentionally does nothing until a proper crouch clip exists.
 	if (!IsAdvancedMovementEnabled() || !IsMovingOnGround() || Velocity.Size2D() < SlideMinSpeed || CharacterOwner->bIsCrouched) return false;
+	RemoveSlideMeshCompensation();
 	OriginalCrouchHalfHeight = GetCrouchedHalfHeight();
 	bOriginalCanCrouch = NavAgentProps.bCanCrouch;
 	SetCrouchedHalfHeight(SlideHalfHeight);
@@ -258,7 +264,9 @@ bool USeleneMovementComponent::TrySlide()
 	Crouch(false);
 	if (!CharacterOwner->bIsCrouched) { bWantsToCrouch = false; SetCrouchedHalfHeight(OriginalCrouchHalfHeight); NavAgentProps.bCanCrouch = bOriginalCanCrouch; return false; }
 	SetMovementMode(MOVE_Custom, 2);
-	CharacterOwner->GetMesh()->AddRelativeLocation(FVector(0, 0, -SlidePoseMeshDrop));
+	LoadSlideClips();
+	AppliedSlideMeshDrop = SlideClips.Num() == 4 ? 0.f : SlidePoseMeshDrop;
+	CharacterOwner->GetMesh()->AddRelativeLocation(FVector(0, 0, -AppliedSlideMeshDrop));
 	PlaySlidePose(true);
 	return true;
 }
@@ -266,8 +274,10 @@ bool USeleneMovementComponent::TrySlide()
 void USeleneMovementComponent::StopSlide()
 {
 	if (!IsSliding()) return;
+	RemoveSlideMeshCompensation();
 	PlaySlidePose(false);
-	CharacterOwner->GetMesh()->AddRelativeLocation(FVector(0, 0, SlidePoseMeshDrop));
+	CharacterOwner->GetMesh()->AddRelativeLocation(FVector(0, 0, AppliedSlideMeshDrop));
+	AppliedSlideMeshDrop = 0.f;
 	SetMovementMode(MOVE_Walking);
 	bWantsToCrouch = false;
 	UnCrouch(false);
@@ -303,15 +313,120 @@ void USeleneMovementComponent::PhysSlide(float DeltaTime, int32 Iterations)
 	}
 }
 
+void USeleneMovementComponent::LoadSlideClips()
+{
+	const ASeleneCharacter* Character = Cast<ASeleneCharacter>(CharacterOwner);
+	if (!Character || Character->GetActiveCharacterName() == SlideClipHero) return;
+	SlideClipHero = Character->GetActiveCharacterName();
+	SlideClips.Reset();
+	const auto& Entry = Character->GetActiveCharacterEntry();
+	CurrentSlideCompensation = AppliedSlideCompensation = FTransform::Identity;
+	SlidePhaseClip = nullptr;
+	const USkeletalMesh* Mesh = Character->GetMesh()->GetSkeletalMeshAsset();
+	if (!Mesh) return;
+	if (Entry.SlideInto.IsNull() || Entry.SlideLoop.IsNull() || Entry.SlideOutMoving.IsNull() || Entry.SlideOutStand.IsNull()) return;
+	for (const auto& Soft : {Entry.SlideInto, Entry.SlideLoop, Entry.SlideOutMoving, Entry.SlideOutStand})
+	{
+		UAnimSequence* Clip = Soft.LoadSynchronous();
+		if (!Clip || Clip->GetSkeleton() != Character->GetMesh()->GetSkeletalMeshAsset()->GetSkeleton())
+		{
+			SlideClips.Reset();
+			return;
+		}
+		SlideClips.Add(Clip);
+	}
+}
+
+FTransform USeleneMovementComponent::GetSlideMeshCompensation(USkeletalMeshComponent* Mesh, UAnimSequence* Clip, float Seconds)
+{
+	const USkeletalMesh* Asset = Mesh ? Mesh->GetSkeletalMeshAsset() : nullptr;
+	if (!Asset || !Clip || Asset->GetRefSkeleton().GetNum() == 0 ||
+		Asset->GetRefSkeleton().GetBoneName(0) != TEXT("mixamorig_Hips")) return FTransform::Identity;
+	const FTransform& Reference = Asset->GetRefSkeleton().GetRefBonePose()[0];
+	FTransform Authored = Clip->ExtractRootTrackTransform(FAnimExtractContext(FMath::Clamp(Seconds, 0.f, Clip->GetPlayLength())), nullptr);
+	// Pin horizontal pelvis travel to its reference position. Preserve only the
+	// authored height and orientation, with rotation about the hips, not the feet.
+	Authored.SetTranslation(FVector(Reference.GetTranslation().X, Reference.GetTranslation().Y, Authored.GetTranslation().Z));
+	Authored.SetScale3D(Reference.GetScale3D());
+	return Reference.Inverse() * Authored;
+}
+
+void USeleneMovementComponent::RemoveSlideMeshCompensation()
+{
+	if (CharacterOwner && CharacterOwner->GetMesh() && !AppliedSlideCompensation.Equals(FTransform::Identity))
+		CharacterOwner->GetMesh()->SetRelativeTransform(AppliedSlideCompensation.Inverse() * CharacterOwner->GetMesh()->GetRelativeTransform());
+	AppliedSlideCompensation = FTransform::Identity;
+}
+
+void USeleneMovementComponent::TickSlidePose(float DeltaTime)
+{
+	UAnimInstance* Anim = CharacterOwner && CharacterOwner->GetMesh() ? CharacterOwner->GetMesh()->GetAnimInstance() : nullptr;
+	if (!Anim) return;
+	// StopSlide can be followed immediately by MOVE_Falling (ledge or slide-jump).
+	if (bSlideExit && IsFalling())
+	{
+		if (SlidePose.IsValid()) Anim->Montage_Stop(AbilityBlendOut, SlidePose.Get());
+		SlidePose.Reset();
+		bSlideExit = false;
+	}
+	// The Out clip has finished or was stopped: hand DefaultSlot back to locomotion.
+	if (bSlideExit && !(SlidePose.IsValid() && Anim->Montage_IsActive(SlidePose.Get()))) bSlideExit = false;
+	if (IsSliding() && bSlideInto && SlideClips.Num() == 4 && SlidePose.IsValid() &&
+		Anim->Montage_GetPosition(SlidePose.Get()) >= FMath::Min(1.25f, SlideClips[0]->GetPlayLength() - 0.08f))
+	{
+		SlidePose = Anim->PlaySlotAnimationAsDynamicMontage(SlideClips[1], TEXT("DefaultSlot"), 0.08f, 0.10f, 1.f, MAX_int32);
+		SlidePhaseClip = SlideClips[1];
+		bSlideInto = false;
+	}
+	FTransform Target = FTransform::Identity;
+	if (SlidePose.IsValid() && SlidePhaseClip && Anim->Montage_IsActive(SlidePose.Get()))
+		Target = GetSlideMeshCompensation(CharacterOwner->GetMesh(), SlidePhaseClip,
+			FMath::Fmod(Anim->Montage_GetPosition(SlidePose.Get()), SlidePhaseClip->GetPlayLength()));
+	// Carry the visual transform across Into/Loop/Out; ease to the normal mesh on
+	// cancellation or falling without changing capsule, speed or crouch physics.
+	CurrentSlideCompensation.Blend(CurrentSlideCompensation, Target, FMath::Clamp(DeltaTime * 30.f, 0.f, 1.f));
+	AppliedSlideCompensation = CurrentSlideCompensation;
+	CharacterOwner->GetMesh()->SetRelativeTransform(AppliedSlideCompensation * CharacterOwner->GetMesh()->GetRelativeTransform());
+}
+
 void USeleneMovementComponent::PlaySlidePose(bool bPlay)
 {
 	ASeleneCharacter* Character = Cast<ASeleneCharacter>(CharacterOwner);
 	UAnimInstance* Anim = Character ? Character->GetMesh()->GetAnimInstance() : nullptr;
 	if (!Anim) return;
-	if (!bPlay) { if (SlidePose.IsValid()) Anim->Montage_Stop(AbilityBlendOut, SlidePose.Get()); SlidePose.Reset(); return; }
-	// Placeholder tucked jump pose through the existing DefaultSlot; dedicated slide clip is still needed.
-	if (UAnimSequence* Clip = Character->GetActiveCharacterEntry().Jump.Get())
+	bSlideInto = false;
+	bSlideExit = false;
+	if (!bPlay)
+	{
+		if (SlidePose.IsValid()) Anim->Montage_Stop(AbilityBlendOut, SlidePose.Get());
+		SlidePose.Reset();
+		if (SlideClips.Num() == 4)
+		{
+			const float Speed = Velocity.Size2D();
+			const bool bMoving = !Acceleration.IsNearlyZero() || !Character->GetPendingMovementInputVector().IsNearlyZero() || Speed > 150.f;
+			// Match the base loop before starting Out: SetAnimationAsset otherwise cancels DefaultSlot.
+			const auto& Entry = Character->GetActiveCharacterEntry();
+			UAnimSequence* Base = Speed < 20.f ? Entry.IdleLoop.Get() : Speed < 250.f ? Entry.WalkLoop.Get() : Speed < 475.f ? Entry.RunLoop.Get() : Entry.SprintLoop.Get();
+			if (UAnimSingleNodeInstance* Single = Character->GetMesh()->GetSingleNodeInstance(); Single && Base && Single->GetAnimationAsset() != Base)
+				Single->SetAnimationAsset(Base, true);
+			SlidePose = Anim->PlaySlotAnimationAsDynamicMontage(SlideClips[bMoving ? 2 : 3], TEXT("DefaultSlot"), 0.08f, 0.12f, 1.f);
+			SlidePhaseClip = SlideClips[bMoving ? 2 : 3];
+			bSlideExit = SlidePose.IsValid();
+		}
+		return;
+	}
+	if (SlideClips.Num() == 4)
+	{
+		SlidePose = Anim->PlaySlotAnimationAsDynamicMontage(SlideClips[0], TEXT("DefaultSlot"), 0.08f, 0.10f, 1.f, 1, -1.f, 0.55f);
+		if (SlidePose.IsValid()) SlidePose->bEnableAutoBlendOut = false;
+		SlidePhaseClip = SlideClips[0];
+		bSlideInto = SlidePose.IsValid();
+	}
+	else if (UAnimSequence* Clip = Character->GetActiveCharacterEntry().Jump.Get())
+	{
+		// Preserve the original held jump pose and mesh drop for incomplete slide sets.
 		SlidePose = Anim->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), AbilityBlendIn, AbilityBlendOut, 0.f, 1, -1.f, FMath::Min(SlidePoseTime, Clip->GetPlayLength()));
+	}
 }
 
 void USeleneMovementComponent::PlayJumpOverlay()

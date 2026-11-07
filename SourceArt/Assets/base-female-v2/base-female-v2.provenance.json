@@ -1,0 +1,81 @@
+{
+  "asset": "base-female-v2",
+  "run": "20261107T095609-81aed3",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T09:56:34.095589+00:00",
+  "files": {
+    "glb": {
+      "file": "base-female-v2.glb",
+      "sha256": "88f1e54ab6bbade62062348fa2c3f958f667d8be3f787eaa89fae553913c62c3",
+      "bytes": 2229620
+    },
+    "fbx": {
+      "file": "base-female-v2.fbx",
+      "sha256": "e4ea81ee6356fd99741798b504e68b1e981b5f2f1a1da2db930608cd31ab07d5",
+      "bytes": 2293660
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/ce02402b-cc81-4eb5-8eb1-91f9775cf058",
+    "downloaded_at": "2026-11-07T09:37:22.532049+00:00",
+    "sha256": "1fc397d57fe3610cd0e62f8455f77ec04b3d51846db7c06e3aa895d72d589188",
+    "bytes": 2307052,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T09:56:34.029472+00:00",
+      "decision": "accept-local",
+      "notes": "Claude: supersedes 4dddd3. Folds the Studio wrapper empties (90 degrees about Y) into the armature so Unreal imports the body upright; feet weights separated and welded foot faces deleted; 1.74 m; UE5 root bone above pelvis."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T093726-b9ecf9",
+    "change": "Scale baked to 1.74 m; Studio wrapper empties (one rotated 90 deg about Y) folded into the armature so Unreal imports it upright; UE5 root bone added above pelvis; foot weights separated per leg below the knee; faces welding the two feet deleted. UVs and texture unchanged.",
+    "candidate_sha256": "a866fcb9f6e376d01995734972944760bae8dc43dc79fc1a73cc38cd508688b5",
+    "candidate_name": "base-female-v2-fixed.glb",
+    "at": "2026-11-07T09:56:09.145455+00:00",
+    "reevaluation": {
+      "reason": "evaluator compares a lone renamed armature by content and supports scale-then-rigid rest transforms",
+      "previously_evaluated_in": [
+        "20261107T095036-f12b5e",
+        "20261107T095407-9a63ba",
+        "20261107T095450-83b8e3",
+        "20261107T095530-d27fc4"
+      ]
+    },
+    "inserted_parents": {
+      "pelvis": "root"
+    },
+    "rest_scale": 1.740850285863798,
+    "rest_transform": [
+      2.028159258316009e-07,
+      -9.064743977660328e-08,
+      0.9999999403953552,
+      0.003398589601282812,
+      -0.9999999403953552,
+      -4.371140960302e-08,
+      2.028159258316009e-07,
+      0.023788986629234413,
+      4.371138828673793e-08,
+      -1.0,
+      -9.064746109288535e-08,
+      5.099007654197688e-08,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "repair_files": [
+      {
+        "file": "fix_feet_scale.py",
+        "sha256": "b68179f4347b8863dd52215c9cdfc348885a52afd5fc108960c5a2f17c3694b5"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/base-female-v2/runs/20261107T095609-81aed3",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

@@ -86,7 +86,7 @@ void SSelenePauseMenu::Construct(const FArguments& Args)
 	Rows->AddSlot().AutoHeight().Padding(0, 0, 0, 12)
 	[
 		SNew(STextBlock).Text(FText::FromString(TEXT(
-			"WASD  Move     Mouse  Look\nShift  Dash, hold to sprint     Ctrl  Slide\nCapsLock  Walk toggle     Space  Jump\nV  Camera     C  Character\nM  Map     F  FPS counter     Esc  Menu")))
+			"WASD  Move     Mouse  Look\nShift  Dash, hold to sprint     Ctrl  Slide\nCapsLock  Walk toggle     Space  Jump\nV  Camera     C  Choose hero\nM  Map     F  FPS counter     Esc  Menu")))
 		.Font(FCoreStyle::GetDefaultFontStyle("Regular", 16)).ColorAndOpacity(Petrol)
 	];
 	AddButton(Rows, FText::FromString(TEXT("Quit to desktop")), [this]()

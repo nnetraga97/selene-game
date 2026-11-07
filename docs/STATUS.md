@@ -4,7 +4,7 @@ Current as of 2026-11-07. This is a concise status page, not a replacement for t
 
 ## Done / available
 
-- **Playable roster:** Champion, Angel, Sparrow, Fixer, Courier, Fox (Lysara), Wanderer, and Ysolde are configured in `Config/DefaultGame.ini`. Ysolde is installed as a UE5-Mannequin-rigged playable hero; her capture review found mesh-quality limitations rather than a failed hookup.
+- **Playable roster:** Champion, Angel, Sparrow, Fixer, Courier, Fox (Lysara), Wanderer, Ysolde and Base are playable, and Nerine is an NPC, all configured in `Config/DefaultGame.ini`. Ysolde is installed as a UE5-Mannequin-rigged playable hero; her capture review found mesh-quality limitations rather than a failed hookup. Base (bald reusable base body) is a playable draft. Nerine (first modular build: body plus hair, jacket and skirt) is now a non-playable NPC (`bPlayable=False`) standing in the plaza near the start, spawned from `Npcs` in `Config/DefaultGame.ini`. Every hero has the GASP knees-out slide (into, loop, out to run or stand). C opens a numbered hero picker (1–9/0, click, or arrows + Enter).
 - **Character rendering:** `M_Character_Toon` was rebuilt from the Substrate Toon BSDF to a standard-lit Substrate Slab with a rim term. The prior material versions are retained in `Content/Selene/Materials/Character/Backup_ToonBSDF`.
 - **Movement/UI:** advanced movement has accepted isolated mechanics in `docs/MOVEMENT-PROGRESS.md`. Current controls include Shift dash/sprint, M for the top-down map, F for the FPS counter, and the pause-menu control text in `Source/Selene/SSelenePauseMenu.cpp`.
 - **TownV2 foundation:** sessions 1–5 established the Kailua-Kona site, a built and walk-tested town map, and a tightened plaza/shop-frontage checkpoint. The reports explicitly do not claim final visual quality or packaged-performance proof.
@@ -19,6 +19,7 @@ Current as of 2026-11-07. This is a concise status page, not a replacement for t
 ## Known issues / limits
 
 - TownV2's accepted session-5 report still calls out incomplete plaza enclosure, repeated shells, broad foreground paving, imperfect doorway/storey proportions, and sparse outskirts. FPS figures there are indicative offscreen samples, not packaged GPU performance.
+- **Nerine (NPC):** the bald side was fixed in session 3 (hair cap centred; scalp and baked stubble recoloured to the cap colour; run `20261107T111329-cbeedd`). Skirt clipping at stride and underarm strips remain; she now only idles, so they rarely show. A v2 rebuilt on the base body was tried and deleted: it was no better.
 - Ysolde needs a separately authorized mesh/weight repair for coat-to-boot clearance, trouser/crotch deformation, and close-up idle fingers. Wanderer lacks an authorized crouch clip and retains skirt/knee visual limitations. Fox retains visible knee/armour and transition limitations.
 - Advanced movement's isolated mechanics are not the same as whole-roster, real-input, complete-animation acceptance. The progress record identifies outstanding combined-sequence and animation-polish checks.
 - No allowed offline scan can prove a Content asset is absent from an Unreal map. The cleanup plan therefore does not mark Content assets for deletion without a permitted map-reference check.

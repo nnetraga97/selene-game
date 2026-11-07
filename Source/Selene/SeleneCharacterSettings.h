@@ -71,6 +71,10 @@ struct SELENE_API FSelenePlayableCharacter
 	UPROPERTY(EditAnywhere, Category = "Character")
 	FName Name;
 
+	/** False keeps the entry out of the hero picker and C-cycling; NPC spawns can still use it. */
+	UPROPERTY(EditAnywhere, Category = "Character")
+	bool bPlayable = true;
+
 	UPROPERTY(EditAnywhere, Category = "Character")
 	TSoftObjectPtr<USkeletalMesh> Mesh;
 
@@ -151,6 +155,19 @@ struct SELENE_API FSelenePlayableCharacter
 	UPROPERTY(EditAnywhere, Category = "Locomotion")
 	TSoftObjectPtr<UAnimSequence> RunPivot;
 
+	/** Optional in-place slide phases, played on DefaultSlot by the movement component. */
+	UPROPERTY(EditAnywhere, Category = "Slide")
+	TSoftObjectPtr<UAnimSequence> SlideInto;
+
+	UPROPERTY(EditAnywhere, Category = "Slide")
+	TSoftObjectPtr<UAnimSequence> SlideLoop;
+
+	UPROPERTY(EditAnywhere, Category = "Slide")
+	TSoftObjectPtr<UAnimSequence> SlideOutMoving;
+
+	UPROPERTY(EditAnywhere, Category = "Slide")
+	TSoftObjectPtr<UAnimSequence> SlideOutStand;
+
 	/** Kawaii Physics secondary motion (requires single-node locomotion, i.e. no AnimClass). */
 	UPROPERTY(EditAnywhere, Category = "Secondary")
 	TArray<FSeleneSecondaryChain> SecondaryChains;
@@ -174,6 +191,24 @@ struct SELENE_API FSelenePlayableCharacter
 	FRotator MeshRotation = FRotator(0.f, -90.f, 0.f);
 };
 
+/** An idle townsperson spawned at play start from a roster entry, placed relative to the first PlayerStart. */
+USTRUCT(BlueprintType)
+struct SELENE_API FSeleneNpcSpawn
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "NPC")
+	FName Character;
+
+	/** Centimetres in the PlayerStart's frame: X ahead, Y right. Z is found by tracing to the ground. */
+	UPROPERTY(EditAnywhere, Category = "NPC")
+	FVector Offset = FVector(500.f, 0.f, 0.f);
+
+	/** Degrees relative to the PlayerStart's facing (180 faces the player). */
+	UPROPERTY(EditAnywhere, Category = "NPC")
+	float Yaw = 180.f;
+};
+
 UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Selene Characters"))
 class SELENE_API USeleneCharacterSettings : public UDeveloperSettings
 {
@@ -185,4 +220,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Characters")
 	FName DefaultCharacter = TEXT("Champion");
+
+	UPROPERTY(Config, EditAnywhere, Category = "Characters")
+	TArray<FSeleneNpcSpawn> Npcs;
 };

@@ -8,6 +8,7 @@
 #include "SSelenePauseMenu.h"
 #include "UI/SSeleneFpsCounter.h"
 #include "UI/SSeleneMapView.h"
+#include "UI/SSeleneHeroPicker.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Perf/SelenePerfRouteSubsystem.h"
@@ -83,6 +84,7 @@ void ASelenePlayerController::TogglePauseMenu()
 	UGameViewportClient* Viewport = GetWorld()->GetGameViewport();
 	if (!Viewport || !SetPause(true)) return;
 
+	CloseHeroPicker();
 	EndJump();
 	EndSprint();
 	FlushPressedKeys();
@@ -205,7 +207,8 @@ void ASelenePlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASelenePlayerController::EndSprint);
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Canceled, this, &ASelenePlayerController::EndSprint);
 	EnhancedInput->BindAction(WalkAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleWalk);
-	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::CycleCharacter);
+	// C opens the hero picker (numbered list); `selene.Character next` still cycles.
+	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleHeroPicker);
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
 	EnhancedInput->BindAction(MenuAction, ETriggerEvent::Started, this, &ASelenePlayerController::TogglePauseMenu);
 	EnhancedInput->BindAction(MapAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleMap);
@@ -260,6 +263,39 @@ void ASelenePlayerController::ToggleFpsCounter()
 	if (!IsLocalPlayerController() || !Viewport || IsCaptureRun()) return;
 	SAssignNew(FpsCounter, SSeleneFpsCounter);
 	Viewport->AddViewportWidgetContent(FpsCounter.ToSharedRef(), 40);
+}
+
+void ASelenePlayerController::ToggleHeroPicker()
+{
+	if (HeroPicker.IsValid())
+	{
+		CloseHeroPicker();
+		return;
+	}
+	UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr;
+	if (!IsLocalPlayerController() || !Viewport || !GetPawn() || IsPaused() || IsCaptureRun()) return;
+	CloseMap();
+	EndSprint();
+	FlushPressedKeys();
+	SAssignNew(HeroPicker, SSeleneHeroPicker).Controller(this);
+	Viewport->AddViewportWidgetContent(HeroPicker.ToSharedRef(), 60);
+	bShowMouseCursor = true;
+	// Game keeps running; the picker takes keyboard focus so number keys reach it.
+	FInputModeGameAndUI Mode;
+	Mode.SetWidgetToFocus(HeroPicker);
+	Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	Mode.SetHideCursorDuringCapture(false);
+	SetInputMode(Mode);
+}
+
+void ASelenePlayerController::CloseHeroPicker()
+{
+	if (!HeroPicker.IsValid()) return;
+	if (GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(HeroPicker.ToSharedRef());
+	HeroPicker.Reset();
+	bShowMouseCursor = false;
+	SetInputMode(FInputModeGameOnly());
 }
 
 void ASelenePlayerController::ToggleMap()
@@ -368,6 +404,9 @@ void ASelenePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		PauseMenu.Reset();
 	}
 	CloseMap();
+	if (HeroPicker.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(HeroPicker.ToSharedRef());
+	HeroPicker.Reset();
 	if (FpsCounter.IsValid())
 	{
 		if (GetWorld() && GetWorld()->GetGameViewport())
