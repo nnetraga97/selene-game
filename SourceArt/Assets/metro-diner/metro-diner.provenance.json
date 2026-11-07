@@ -1,0 +1,50 @@
+{
+  "asset": "metro-diner",
+  "run": "20261107T074427-5b9d55",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:44:39.364981+00:00",
+  "files": {
+    "glb": {
+      "file": "metro-diner.glb",
+      "sha256": "94d5c2bfd504de1bb84a73eb51f7921476024f992024da943e9930aa20fbfcf3",
+      "bytes": 11746548
+    },
+    "fbx": {
+      "file": "metro-diner.fbx",
+      "sha256": "7e579992e929084c3b18cdde5bbe4266be0eb104ba288c871ad4a77a91450b61",
+      "bytes": 9030780
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:44:15.539692+00:00",
+    "sha256": "becb15ea7f2ab92a08d6028fb19f898a0fea03287b8429e304abdcf2c2b17c04",
+    "bytes": 11746420,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:44:39.192623+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed the split piece renders (q34 and back): clean, closed building in the Selene palette; split from the sheet by connected parts at measured height gaps; candidate only bakes a uniform scale to spec height, base at Z=0."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T074415-8e1390",
+    "change": "Uniform scale to the spec height of 6.5 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "a760aaf328f708e121a8526578153ec93366eca20020a232229319b35d7d5992",
+    "candidate_name": "metro-diner-scaled.glb",
+    "at": "2026-11-07T07:44:27.414230+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/metro-diner/runs/20261107T074427-5b9d55",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

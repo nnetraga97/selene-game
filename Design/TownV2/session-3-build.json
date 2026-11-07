@@ -1,0 +1,518 @@
+{
+  "site": "Kailua-Kona",
+  "map": "/Game/Selene/Maps/TownV2",
+  "source_layout_sha256": "4e9c79b9064a2d4dc7b5cf3f87721ca851ea1cc2c0ac099d8ba916a325835332",
+  "source_heightmap_sha256": "50594d19efc8fc42ee057fe37cbe4adc10b7c321a899264036a41abc9130f8c2",
+  "meshes": {
+    "V2TerrainCore": {
+      "vertices": 14641,
+      "faces": 28800,
+      "bounds_m": [
+        [
+          -150.0,
+          150.0
+        ],
+        [
+          -150.0,
+          150.0
+        ],
+        [
+          -8.0,
+          15.083790885925291
+        ]
+      ]
+    },
+    "V2TerrainRing": {
+      "vertices": 22801,
+      "faces": 43200,
+      "bounds_m": [
+        [
+          -590.0,
+          910.0
+        ],
+        [
+          -750.0,
+          750.0
+        ],
+        [
+          -8.0,
+          82.16513181518555
+        ]
+      ]
+    },
+    "V2Roads": {
+      "vertices": 2684,
+      "faces": 1772,
+      "bounds_m": [
+        [
+          -125.94874310716453,
+          127.30166494479568
+        ],
+        [
+          -126.68524920344089,
+          126.77388634895038
+        ],
+        [
+          2.6478718997471247,
+          14.5800633536656
+        ]
+      ]
+    },
+    "V2Sidewalks": {
+      "vertices": 8278,
+      "faces": 5464,
+      "bounds_m": [
+        [
+          -126.38662454124047,
+          128.55711855104786
+        ],
+        [
+          -128.12974852067592,
+          127.74146072110513
+        ],
+        [
+          0.22102153501867677,
+          14.729962083853152
+        ]
+      ]
+    },
+    "V2Curbs": {
+      "vertices": 5368,
+      "faces": 3544,
+      "bounds_m": [
+        [
+          -126.01880413661668,
+          127.50253752179603
+        ],
+        [
+          -126.91636909419849,
+          126.92869824849514
+        ],
+        [
+          2.5525076526576442,
+          14.750136031422036
+        ]
+      ]
+    }
+  },
+  "grading": {
+    "method": "12 m longitudinal smoothing and 5 m blended road shoulders; source data unchanged",
+    "max_delta_m": 2.159784495830536,
+    "design_links": [
+      "plaza-clock-link",
+      "plaza-cafe-link"
+    ]
+  },
+  "placements": [
+    {
+      "lot": "way/198653703",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_9",
+      "scale": 1.222,
+      "center_m": [
+        -18.66392905010745,
+        -17.23290282368915,
+        5.611
+      ],
+      "actor": "V2_Lot_way_198653703"
+    },
+    {
+      "lot": "way/260244425",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_11",
+      "scale": 0.8561653753153468,
+      "center_m": [
+        118.12483275942253,
+        74.66131965071334,
+        13.555
+      ],
+      "actor": "V2_Lot_way_260244425"
+    },
+    {
+      "lot": "way/289193785",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_12",
+      "scale": 0.6762982731372905,
+      "center_m": [
+        -117.78977499678268,
+        114.50268312806726,
+        8.261
+      ],
+      "actor": "V2_Lot_way_289193785"
+    },
+    {
+      "lot": "way/289193790",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_4",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        97.2544246385757,
+        45.22543066968894,
+        13.34
+      ],
+      "actor": "V2_Lot_way_289193790"
+    },
+    {
+      "lot": "way/455896316",
+      "hero": "clock-hall",
+      "asset": "/Game/Assets/clock-hall/clock-hall/StaticMeshes/clock-hall",
+      "scale": 0.7017417905777176,
+      "center_m": [
+        51.12009708175176,
+        12.719409627534128,
+        7.45
+      ],
+      "actor": "V2_Hero_clock-hall"
+    },
+    {
+      "lot": "way/494460070",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        23.924463794178642,
+        120.58933576809005,
+        11.435
+      ],
+      "actor": "V2_Lot_way_494460070"
+    },
+    {
+      "lot": "way/552608374",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_10",
+      "scale": 1.222,
+      "center_m": [
+        59.295746583549416,
+        -40.815024628316614,
+        8.627
+      ],
+      "actor": "V2_Lot_way_552608374"
+    },
+    {
+      "lot": "way/552608375",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_7",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        47.31431169830003,
+        -93.08636101052404,
+        5.531
+      ],
+      "actor": "V2_Lot_way_552608375"
+    },
+    {
+      "lot": "way/663900821",
+      "hero": "bakery",
+      "asset": "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner",
+      "scale": 1.4720000000000002,
+      "center_m": [
+        -60.26892582792169,
+        58.384365738296914,
+        5.724
+      ],
+      "actor": "V2_Hero_bakery"
+    },
+    {
+      "lot": "way/663900822",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_2",
+      "scale": 1.222,
+      "center_m": [
+        -75.3038688786201,
+        69.097232529198,
+        5.708
+      ],
+      "actor": "V2_Lot_way_663900822"
+    },
+    {
+      "lot": "way/663900823",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        -90.5509557117795,
+        84.02670041589137,
+        6.68
+      ],
+      "actor": "V2_Lot_way_663900823"
+    },
+    {
+      "lot": "way/831071357",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_6",
+      "scale": 1.1923512382613257,
+      "center_m": [
+        88.12061310160756,
+        -89.64451420951112,
+        6.945
+      ],
+      "actor": "V2_Lot_way_831071357"
+    },
+    {
+      "lot": "way/831071358",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 0.9602893215467073,
+      "center_m": [
+        87.10889641747596,
+        -77.79336227572881,
+        7.93
+      ],
+      "actor": "V2_Lot_way_831071358"
+    },
+    {
+      "lot": "way/831071359",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_11",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        111.29216912221479,
+        -75.18926895879773,
+        8.541
+      ],
+      "actor": "V2_Lot_way_831071359"
+    },
+    {
+      "lot": "way/831077550",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_9",
+      "scale": 0.9956050773208724,
+      "center_m": [
+        98.83113479938056,
+        -114.84975089744925,
+        6.398
+      ],
+      "actor": "V2_Lot_way_831077550"
+    },
+    {
+      "lot": "way/831077551",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_11",
+      "scale": 0.4070629475806671,
+      "center_m": [
+        114.06578083786243,
+        -111.33081168371967,
+        7.562
+      ],
+      "actor": "V2_Lot_way_831077551"
+    },
+    {
+      "lot": "way/831077552",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_12",
+      "scale": 0.48192287809358453,
+      "center_m": [
+        121.65939835599426,
+        -109.16131629119518,
+        8.24
+      ],
+      "actor": "V2_Lot_way_831077552"
+    },
+    {
+      "lot": "way/831077554",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_10",
+      "scale": 1.0795693200741536,
+      "center_m": [
+        94.22901779462168,
+        -100.84298016138328,
+        6.397
+      ],
+      "actor": "V2_Lot_way_831077554"
+    },
+    {
+      "lot": "way/831077555",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_3",
+      "scale": 0.4085106539299361,
+      "center_m": [
+        107.03860294605502,
+        -97.74794343910963,
+        7.176
+      ],
+      "actor": "V2_Lot_way_831077555"
+    },
+    {
+      "lot": "way/831077556",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_8",
+      "scale": 0.5501157829544814,
+      "center_m": [
+        118.85437145376436,
+        -92.3665122848967,
+        7.963
+      ],
+      "actor": "V2_Lot_way_831077556"
+    },
+    {
+      "lot": "way/831077557",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_11",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        55.518276971160155,
+        41.65544938359065,
+        8.587
+      ],
+      "actor": "V2_Lot_way_831077557"
+    },
+    {
+      "lot": "way/831077558",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_2",
+      "scale": 1.222,
+      "center_m": [
+        76.3746561163912,
+        23.467185558890908,
+        9.649
+      ],
+      "actor": "V2_Lot_way_831077558"
+    },
+    {
+      "lot": "way/831077559",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_4",
+      "scale": 0.5288399142254124,
+      "center_m": [
+        83.03902084549489,
+        6.288103495043963,
+        10.347
+      ],
+      "actor": "V2_Lot_way_831077559"
+    },
+    {
+      "lot": "way/1296717081",
+      "hero": "cafe",
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        -24.34087123219862,
+        63.63350544999865,
+        5.601
+      ],
+      "actor": "V2_Cafe_cafe"
+    },
+    {
+      "lot": "way/1296717082",
+      "hero": "tool-shop",
+      "asset": "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair",
+      "scale": 1.4720000000000002,
+      "center_m": [
+        15.94627699194959,
+        44.22105702926436,
+        5.495
+      ],
+      "actor": "V2_Hero_tool-shop"
+    },
+    {
+      "lot": "way/1331478424",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_6",
+      "scale": 1.0065558129514334,
+      "center_m": [
+        42.467228781804444,
+        59.55096961811151,
+        7.58
+      ],
+      "actor": "V2_Lot_way_1331478424"
+    },
+    {
+      "lot": "way/1452659412",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 1.0130198993086397,
+      "center_m": [
+        10.713824204990111,
+        -44.5511436428223,
+        5.755
+      ],
+      "actor": "V2_Lot_way_1452659412"
+    },
+    {
+      "lot": "way/1452659413",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 0.8244472001834282,
+      "center_m": [
+        25.715875825352555,
+        -55.28696453524826,
+        5.354
+      ],
+      "actor": "V2_Lot_way_1452659413"
+    },
+    {
+      "lot": "relation/11356594",
+      "hero": false,
+      "asset": "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5",
+      "scale": 1.2420000000000002,
+      "center_m": [
+        107.29975444431271,
+        -29.434579895870108,
+        12.058
+      ],
+      "actor": "V2_Lot_relation_11356594"
+    }
+  ],
+  "asset_counts": {
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_9": 2,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_11": 4,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_12": 2,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_4": 2,
+    "/Game/Assets/clock-hall/clock-hall/StaticMeshes/clock-hall": 1,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_5": 7,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_10": 2,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_7": 1,
+    "/Game/Assets/shop-bakery-corner/shop-bakery-corner/StaticMeshes/shop-bakery-corner": 1,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_2": 2,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_6": 2,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_3": 1,
+    "/Game/Fantastic_Village_Pack/blueprints/buildings/BP_BLD_house_8": 1,
+    "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair": 1
+  },
+  "gaps": [
+    "No palms in FANTASTIC Village",
+    "No dedicated Tripo cafe; Village house 5 fills cafe hero lot",
+    "Stylized_Medieval_Town content exists but was not validated or used",
+    "Scripted scatter, no PCG graph",
+    "Buildings are fictional substitutions; road widths are class estimates",
+    "Full movement suite and packaged GPU profile pending"
+  ],
+  "design_links": [
+    {
+      "id": "plaza-clock-link",
+      "points_m": [
+        [
+          -8,
+          10
+        ],
+        [
+          12,
+          11
+        ],
+        [
+          39,
+          12
+        ]
+      ],
+      "width_m": 3.0
+    },
+    {
+      "id": "plaza-cafe-link",
+      "points_m": [
+        [
+          -24,
+          20
+        ],
+        [
+          -24,
+          39
+        ],
+        [
+          -24,
+          52
+        ]
+      ],
+      "width_m": 2.6
+    }
+  ]
+}

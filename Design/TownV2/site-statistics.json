@@ -1,0 +1,30 @@
+{
+  "kona": {
+    "buildings": 25,
+    "streets": 49,
+    "trees": 2,
+    "areas": 6,
+    "width_tagged": 0
+  },
+  "hilo": {
+    "buildings": 51,
+    "streets": 63,
+    "trees": 1,
+    "areas": 3,
+    "width_tagged": 0
+  },
+  "haleiwa": {
+    "buildings": 51,
+    "streets": 22,
+    "trees": 10,
+    "areas": 4,
+    "width_tagged": 0
+  },
+  "sanur": {
+    "buildings": 40,
+    "streets": 9,
+    "trees": 0,
+    "areas": 1,
+    "width_tagged": 0
+  }
+}

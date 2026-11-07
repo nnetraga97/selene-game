@@ -1,0 +1,53 @@
+{
+  "asset": "teal-wanderer",
+  "run": "20261107T001402-33b409",
+  "draft": false,
+  "format": "glb",
+  "imported_at": "2026-11-07T00:14:40.735131+00:00",
+  "engine": "5.8.4-58902052+++UE5+Release-5.8",
+  "imported": [
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/Textures/fantasy_female_character_3d_model_Clone1_basecolor.fantasy_female_character_3d_model_Clone1_basecolor",
+      "class": "Texture2D"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/Textures/FoxEye_amber.FoxEye_amber",
+      "class": "Texture2D"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/SkeletalMeshes/teal-wanderer_Skeleton.teal-wanderer_Skeleton",
+      "class": "Skeleton"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/Materials/tripo_node_18c11c56-d129-4439-84be-5aa7660659ba_material.tripo_node_18c11c56-d129-4439-84be-5aa7660659ba_material",
+      "class": "MaterialInstanceConstant"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/Materials/FoxEye_amber.FoxEye_amber",
+      "class": "MaterialInstanceConstant"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/SkeletalMeshes/teal-wanderer.teal-wanderer",
+      "class": "SkeletalMesh",
+      "size_m": [
+        0.5665,
+        0.5303,
+        1.68
+      ],
+      "skeleton": "teal-wanderer_Skeleton"
+    },
+    {
+      "path": "/Game/Assets/teal-wanderer/teal-wanderer/SkeletalMeshes/teal-wanderer_PhysicsAsset.teal-wanderer_PhysicsAsset",
+      "class": "PhysicsAsset"
+    }
+  ],
+  "game_ready": false,
+  "still_to_check": [
+    "scale against the design height",
+    "pivot placement",
+    "collision fit",
+    "material and texture look in the target lighting",
+    "LODs and streaming",
+    "performance on target hardware"
+  ]
+}

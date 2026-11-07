@@ -1,0 +1,50 @@
+{
+  "asset": "metro-glass-office",
+  "run": "20261107T074343-a1c5b0",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:43:52.976415+00:00",
+  "files": {
+    "glb": {
+      "file": "metro-glass-office.glb",
+      "sha256": "68ab8c9215c31ef2622aceb68dd392cacd63568422a32c8becfa6b7e027b2195",
+      "bytes": 11957712
+    },
+    "fbx": {
+      "file": "metro-glass-office.fbx",
+      "sha256": "83aa502150f82452eca8fc3a1f89b40b38f0bcbca02cc24bc1c07ca115b4914a",
+      "bytes": 9286892
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:43:30.639128+00:00",
+    "sha256": "9684ecacae96fca0dd6626ae0de0d52c5c4c7f4288e04dad806c9a918958128b",
+    "bytes": 11957200,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:43:52.898819+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed the split piece renders (q34 and back): clean, closed building in the Selene palette; split from the sheet by connected parts at measured height gaps; candidate only bakes a uniform scale to spec height, base at Z=0."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T074330-4683a6",
+    "change": "Uniform scale to the spec height of 38 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "4eeb8e976a8f3157f63f3cb18932c40822d1e3295e5ad66691fcc5c22262d71a",
+    "candidate_name": "metro-glass-office-scaled.glb",
+    "at": "2026-11-07T07:43:43.225179+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/metro-glass-office/runs/20261107T074343-a1c5b0",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

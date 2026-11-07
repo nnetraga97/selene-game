@@ -1,0 +1,27 @@
+{
+  "url": "https://overpass-api.de/api/interpreter",
+  "request_method": "POST",
+  "query_file": "kona-core.xml.overpassql",
+  "retrieved_utc": "2026-11-07T01:38:15.781822+00:00",
+  "bbox_s_w_n_e": [
+    19.638144986449866,
+    -155.99563069612626,
+    19.640855013550137,
+    -155.99276930387376
+  ],
+  "display_size_m": 300,
+  "centre": {
+    "name": "Kailua-Kona | refined palace / church core",
+    "lat": 19.6395,
+    "lon": -155.9942
+  },
+  "sha256": "22499a5c5badbe163ec0d7e9ed35753a5c9d8942837cbd3361aa0577d6c4ef81",
+  "bytes": 186472,
+  "response_headers": {
+    "Server": "nginx",
+    "Date": "Sat, 07 Nov 2026 01:38:15 GMT",
+    "Content-Type": "application/osm3s+xml",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  }
+}

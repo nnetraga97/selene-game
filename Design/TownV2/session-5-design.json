@@ -1,0 +1,316 @@
+{
+  "source": "saved Session 4, targeted in-place Session 5",
+  "moves": [
+    {
+      "lot": "way/198653703",
+      "hero": false,
+      "actor": "V2_Lot_way_198653703",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -18.66392905010745,
+        -17.23290282368915,
+        5.8309999999999995
+      ],
+      "scale": 1.128,
+      "yaw": -29.002880230506165,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        29.63072193678615,
+        15.124858296226083
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ],
+      "index": 0,
+      "new_center_m": [
+        -18,
+        -17
+      ],
+      "new_yaw": 270,
+      "new_scale": 1.128
+    },
+    {
+      "lot": "way/455896316",
+      "hero": "clock-hall",
+      "actor": "V2_Hero_clock-hall",
+      "asset": "/Game/Assets/clock-hall/clock-hall/StaticMeshes/clock-hall.clock-hall",
+      "building": "clock-hall",
+      "center_m": [
+        51.12009708175176,
+        12.719409627534128,
+        7.67
+      ],
+      "scale": 0.7017417905777176,
+      "yaw": 177.88455200174567,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        38.04611580841983,
+        15.79286071160712
+      ],
+      "building_dimensions_m": [
+        17.890985759671405,
+        14.52943185467855
+      ],
+      "index": 4,
+      "new_center_m": [
+        28,
+        3
+      ],
+      "new_yaw": 180,
+      "new_scale": 0.7017417905777176
+    },
+    {
+      "lot": "way/663900822",
+      "hero": false,
+      "actor": "V2_Lot_way_663900822",
+      "asset": "/Game/Assets/townhouse-terrace/townhouse-terrace/StaticMeshes/townhouse-terrace.townhouse-terrace",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -75.3038688786201,
+        69.097232529198,
+        5.928
+      ],
+      "scale": 1.128,
+      "yaw": 44.466387248653604,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        29.474233621570214,
+        15.841717224418815
+      ],
+      "building_dimensions_m": [
+        19.2672258984375,
+        7.6606456640625
+      ],
+      "index": 9,
+      "new_center_m": [
+        -72,
+        72
+      ],
+      "new_yaw": 315,
+      "new_scale": 1.128
+    },
+    {
+      "lot": "way/831077557",
+      "hero": false,
+      "actor": "V2_Lot_way_831077557",
+      "asset": "/Game/Assets/apartment-curved/apartment-curved/StaticMeshes/apartment-curved.apartment-curved",
+      "building": "apartment-curved",
+      "center_m": [
+        55.518276971160155,
+        41.65544938359065,
+        8.807
+      ],
+      "scale": 1.128,
+      "yaw": 148.37534779790022,
+      "palette": "ivory",
+      "tint": [
+        1,
+        1,
+        1
+      ],
+      "lot_dimensions_m": [
+        29.03679733645219,
+        24.149145605339793
+      ],
+      "building_dimensions_m": [
+        13.878916406249997,
+        14.15430427734375
+      ],
+      "index": 20,
+      "new_center_m": [
+        18,
+        50
+      ],
+      "new_yaw": 90,
+      "new_scale": 1.128
+    },
+    {
+      "lot": "way/1296717081",
+      "hero": "cafe",
+      "actor": "V2_Cafe_cafe",
+      "asset": "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair.shop-tool-repair",
+      "building": "shop-tool-repair",
+      "center_m": [
+        -24.34087123219862,
+        63.63350544999865,
+        5.821
+      ],
+      "scale": 1.12,
+      "yaw": 90,
+      "palette": "petrol",
+      "tint": [
+        0.76,
+        0.94,
+        0.97
+      ],
+      "lot_dimensions_m": [
+        35.33014345312119,
+        26.937168361614425
+      ],
+      "building_dimensions_m": [
+        10.303605566406251,
+        10.95494462890625
+      ],
+      "index": 23,
+      "new_center_m": [
+        -24.34,
+        50
+      ],
+      "new_yaw": 90,
+      "new_scale": 1.12
+    },
+    {
+      "lot": "way/1296717082",
+      "hero": "tool-shop",
+      "actor": "V2_Hero_tool-shop",
+      "asset": "/Game/Assets/shop-tool-repair/shop-tool-repair/StaticMeshes/shop-tool-repair.shop-tool-repair",
+      "building": "shop-tool-repair",
+      "center_m": [
+        15.94627699194959,
+        44.22105702926436,
+        5.715
+      ],
+      "scale": 1.12,
+      "yaw": 58.748714442216475,
+      "palette": "coral",
+      "tint": [
+        1,
+        0.85,
+        0.78
+      ],
+      "lot_dimensions_m": [
+        37.711629436935105,
+        19.406866859716104
+      ],
+      "building_dimensions_m": [
+        10.303605566406251,
+        10.95494462890625
+      ],
+      "index": 24,
+      "new_center_m": [
+        -10,
+        50
+      ],
+      "new_yaw": 90,
+      "new_scale": 1.12
+    }
+  ],
+  "additions": [
+    {
+      "label": "SouthCorner",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        2,
+        -17
+      ],
+      "scale": 1.05,
+      "yaw": 0,
+      "palette": "cream"
+    },
+    {
+      "label": "CafeNeighbour",
+      "building": "shop-bakery-corner",
+      "center_m": [
+        3,
+        50
+      ],
+      "scale": 1.05,
+      "yaw": 180,
+      "palette": "sand"
+    },
+    {
+      "label": "ShopCorner",
+      "building": "shop-tool-repair",
+      "center_m": [
+        -33,
+        63
+      ],
+      "scale": 1.12,
+      "yaw": 135,
+      "palette": "ivory"
+    },
+    {
+      "label": "ShopRow",
+      "building": "townhouse-terrace",
+      "center_m": [
+        -46,
+        76
+      ],
+      "scale": 1.128,
+      "yaw": 135,
+      "palette": "coral"
+    },
+    {
+      "label": "LowerShop",
+      "building": "shop-tool-repair",
+      "center_m": [
+        -58,
+        39
+      ],
+      "scale": 1.12,
+      "yaw": 315,
+      "palette": "cream"
+    }
+  ],
+  "gardens": [
+    {
+      "name": "CafeRear",
+      "rect": [
+        -22,
+        61,
+        1,
+        79
+      ],
+      "gate": "south"
+    },
+    {
+      "name": "UpperCourt",
+      "rect": [
+        5,
+        63,
+        28,
+        82
+      ],
+      "gate": "south"
+    },
+    {
+      "name": "ClockRear",
+      "rect": [
+        40,
+        -3,
+        66,
+        20
+      ],
+      "gate": "west"
+    },
+    {
+      "name": "EastCourt",
+      "rect": [
+        32,
+        34,
+        65,
+        50
+      ],
+      "gate": "west"
+    }
+  ],
+  "scale_policy": "No whole-district enlargement. Existing central assets retain uniform scales; new bakery copies 1.05. Central doors and floors already substantial against 1.8 m pawn.",
+  "walk_route_unchanged": true
+}

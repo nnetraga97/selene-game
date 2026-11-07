@@ -1,0 +1,50 @@
+{
+  "asset": "artdeco-tower",
+  "run": "20261107T073504-98afae",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:35:45.100180+00:00",
+  "files": {
+    "glb": {
+      "file": "artdeco-tower.glb",
+      "sha256": "0dfe9540ddf28e0851f9d3e49c58e1fb38a5f55c02f4659b501f72c6fc068a05",
+      "bytes": 18695364
+    },
+    "fbx": {
+      "file": "artdeco-tower.fbx",
+      "sha256": "3530613b77dd702e2fc6e47409787ebb31e8e57d81c90f76bc3d3e6951bfd106",
+      "bytes": 15507436
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:33:58.595912+00:00",
+    "sha256": "86600581c78c2792393138043e169eacf1ad7d0e2a5720b8b433afd0f0deb1ff",
+    "bytes": 18692740,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:35:45.007727+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed front, 3/4, side and back renders of the source: clean, closed building in the Selene palette; candidate only bakes a uniform scale to the spec height with the base at Z=0. Tripo non-manifold seams are expected. ~250-280k triangles is above our older buildings (10-20k) but within the 300k spec; Nanite in engine."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T073358-715569",
+    "change": "Uniform scale to the spec height of 80 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "30eeb1217e5c30c74e7089c33835ab26d9a053e071b41f6e8ee662a40144a2a7",
+    "candidate_name": "artdeco-tower-scaled.glb",
+    "at": "2026-11-07T07:35:04.277914+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/artdeco-tower/runs/20261107T073504-98afae",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

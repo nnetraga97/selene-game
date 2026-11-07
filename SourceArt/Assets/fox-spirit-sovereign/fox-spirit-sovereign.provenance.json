@@ -1,0 +1,56 @@
+{
+  "asset": "fox-spirit-sovereign",
+  "run": "20261106T220404-a52fa1",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-06T22:04:35.203635+00:00",
+  "files": {
+    "glb": {
+      "file": "fox-spirit-sovereign.glb",
+      "sha256": "7646fafae07380e96e28dc074f2658f7e0a7220d764c099dd745d1b528035af9",
+      "bytes": 4609464
+    },
+    "fbx": {
+      "file": "fox-spirit-sovereign.fbx",
+      "sha256": "c928753cc6d74003222ade2cc55f9077b27dc4991744f8735a6fe61cdb4db6d8",
+      "bytes": 4785340
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/texture/kitsune-inspired-fantasy-character-with-nine-tails-white-teal-armor-420e2152-d46e-482f-9272-c0ef362b500a",
+    "downloaded_at": "2026-11-06T20:45:53.396992+00:00",
+    "sha256": "0dfac9a88f96de1715d1ba202f9f2386a7489da205a3e4637e1b3bdc4597393a",
+    "bytes": 4358516,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-06T22:04:35.134037+00:00",
+      "decision": "accept-local",
+      "notes": "Accepted for a FIRST IN-ENGINE TEST only (user: 'Yes, fix and import'). Hand-built rig-v10: 160 bones, 24 secondary chains incl. all nine tails (user decision), geometry/UV/texture untouched, 1.75 m, -Y, unit scale, one mesh after the bone-shape import fix. Reviewed by Claude, Sol (needs work) and Sonnet second opinion: sleeves and tails good; knees spike at 130 deg and thighs are blocky (unproven whether tabards hide it in play); fist/wrist poor (mesh-limited, minor at gameplay distance). Kawaii snippet needs forearm/tail colliders and per-chain tuning. Not game_ready."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261106T215039-b9daa1",
+    "change": "rig-v10 (hand-built rig, nine tails, 24 secondary chains) re-evaluated after the import fix",
+    "candidate_sha256": "7e389a6a426cb34380e37a47709dd6eaff5c83731a85b0733eab17288cd865c6",
+    "candidate_name": "rigged.glb",
+    "at": "2026-11-06T22:04:04.012808+00:00",
+    "reevaluation": {
+      "reason": "blender_worker.py now imports with disable_bone_shape=True; run 20261106T215039-b9daa1 was rejected only for the Icosphere bone-shape helper",
+      "previously_evaluated_in": [
+        "20261106T215039-b9daa1"
+      ]
+    },
+    "repair_files": [
+      {
+        "file": "reproduction.py",
+        "sha256": "27d081d029b9222817198fc79807d3b379ee5ff1851a2a6623e8c0b6d612968e"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/fox-spirit-sovereign/runs/20261106T220404-a52fa1",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

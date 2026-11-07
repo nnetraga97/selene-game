@@ -1,0 +1,225 @@
+{
+  "status": "saved",
+  "assets": [
+    {
+      "asset": "seaside-guesthouse",
+      "nanite": true,
+      "collision": "complex-as-simple"
+    },
+    {
+      "asset": "seaside-lighthouse-house",
+      "nanite": true,
+      "collision": "complex-as-simple"
+    },
+    {
+      "asset": "harbour-boathouse",
+      "nanite": true,
+      "collision": "complex-as-simple"
+    },
+    {
+      "asset": "artdeco-tower",
+      "nanite": true,
+      "collision": "complex-as-simple"
+    }
+  ],
+  "placements": [
+    {
+      "actor": "V6_Guesthouse",
+      "asset": "seaside-guesthouse",
+      "center_m": [
+        -77.0,
+        70.0,
+        6.22
+      ],
+      "yaw": 45.0,
+      "uniform_scale": 1,
+      "height_m": 15.0,
+      "terrace": {
+        "base_m": 6.22,
+        "foundation_bottom_m": 5.161569353809001,
+        "corners_m": [
+          [
+            -87.96478945447082,
+            69.87235307004953
+          ],
+          [
+            -76.87235307004953,
+            80.96478945447082
+          ],
+          [
+            -66.03521054552918,
+            70.12764692995047
+          ],
+          [
+            -77.12764692995047,
+            59.03521054552918
+          ]
+        ],
+        "corner_ground_m": [
+          6.58006366536573,
+          6.573340777677611,
+          5.707961559295654,
+          5.461569353809001
+        ]
+      }
+    },
+    {
+      "actor": "V6_Lighthouse",
+      "asset": "seaside-lighthouse-house",
+      "center_m": [
+        -59.5,
+        22.0,
+        5.55
+      ],
+      "yaw": 180.0,
+      "uniform_scale": 1,
+      "height_m": 14.0,
+      "terrace": {
+        "base_m": 5.55,
+        "foundation_bottom_m": 0.1476665887260435,
+        "corners_m": [
+          [
+            -51.73319458007813,
+            30.672338256835936
+          ],
+          [
+            -51.73319458007813,
+            13.327661743164064
+          ],
+          [
+            -67.26680541992188,
+            13.327661743164061
+          ],
+          [
+            -67.26680541992188,
+            30.672338256835936
+          ]
+        ],
+        "corner_ground_m": [
+          5.3756433473895875,
+          4.668407717347484,
+          0.4476665887260435,
+          1.6709081954815612
+        ]
+      }
+    },
+    {
+      "actor": "V6_Boathouse",
+      "asset": "harbour-boathouse",
+      "center_m": [
+        -58.0,
+        -8.0,
+        3.85
+      ],
+      "yaw": 180.0,
+      "uniform_scale": 1,
+      "height_m": 9.0,
+      "terrace": {
+        "base_m": 3.85,
+        "foundation_bottom_m": -1.5972742689502046,
+        "corners_m": [
+          [
+            -51.74728698730469,
+            -1.0331939697265622
+          ],
+          [
+            -51.74728698730469,
+            -14.966806030273437
+          ],
+          [
+            -64.25271301269531,
+            -14.966806030273437
+          ],
+          [
+            -64.25271301269531,
+            -1.0331939697265635
+          ]
+        ],
+        "corner_ground_m": [
+          3.7440055955581775,
+          0.10240741964043668,
+          -1.2972742689502046,
+          0.6970732720500641
+        ]
+      }
+    }
+  ],
+  "removed": [
+    "V2_Lot_way_663900822",
+    "V4_Foundation_9"
+  ],
+  "new_actors": [
+    "V6_Guesthouse_Foundation",
+    "V6_Guesthouse_Paving",
+    "V6_Guesthouse",
+    "V6_Lighthouse_Foundation",
+    "V6_Lighthouse_Paving",
+    "V6_Lighthouse",
+    "V6_Boathouse_Foundation",
+    "V6_Boathouse_Paving",
+    "V6_Boathouse",
+    "V6_GuesthouseEntry_Step_0",
+    "V6_GuesthouseEntry_Step_1",
+    "V6_GuesthouseEntry_Step_2",
+    "V6_GuesthouseEntry_Step_3",
+    "V6_LighthouseLink_Step_0",
+    "V6_BoathouseLink_Step_0",
+    "V6_BoathouseLink_Step_1",
+    "V6_BoathouseLink_Step_2",
+    "V6_BoathouseLink_Step_3",
+    "V6_BoathouseLink_Step_4",
+    "V6_BoathouseLink_Step_5",
+    "V6_BoathouseLink_Step_6",
+    "V6_LighthouseWall_0",
+    "V6_LighthouseCap_0",
+    "V6_LighthouseWall_1",
+    "V6_LighthouseCap_1",
+    "V6_BoathouseLanding"
+  ],
+  "scale_policy": "Source real-scale meshes at uniform 1.0; base-centred pivot retained",
+  "connections": [
+    {
+      "name": "GuesthouseEntry",
+      "start_m": [
+        -70.3086485296317,
+        63.308648529631704,
+        5.672933559782425
+      ],
+      "end_m": [
+        -71.58144073576749,
+        64.58144073576749,
+        6.22
+      ],
+      "steps": 4
+    },
+    {
+      "name": "LighthouseLink",
+      "start_m": [
+        -49.8,
+        22,
+        5.4439399666442965
+      ],
+      "end_m": [
+        -51.7,
+        22,
+        5.55
+      ],
+      "steps": 1
+    },
+    {
+      "name": "BoathouseLink",
+      "start_m": [
+        -49.0,
+        -8,
+        2.9487526845703047
+      ],
+      "end_m": [
+        -51.75,
+        -8,
+        3.85
+      ],
+      "steps": 7
+    }
+  ],
+  "actor_count": 773
+}

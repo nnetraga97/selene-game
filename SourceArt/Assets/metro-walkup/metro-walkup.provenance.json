@@ -1,0 +1,50 @@
+{
+  "asset": "metro-walkup",
+  "run": "20261107T074256-346dc1",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:43:06.747375+00:00",
+  "files": {
+    "glb": {
+      "file": "metro-walkup.glb",
+      "sha256": "0d19f1bd2f72a1e6426cd1102b92de34fe4e3cf57f37f1b9b933c05770c56493",
+      "bytes": 12555932
+    },
+    "fbx": {
+      "file": "metro-walkup.fbx",
+      "sha256": "128f6e93de340755ba57d1896644602d5f6eb20bc0860afe0f99c99e368418dc",
+      "bytes": 9903532
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/cc60778d-a5a2-4976-9bfa-7c46cedb62dc",
+    "downloaded_at": "2026-11-07T07:42:42.979468+00:00",
+    "sha256": "b74a612245ed867d093624d5d4bc5d6471efbddcced4f95d73385e48b6bef827",
+    "bytes": 12555484,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:43:06.670053+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed the split piece renders (q34 and back): clean, closed building in the Selene palette; split from the sheet by connected parts at measured height gaps; candidate only bakes a uniform scale to spec height, base at Z=0."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T074243-5d4ac2",
+    "change": "Uniform scale to the spec height of 18 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "b7c6b49b3ea2faa98cab88ae1d82e13736fbe5a8f19f35cb2b8180dacc5513c9",
+    "candidate_name": "metro-walkup-scaled.glb",
+    "at": "2026-11-07T07:42:56.190327+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/metro-walkup/runs/20261107T074256-346dc1",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

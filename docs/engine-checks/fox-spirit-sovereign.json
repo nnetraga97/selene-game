@@ -1,0 +1,45 @@
+{
+  "asset": "fox-spirit-sovereign",
+  "run": "20261106T220404-a52fa1",
+  "draft": false,
+  "format": "glb",
+  "imported_at": "2026-11-06T22:05:08.652160+00:00",
+  "engine": "5.8.4-58902052+++UE5+Release-5.8",
+  "imported": [
+    {
+      "path": "/Game/Assets/fox-spirit-sovereign/fox-spirit-sovereign/Textures/kitsune_fantasy_character_3d_model_basecolor.kitsune_fantasy_character_3d_model_basecolor",
+      "class": "Texture2D"
+    },
+    {
+      "path": "/Game/Assets/fox-spirit-sovereign/fox-spirit-sovereign/SkeletalMeshes/fox-spirit-sovereign_Skeleton.fox-spirit-sovereign_Skeleton",
+      "class": "Skeleton"
+    },
+    {
+      "path": "/Game/Assets/fox-spirit-sovereign/fox-spirit-sovereign/Materials/tripo_7bce1b64_a754_4000_bb85_d85c877abbda.tripo_7bce1b64_a754_4000_bb85_d85c877abbda",
+      "class": "MaterialInstanceConstant"
+    },
+    {
+      "path": "/Game/Assets/fox-spirit-sovereign/fox-spirit-sovereign/SkeletalMeshes/fox-spirit-sovereign.fox-spirit-sovereign",
+      "class": "SkeletalMesh",
+      "size_m": [
+        1.485,
+        1.0165,
+        1.75
+      ],
+      "skeleton": "fox-spirit-sovereign_Skeleton"
+    },
+    {
+      "path": "/Game/Assets/fox-spirit-sovereign/fox-spirit-sovereign/SkeletalMeshes/fox-spirit-sovereign_PhysicsAsset.fox-spirit-sovereign_PhysicsAsset",
+      "class": "PhysicsAsset"
+    }
+  ],
+  "game_ready": false,
+  "still_to_check": [
+    "scale against the design height",
+    "pivot placement",
+    "collision fit",
+    "material and texture look in the target lighting",
+    "LODs and streaming",
+    "performance on target hardware"
+  ]
+}

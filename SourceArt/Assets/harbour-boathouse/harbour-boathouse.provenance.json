@@ -1,0 +1,50 @@
+{
+  "asset": "harbour-boathouse",
+  "run": "20261107T073450-5934a3",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T07:35:44.930084+00:00",
+  "files": {
+    "glb": {
+      "file": "harbour-boathouse.glb",
+      "sha256": "5f39796f758e2f2d312f20ffd1197c8ab02829625fb5559bf55db7c1677def0e",
+      "bytes": 16921852
+    },
+    "fbx": {
+      "file": "harbour-boathouse.fbx",
+      "sha256": "f215c98c3b50ec71ef27aa339215453f7d81d0e52e33c2fd129fd95be0938cb9",
+      "bytes": 14535372
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/c6082dcf-e6d1-4c95-a3b4-a0e0c7486368",
+    "downloaded_at": "2026-11-07T07:33:35.725682+00:00",
+    "sha256": "4e13afa804dca77f98612347e81190bfa2012e68a65a1b220c0f9499e9b175a6",
+    "bytes": 16917560,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T07:35:44.840886+00:00",
+      "decision": "accept-local",
+      "notes": "Claude reviewed front, 3/4, side and back renders of the source: clean, closed building in the Selene palette; candidate only bakes a uniform scale to the spec height with the base at Z=0. Tripo non-manifold seams are expected. ~250-280k triangles is above our older buildings (10-20k) but within the 300k spec; Nanite in engine."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T073335-dbd2c9",
+    "change": "Uniform scale to the spec height of 9 m, base centred at the origin with the ground at Z=0; geometry, UVs and textures otherwise unchanged",
+    "candidate_sha256": "6458965f4c504da058dbeaae25583e897a38c929ad87b07250dc34871d5d5ec9",
+    "candidate_name": "harbour-boathouse-scaled.glb",
+    "at": "2026-11-07T07:34:50.469604+00:00",
+    "repair_files": [
+      {
+        "file": "scale_to_height.py",
+        "sha256": "9ada8b25b39194a57ed40b596d158d68938f1ab0f96749e9605cc7bc9dbbd60c"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/harbour-boathouse/runs/20261107T073450-5934a3",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

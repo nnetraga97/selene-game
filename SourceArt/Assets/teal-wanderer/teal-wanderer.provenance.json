@@ -1,0 +1,50 @@
+{
+  "asset": "teal-wanderer",
+  "run": "20261107T001402-33b409",
+  "run_state": "accepted_local",
+  "draft": false,
+  "delivered_at": "2026-11-07T00:14:22.274591+00:00",
+  "files": {
+    "glb": {
+      "file": "teal-wanderer.glb",
+      "sha256": "9d8a88c6d29a7377eea7d68a427fa2d4df6e7f90764cb32a865ee06c6f0313cb",
+      "bytes": 6431724
+    },
+    "fbx": {
+      "file": "teal-wanderer.fbx",
+      "sha256": "6ef46baef6791558a0a6bf09910e879344517ff90c5d1bad46b6b0affabb3d1a",
+      "bytes": 6004380
+    }
+  },
+  "source": {
+    "source_url": "https://studio.tripo3d.ai/workspace/generate/female-fantasy-character-with-teal-outfit-standing-in-front-of-glowing-84f856eb-9019-45de-96d9-117e11cd9273",
+    "downloaded_at": "2026-11-06T23:05:31.748768+00:00",
+    "sha256": "01c8bfdf5d59e5363d3dbf9406619c3980cb00af85d2302dd23f6fc7de6e5de2",
+    "bytes": 5483944,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [
+    {
+      "at": "2026-11-07T00:14:22.217958+00:00",
+      "decision": "accept-local",
+      "notes": "Accepted for the first in-engine test; supersedes 20261106T235052-26fdc6. Adds: ruffle weights restored to Tripo's arm-blended originals and the six ruffle bones removed (Sol accept-local), eye caps recessed (Sol: rim still visible close-up), eye cards joined into the body mesh so Unreal imports one skeletal mesh named teal-wanderer. 108 joints, 1.68 m, unit scale, -Y. Not game_ready."
+    }
+  ],
+  "lineage": {
+    "parent_run": "20261107T001333-3096a6",
+    "change": "Joined the two head-weighted eye-card meshes into the body mesh (second material slot) so Unreal imports one skeletal mesh; renamed the mesh to teal-wanderer. No vertex/UV/weight/image change.",
+    "candidate_sha256": "38effbd66ce0fd9abdcc14786a61f5f4e73f1dd6018ef1996c6059b9438cc27b",
+    "candidate_name": "teal-wanderer-merged.glb",
+    "at": "2026-11-07T00:14:02.578903+00:00",
+    "repair_files": [
+      {
+        "file": "merge_eyes.py",
+        "sha256": "de5f10843b3cd23b2d75199b03329c0233bc06301b901e6db35f1abbd010c73f"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/teal-wanderer/runs/20261107T001402-33b409",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

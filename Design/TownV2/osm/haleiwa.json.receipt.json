@@ -1,0 +1,27 @@
+{
+  "url": "https://overpass-api.de/api/interpreter",
+  "request_method": "POST",
+  "query_file": "haleiwa.json.overpassql",
+  "retrieved_utc": "2026-11-07T01:33:49.493592+00:00",
+  "bbox_s_w_n_e": [
+    21.591594986449863,
+    -158.10494916670993,
+    21.594305013550134,
+    -158.10205083329006
+  ],
+  "display_size_m": 300,
+  "centre": {
+    "name": "Haleiwa | bridge / harbour edge",
+    "lat": 21.59295,
+    "lon": -158.1035
+  },
+  "sha256": "c7d431e0ff37e7ca40cd9536b2fba96f2fd5a0160b0fa280e750456e835b6a39",
+  "bytes": 145626,
+  "response_headers": {
+    "Server": "nginx",
+    "Date": "Sat, 07 Nov 2026 01:33:48 GMT",
+    "Content-Type": "application/json",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close"
+  }
+}
