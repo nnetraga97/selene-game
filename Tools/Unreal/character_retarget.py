@@ -18,7 +18,8 @@ import unreal as u
 ROOT = u.Paths.convert_relative_path_to_full(u.Paths.project_dir())
 NAME = os.environ["SELENE_CHAR"]
 CHAMP = os.environ["SELENE_CHAR_MESH"]
-BASE = "/Game/Selene/Characters/" + NAME
+CANONICAL_BASE = "/Game/Selene/Characters/" + NAME
+BASE = os.environ.get("SELENE_CHAR_OUTPUT_ROOT") or CANONICAL_BASE
 MANNY = "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple"
 ABP = "/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed"
 report = {"status": "failed"}
@@ -47,11 +48,22 @@ MIXAMO_CHAINS = [("Spine", "Spine", "Spine2"), ("Neck", "Neck", "Neck"), ("Head"
 
 
 def mixamo_chains(c):
-    if not c.set_retarget_root("mixamorig_Hips"):
-        return False
-    for chain, start, end in MIXAMO_CHAINS:
-        c.add_retarget_chain(chain, "mixamorig_" + start, "mixamorig_" + end, "")
-    return len(c.get_retarget_chains()) == len(MIXAMO_CHAINS)
+    root = "mixamorig_Hips"
+    if str(c.get_retarget_root()) != root:
+        c.set_retarget_root(root)
+    if str(c.get_retarget_root()) != root:
+        raise RuntimeError("Required Mixamo root is missing: " + root)
+    existing = {str(chain.chain_name): chain.chain_name for chain in c.get_retarget_chains()}
+    for name, start, end in MIXAMO_CHAINS:
+        start, end = "mixamorig_" + start, "mixamorig_" + end
+        if name in existing:
+            chain = existing[name]
+            if str(c.get_retarget_chain_start_bone(chain)) == start and str(c.get_retarget_chain_end_bone(chain)) == end:
+                continue
+            c.remove_retarget_chain(chain)
+        c.add_retarget_chain(name, start, end, "")
+        if str(c.get_retarget_chain_start_bone(name)) != start or str(c.get_retarget_chain_end_bone(name)) != end:
+            raise RuntimeError(f"Missing Mixamo topology for {name} ({start} to {end})")
 
 
 def ik_rig(name, mesh):
@@ -64,8 +76,7 @@ def ik_rig(name, mesh):
     if not c.apply_auto_generated_retarget_definition():
         # Extra secondary-physics bones (braid/skirt/hair chains) stop the template matcher recognising the
         # Mixamo skeleton, so define the body chains by bone name (same map the auto rig produced for Angel).
-        if not mixamo_chains(c):
-            raise RuntimeError(name + ": auto retarget definition failed and the skeleton is not Mixamo")
+        mixamo_chains(c)
         report.setdefault("manual_chains", []).append(name)
     try:
         c.apply_auto_fbik()
@@ -115,7 +126,7 @@ def main():
                 raise RuntimeError("Invalid audited bind quaternion")
             q = u.Quat(*values)
         else:
-            idle = u.load_asset(BASE + "/Anims/MM_Idle_" + NAME)
+            idle = u.load_asset(CANONICAL_BASE + "/Anims/MM_Idle_" + NAME)
             if not idle:
                 raise RuntimeError("Pose-yaw alignment requires an audited bind quaternion or existing base idle")
             opts = u.AnimPoseEvaluationOptions()
@@ -134,9 +145,12 @@ def main():
         report["pose_yaw_alignment"] = {"world_yaw_degrees": yaw, "reference_root_quaternion": bind, "local_delta_quaternion": delta}
     r.auto_align_all_bones(T)
     report["mapping"] = {ch[0]: str(r.get_source_chain(ch[0])) for ch in report["IK_" + NAME]["chains"]}
-    lib.save_loaded_asset(src)
-    lib.save_loaded_asset(tgt)
-    lib.save_loaded_asset(rtg)
+    required = {"Spine", "LeftLeg", "RightLeg", "LeftArm", "RightArm"}
+    if any(report["mapping"].get(chain) in {None, "", "None"} for chain in required):
+        raise RuntimeError("Required locomotion chains are unmapped")
+    for asset in (src, tgt, rtg):
+        if not lib.save_loaded_asset(asset):
+            raise RuntimeError("Could not save " + asset.get_path_name())
 
     inputs = u.IKRetargetBatchOperationInputs()
     inputs.set_editor_property("assets_to_retarget", [u.AssetRegistryHelpers.get_asset_registry().get_asset_by_object_path(ABP + ".ABP_Unarmed")])

@@ -76,7 +76,8 @@ def run(stages, root, output):
         started = time.monotonic()
         try:
             entry['inputs'] = {str(path): digest(path) for path in stage.inputs}
-            env = {**os.environ, **(stage.env or {}), 'SELENE_STAGE_ID': invocation,
+            settings = {key: value.replace('{invocation}', invocation) for key, value in (stage.env or {}).items()}
+            env = {**os.environ, **settings, 'SELENE_STAGE_ID': invocation,
                    'SELENE_STAGE_REPORT': str(report), 'SELENE_SHOT_OUTPUT': str(stage_dir / 'shots')}
             entry['exit_code'] = execute(stage.argv, root, env, stage_dir / 'console.log', stage.timeout)
             if entry['exit_code']:
@@ -191,7 +192,8 @@ def workflow(args):
         ]
     if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,39}', args.character):
         raise ValueError('Invalid character name')
-    env = {'SELENE_CHAR': args.character, 'SELENE_CHAR_MESH': args.mesh}
+    env = {'SELENE_CHAR': args.character, 'SELENE_CHAR_MESH': args.mesh, 'SELENE_CHAR_EXPECTED_PACKAGES': '',
+           'SELENE_CHAR_OUTPUT_ROOT': f'/Game/__SeleneChecks/{{invocation}}/{args.character}'}
     return [
         Stage('retarget', commandlet('character_retarget.py'), Path('retarget.json'), retarget_saved,
               (package(args.mesh), tools / 'character_retarget.py'), env),
