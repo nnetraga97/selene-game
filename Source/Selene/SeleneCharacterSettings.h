@@ -92,6 +92,17 @@ struct SELENE_API FSelenePlayableCharacter
 	UPROPERTY(EditAnywhere, Category = "Character")
 	TSoftObjectPtr<UMaterialInterface> OverrideMaterial;
 
+	// WANDERER MATERIAL SLOTS: empty preserves the existing all-slot override behavior.
+	/** Named mesh slots that retain their imported material when OverrideMaterial is applied. */
+	UPROPERTY(EditAnywhere, Category = "Character")
+	TArray<FName> KeepMaterialSlots;
+	// END WANDERER MATERIAL SLOTS
+
+	// YSOLDE MATERIAL SLOTS: named overrides applied after the global override.
+	UPROPERTY(EditAnywhere, Category = "Character")
+	TMap<FName, TSoftObjectPtr<UMaterialInterface>> SlotMaterials;
+	// END YSOLDE MATERIAL SLOTS
+
 	/**
 	 * Borrowed mocap locomotion (Epic Game Animation Sample clips, retargeted to the hero). When WalkLoop is set it
 	 * replaces the Locomotion blend space on the ground: the loop is picked by speed and played at

@@ -5,6 +5,10 @@
 #include "SelenePlayerController.generated.h"
 
 class SSelenePauseMenu;
+class SSeleneFpsCounter;
+class SSeleneMapView;
+class USceneCaptureComponent2D;
+class UTextureRenderTarget2D;
 class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
@@ -18,6 +22,10 @@ class SELENE_API ASelenePlayerController : public APlayerController
 public:
 	void TogglePauseMenu();
 	void ClosePauseMenu();
+	void ToggleMap();
+	void ToggleFpsCounter();
+	FVector GetMapCenter() const { return MapCenter; }
+	float GetMapWidthCm() const { return MapWidthCm; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -41,6 +49,10 @@ private:
 	void ToggleCamera();
 	void CycleCharacter();
 	void ApplyMovementPace();
+	void ZoomMap(const FInputActionValue& Value);
+	void CaptureMap();
+	void CloseMap();
+	bool IsCaptureRun() const;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UInputMappingContext> RuntimeMappingContext;
@@ -70,6 +82,26 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> MenuAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> MapAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> MapZoomAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> FpsAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<USceneCaptureComponent2D> MapCapture;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UTextureRenderTarget2D> MapTarget;
+
+	TSharedPtr<SSeleneMapView> MapView;
+	TSharedPtr<SSeleneFpsCounter> FpsCounter;
+	FVector MapCenter = FVector::ZeroVector;
+	float MapWidthCm = 40000.f;
 
 	bool bSprintHeld = false;
 	bool bWalkToggled = false;

@@ -1,5 +1,8 @@
 #include "SeleneCharacter.h"
 
+// AdvancedMovement hook: all ability/physics logic lives in Movement/.
+#include "Movement/SeleneMovementComponent.h"
+
 #include "Selene.h"
 #include "Animation/SeleneSecondaryAnimInstance.h"
 #include "Animation/AnimInstance.h"
@@ -16,6 +19,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/World.h"
+#include "Engine/StaticMeshActor.h"
+#include "Components/StaticMeshComponent.h"
+#include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -101,7 +107,8 @@ namespace
 
 }
 
-ASeleneCharacter::ASeleneCharacter()
+ASeleneCharacter::ASeleneCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<USeleneMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -255,6 +262,9 @@ void ASeleneCharacter::SelectCharacter(FName Name)
 	AddPath(Entry->Jump);
 	AddPath(Entry->Land);
 	AddPath(Entry->OverrideMaterial);
+	// YSOLDE MATERIAL SLOTS: include named materials in the existing async load.
+	for (const auto& SlotMaterial : Entry->SlotMaterials) AddPath(SlotMaterial.Value);
+	// END YSOLDE MATERIAL SLOTS
 	AddPath(Entry->IdleLoop);
 	AddPath(Entry->WalkLoop);
 	AddPath(Entry->RunLoop);
@@ -321,6 +331,9 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 	Validate(Entry.Jump);
 	Validate(Entry.Land);
 	Validate(Entry.OverrideMaterial);
+	// YSOLDE MATERIAL SLOTS: validate before changing the live pawn.
+	for (const auto& SlotMaterial : Entry.SlotMaterials) Validate(SlotMaterial.Value);
+	// END YSOLDE MATERIAL SLOTS
 	Validate(Entry.IdleLoop);
 	Validate(Entry.WalkLoop);
 	Validate(Entry.RunLoop);
@@ -347,8 +360,22 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 	Mesh->SetRelativeLocationAndRotation(Entry.MeshOffset, Entry.MeshRotation);
 	if (UMaterialInterface* Material = Entry.OverrideMaterial.Get())
 	{
-		for (int32 Slot = 0; Slot < Mesh->GetNumMaterials(); ++Slot) Mesh->SetMaterial(Slot, Material);
+		// WANDERER MATERIAL SLOTS: preserve named imported slots (e.g. eye cards).
+		const TArray<FName> SlotNames = Mesh->GetMaterialSlotNames();
+		for (int32 Slot = 0; Slot < Mesh->GetNumMaterials(); ++Slot)
+		{
+			if (SlotNames.IsValidIndex(Slot) && Entry.KeepMaterialSlots.Contains(SlotNames[Slot])) continue;
+			Mesh->SetMaterial(Slot, Material);
+		}
+		// END WANDERER MATERIAL SLOTS
 	}
+	// YSOLDE MATERIAL SLOTS: explicit per-slot overrides take precedence.
+	for (const auto& SlotMaterial : Entry.SlotMaterials)
+	{
+		const int32 Slot = Mesh->GetMaterialIndex(SlotMaterial.Key);
+		if (Slot != INDEX_NONE && SlotMaterial.Value.Get()) Mesh->SetMaterial(Slot, SlotMaterial.Value.Get());
+	}
+	// END YSOLDE MATERIAL SLOTS
 	ActiveCharacter = Entry;
 	ActiveCharacterName = Entry.Name;
 	ActiveCharacterLoad = MoveTemp(PendingCharacterLoad);
@@ -358,21 +385,12 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 		Mesh->SetAnimInstanceClass(AnimClass);
 		SetActorTickEnabled(false);
 	}
-	else if (!Entry.SecondaryChains.IsEmpty())
+	else
 	{
-		// Same single-node locomotion, plus Kawaii Physics chains (hair/braid/skirt/wings) in a native graph.
+		// All native clip players need DefaultSlot transitions/crossfades; Kawaii chains are optional.
 		// ActiveCharacter is already set: the instance reads its chains from GetActiveCharacterEntry().
 		Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 		Mesh->SetAnimInstanceClass(USeleneSecondaryAnimInstance::StaticClass());
-		SingleNodePhase = ESingleNodePhase::Ground;
-		bWasFalling = GetCharacterMovement()->IsFalling();
-		ConfigureBlendAxes();
-		UpdateSingleNodeAnimation(0.f);
-		SetActorTickEnabled(true);
-	}
-	else
-	{
-		Mesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 		SingleNodePhase = ESingleNodePhase::Ground;
 		bWasFalling = GetCharacterMovement()->IsFalling();
 		ConfigureBlendAxes();
@@ -436,6 +454,13 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 {
 	UAnimSingleNodeInstance* Instance = GetMesh()->GetSingleNodeInstance();
 	if (!Instance) return;
+	// AdvancedMovement hook: the slide owns DefaultSlot; base changes otherwise cancel or retime its held pose.
+	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && Advanced->IsSliding())
+	{
+		PrevSpeed = GetVelocity().Size2D();
+		bHadInput = Advanced->GetCurrentAcceleration().SizeSquared2D() > 1.f;
+		return;
+	}
 	const bool bFalling = GetCharacterMovement()->IsFalling();
 	if (bFalling)
 	{
@@ -507,6 +532,7 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 				0.f, 0.25f, PreviousRate, 1, -1.f, PreviousTime))
 			{
 				AnimInstance->Montage_Stop(0.25f, Fade);
+				UE_LOG(LogSelene, Verbose, TEXT("Loop crossfade %s -> %s slot=DefaultSlot"), *GetNameSafe(PreviousLoop), *GetNameSafe(Animation));
 			}
 		}
 	}
@@ -548,6 +574,10 @@ namespace
 		TEXT("Debug: 1 drives the player on a repeating 12 s loop (walk, sprint, sharp stop, turn, jog, jump) for tuning secondary motion."));
 	TAutoConsoleVariable<float> CVarAutoShots(TEXT("selene.AutoShots"), 0.f,
 		TEXT("Debug: > 0 takes a game screenshot every N seconds to Saved/AutoShots/."));
+	TAutoConsoleVariable<int32> CVarAnimMatch(TEXT("selene.AnimMatch"), 0,
+		TEXT("Debug: capture idle/walk/run/sprint/stop/pivot/jump from front/side/back on a temporary platform."));
+	TAutoConsoleVariable<FString> CVarAnimMatchLabel(TEXT("selene.AnimMatchLabel"), TEXT("before"),
+		TEXT("Debug: evidence subfolder under Saved/AnimMatch/Captures/."));
 }
 
 UAnimationAsset* ASeleneCharacter::ChooseGroundLoop(float Speed, float& OutPlayRate) const
@@ -570,7 +600,12 @@ void ASeleneCharacter::PlayTransition(UAnimSequence* Clip, float BlendIn, float 
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (!Clip || !AnimInstance) return;
-	AnimInstance->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), BlendIn, BlendOut, 1.f, 1, -1.f, 0.f);
+	UAnimMontage* Montage = AnimInstance->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), BlendIn, BlendOut, 1.f, 1, -1.f, 0.f);
+	if (CVarAnimMatch.GetValueOnGameThread() > 0)
+	{
+		UE_LOG(LogSelene, Log, TEXT("AnimMatch transition hero=%s clip=%s slot=DefaultSlot montage=%s playing=%d"),
+			*ActiveCharacterName.ToString(), *GetNameSafe(Clip), *GetNameSafe(Montage), Montage && AnimInstance->Montage_IsPlaying(Montage));
+	}
 }
 
 void ASeleneCharacter::UpdateLocomotionTransitions(float Speed, float DeltaSeconds)
@@ -620,6 +655,11 @@ void ASeleneCharacter::Tick(float DeltaSeconds)
 
 void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 {
+	if (CVarAnimMatch.GetValueOnGameThread() > 0 && IsLocallyControlled())
+	{
+		TickAnimMatch(DeltaSeconds);
+		return;
+	}
 	DebugTime += DeltaSeconds;
 	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsLocallyControlled())
 	{
@@ -654,6 +694,78 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 		const FString Dir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir() / TEXT("AutoShots"));
 		IFileManager::Get().MakeDirectory(*Dir, true);
 		FScreenshotRequest::RequestScreenshot(Dir / FString::Printf(TEXT("%s_%05.1f.png"), *ActiveCharacterName.ToString(), DebugTime), false, false);
+	}
+}
+
+void ASeleneCharacter::TickAnimMatch(float DeltaSeconds)
+{
+	// Wait for async roster loading and shader warmup before the first reference frame.
+	if (!PendingCharacterName.IsNone()) return;
+	AnimMatchTime += DeltaSeconds;
+	if (AnimMatchTime < 0.f || AnimMatchTime >= 42.f) return;
+	const int32 ViewIndex = FMath::FloorToInt(AnimMatchTime / 14.f);
+	const float T = FMath::Fmod(AnimMatchTime, 14.f);
+	if (ViewIndex != AnimMatchView)
+	{
+		if (AnimMatchView == INDEX_NONE)
+		{
+			// A runtime-only level fixture removes town obstacles and camera collision from comparisons.
+			AnimMatchOrigin = GetActorLocation() + FVector(0.f, 0.f, 3000.f);
+			AStaticMeshActor* Floor = GetWorld()->SpawnActor<AStaticMeshActor>();
+			Floor->SetMobility(EComponentMobility::Movable);
+			Floor->GetStaticMeshComponent()->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")));
+			Floor->SetActorLocation(AnimMatchOrigin - FVector(0.f, 0.f, 139.5f));
+			Floor->SetActorScale3D(FVector(120.f, 120.f, 1.f));
+			Floor->GetStaticMeshComponent()->SetCollisionProfileName(TEXT("BlockAll"));
+			SetCameraMode(ESeleneCameraMode::ThirdPerson);
+			CameraBoom->TargetArmLength = 450.f;
+			CameraBoom->TargetOffset = FVector(0.f, 0.f, 0.f);
+			CameraBoom->bEnableCameraLag = false;
+			CameraBoom->bDoCollisionTest = false;
+		}
+		GetCharacterMovement()->StopMovementImmediately();
+		SetActorLocationAndRotation(AnimMatchOrigin, FRotator::ZeroRotator, false, nullptr, ETeleportType::TeleportPhysics);
+		AnimMatchView = ViewIndex;
+		AnimMatchShot = 0;
+		bAnimMatchJumped = false;
+	}
+	const FVector Direction = T >= 10.f && T < 11.f ? -FVector::ForwardVector : FVector::ForwardVector;
+	if (T >= 2.f && T < 4.f) { SetMovementPace(ESelenePace::Walk); AddMovementInput(Direction); }
+	else if ((T >= 4.f && T < 6.f) || (T >= 9.f && T < 11.f))
+	{ SetMovementPace(ESelenePace::Jog); AddMovementInput(Direction); }
+	else if (T >= 6.f && T < 8.f) { SetMovementPace(ESelenePace::Sprint); AddMovementInput(Direction); }
+	if (T >= 12.f && !bAnimMatchJumped) { Jump(); bAnimMatchJumped = true; }
+	if (T >= 12.1f) StopJumping();
+	static const float Yaws[] = {180.f, 90.f, 0.f};
+	static const TCHAR* Views[] = {TEXT("front"), TEXT("side"), TEXT("back")};
+	GetController()->SetControlRotation(FRotator(-10.f, GetActorRotation().Yaw + Yaws[ViewIndex], 0.f));
+	const FVector Base = GetActorLocation() - FVector(0.f, 0.f, 83.f);
+	const FVector Travel = GetVelocity().SizeSquared2D() > 1.f ? GetVelocity().GetSafeNormal2D() : GetActorForwardVector();
+	DrawDebugDirectionalArrow(GetWorld(), Base, Base + Travel * 160.f, 25.f, FColor::Cyan, false, -1.f, 0, 3.f);
+	if (UAnimInstance* Anim = GetMesh()->GetAnimInstance())
+	{
+		if (UAnimMontage* Montage = Anim->GetCurrentActiveMontage())
+		{
+			UE_LOG(LogSelene, Log, TEXT("AnimMatch slot hero=%s view=%s t=%.3f montage=%s position=%.3f playing=%d"),
+				*ActiveCharacterName.ToString(), Views[ViewIndex], T, *GetNameSafe(Montage),
+				Anim->Montage_GetPosition(Montage), Anim->Montage_IsPlaying(Montage));
+		}
+	}
+	static const float Times[] = {1.f, 3.f, 5.f, 7.f, 8.12f, 10.12f, 12.25f};
+	static const TCHAR* Phases[] = {TEXT("idle"), TEXT("walk"), TEXT("run"), TEXT("sprint"), TEXT("stop"), TEXT("pivot"), TEXT("jump")};
+	if (AnimMatchShot < UE_ARRAY_COUNT(Times) && T >= Times[AnimMatchShot])
+	{
+		const FString Dir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir() / TEXT("AnimMatch/Captures")
+			/ CVarAnimMatchLabel.GetValueOnGameThread() / ActiveCharacterName.ToString());
+		IFileManager::Get().MakeDirectory(*Dir, true);
+		const FString Name = FString::Printf(TEXT("%02d_%s_%s.png"), AnimMatchShot, Phases[AnimMatchShot], Views[ViewIndex]);
+		FScreenshotRequest::RequestScreenshot(Dir / Name, false, false);
+		UE_LOG(LogSelene, Log, TEXT("AnimMatch %s %s t=%.3f actor=%s mesh=%s velocity=%s anim=%s secondaryChains=%d base=%s playRate=%.3f"),
+			*ActiveCharacterName.ToString(), *Name, T, *GetActorRotation().ToString(), *GetMesh()->GetRelativeRotation().ToString(),
+			*GetVelocity().ToString(), *GetNameSafe(GetMesh()->GetAnimInstance()), ActiveCharacter.SecondaryChains.Num(),
+			*GetNameSafe(GetMesh()->GetSingleNodeInstance() ? GetMesh()->GetSingleNodeInstance()->GetAnimationAsset() : nullptr),
+			GetMesh()->GetSingleNodeInstance() ? GetMesh()->GetSingleNodeInstance()->GetPlayRate() : 0.f);
+		++AnimMatchShot;
 	}
 }
 

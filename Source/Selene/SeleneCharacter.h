@@ -31,7 +31,8 @@ class SELENE_API ASeleneCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	ASeleneCharacter();
+	// AdvancedMovement hook: select the CMC subclass without changing animation ownership.
+	ASeleneCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Selene|Character")
 	void SelectCharacter(FName Name);
@@ -91,6 +92,12 @@ private:
 	void ConfigureBlendAxes();
 	void UpdateSingleNodeAnimation(float DeltaSeconds);
 	void TickDebugDrivers(float DeltaSeconds);
+	void TickAnimMatch(float DeltaSeconds);
+	float AnimMatchTime = -5.f;
+	int32 AnimMatchView = INDEX_NONE;
+	int32 AnimMatchShot = 0;
+	FVector AnimMatchOrigin = FVector::ZeroVector;
+	bool bAnimMatchJumped = false;
 	float DebugTime = 0.f;
 	float NextAutoShot = 0.f;
 	float AutoWalkBaseYaw = 0.f;

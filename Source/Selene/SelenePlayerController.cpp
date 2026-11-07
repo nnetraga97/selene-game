@@ -1,7 +1,15 @@
 #include "SelenePlayerController.h"
 
+// AdvancedMovement hooks: ability implementation and additional bindings live in Movement/.
+#include "Movement/SeleneMovementComponent.h"
+#include "Movement/SeleneMovementInput.h"
+
 #include "Selene.h"
 #include "SSelenePauseMenu.h"
+#include "UI/SSeleneFpsCounter.h"
+#include "UI/SSeleneMapView.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "Perf/SelenePerfRouteSubsystem.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/World.h"
@@ -17,6 +25,34 @@
 
 namespace
 {
+	TAutoConsoleVariable<int32> CVarShowFps(
+		TEXT("selene.ShowFPS"), 1, TEXT("Show the frame-rate counter at startup (F toggles it in game)."), ECVF_Default);
+
+	ASelenePlayerController* FindLocalSeleneController(UWorld* World)
+	{
+		if (!World) return nullptr;
+		for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+		{
+			ASelenePlayerController* PC = Cast<ASelenePlayerController>(It->Get());
+			if (PC && PC->IsLocalPlayerController()) return PC;
+		}
+		return nullptr;
+	}
+
+	FAutoConsoleCommandWithWorldAndArgs MapCommand(
+		TEXT("selene.Map"), TEXT("Toggle the top-down map (M)."),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>&, UWorld* World)
+		{
+			if (ASelenePlayerController* PC = FindLocalSeleneController(World)) PC->ToggleMap();
+		}), ECVF_Default);
+
+	FAutoConsoleCommandWithWorldAndArgs FpsCommand(
+		TEXT("selene.FPS"), TEXT("Toggle the frame-rate counter (F)."),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>&, UWorld* World)
+		{
+			if (ASelenePlayerController* PC = FindLocalSeleneController(World)) PC->ToggleFpsCounter();
+		}), ECVF_Default);
+
 	FAutoConsoleCommandWithWorldAndArgs MenuCommand(
 		TEXT("selene.Menu"), TEXT("Toggle the local pause menu."),
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
@@ -96,6 +132,16 @@ void ASelenePlayerController::CreateRuntimeInput()
 	RuntimeMappingContext->MapKey(MenuAction, EKeys::Escape);
 	RuntimeMappingContext->MapKey(MenuAction, EKeys::Gamepad_Special_Right);
 	CameraAction = MakeAction(TEXT("CameraToggle"), EInputActionValueType::Boolean);
+	MapAction = MakeAction(TEXT("MapToggle"), EInputActionValueType::Boolean);
+	MapZoomAction = MakeAction(TEXT("MapZoom"), EInputActionValueType::Axis1D);
+	FpsAction = MakeAction(TEXT("FpsToggle"), EInputActionValueType::Boolean);
+	RuntimeMappingContext->MapKey(MapAction, EKeys::M);
+	RuntimeMappingContext->MapKey(FpsAction, EKeys::F);
+	RuntimeMappingContext->MapKey(MapZoomAction, EKeys::MouseWheelAxis);
+	RuntimeMappingContext->MapKey(MapZoomAction, EKeys::Equals);
+	RuntimeMappingContext->MapKey(MapZoomAction, EKeys::Add);
+	RuntimeMappingContext->MapKey(MapZoomAction, EKeys::Hyphen).Modifiers.Add(NewObject<UInputModifierNegate>(RuntimeMappingContext));
+	RuntimeMappingContext->MapKey(MapZoomAction, EKeys::Subtract).Modifiers.Add(NewObject<UInputModifierNegate>(RuntimeMappingContext));
 
 	auto MapMovementKey = [this](FKey Key, bool bNegate, bool bSwizzle)
 	{
@@ -162,6 +208,11 @@ void ASelenePlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::CycleCharacter);
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
 	EnhancedInput->BindAction(MenuAction, ETriggerEvent::Started, this, &ASelenePlayerController::TogglePauseMenu);
+	EnhancedInput->BindAction(MapAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleMap);
+	EnhancedInput->BindAction(MapZoomAction, ETriggerEvent::Started, this, &ASelenePlayerController::ZoomMap);
+	EnhancedInput->BindAction(FpsAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleFpsCounter);
+	// AdvancedMovement hook: gated keys remain inert when the feature is off.
+	FSeleneMovementInput::Bind(*EnhancedInput, *this, [this]() { bWalkToggled = !bWalkToggled; ApplyMovementPace(); });
 	AddRuntimeMappingContext();
 }
 
@@ -185,6 +236,98 @@ void ASelenePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	AddRuntimeMappingContext();
+	if (CVarShowFps.GetValueOnGameThread() != 0 && !FpsCounter.IsValid())
+	{
+		ToggleFpsCounter();
+	}
+}
+
+bool ASelenePlayerController::IsCaptureRun() const
+{
+	// PerfRoute processes keep the screen clean.
+	return GetWorld() && GetWorld()->GetSubsystem<USelenePerfRouteSubsystem>();
+}
+
+void ASelenePlayerController::ToggleFpsCounter()
+{
+	UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr;
+	if (FpsCounter.IsValid())
+	{
+		if (Viewport) Viewport->RemoveViewportWidgetContent(FpsCounter.ToSharedRef());
+		FpsCounter.Reset();
+		return;
+	}
+	if (!IsLocalPlayerController() || !Viewport || IsCaptureRun()) return;
+	SAssignNew(FpsCounter, SSeleneFpsCounter);
+	Viewport->AddViewportWidgetContent(FpsCounter.ToSharedRef(), 40);
+}
+
+void ASelenePlayerController::ToggleMap()
+{
+	if (MapView.IsValid())
+	{
+		CloseMap();
+		return;
+	}
+	UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr;
+	if (!IsLocalPlayerController() || !Viewport || !GetPawn() || IsPaused() || IsCaptureRun()) return;
+	CaptureMap();
+	if (!MapTarget) return;
+	SAssignNew(MapView, SSeleneMapView).Controller(this).Target(MapTarget.Get());
+	Viewport->AddViewportWidgetContent(MapView.ToSharedRef(), 50);
+}
+
+void ASelenePlayerController::CloseMap()
+{
+	if (!MapView.IsValid()) return;
+	if (GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(MapView.ToSharedRef());
+	MapView.Reset();
+}
+
+void ASelenePlayerController::ZoomMap(const FInputActionValue& Value)
+{
+	const float Direction = Value.Get<float>();
+	if (!MapView.IsValid() || FMath::IsNearlyZero(Direction)) return;
+	MapWidthCm = FMath::Clamp(MapWidthCm * (Direction > 0.f ? 0.8f : 1.25f), 8000.f, 300000.f);
+	CaptureMap();
+}
+
+void ASelenePlayerController::CaptureMap()
+{
+	APawn* MapPawn = GetPawn();
+	if (!MapPawn || !GetWorld()) return;
+	if (!MapTarget)
+	{
+		MapTarget = NewObject<UTextureRenderTarget2D>(this, TEXT("SeleneMapTarget"), RF_Transient);
+		MapTarget->RenderTargetFormat = RTF_RGBA8;
+		MapTarget->ClearColor = FLinearColor(0.02f, 0.05f, 0.08f, 1.f);
+		MapTarget->InitAutoFormat(1536, 1536);
+		MapTarget->UpdateResourceImmediate(true);
+	}
+	if (!MapCapture)
+	{
+		MapCapture = NewObject<USceneCaptureComponent2D>(this, TEXT("SeleneMapCapture"), RF_Transient);
+		MapCapture->bCaptureEveryFrame = false;
+		MapCapture->bCaptureOnMovement = false;
+		// Without a persistent view state the capture can't run eye adaptation and renders the sunlit town
+		// at a fixed exposure (pure white). Keeping the state lets it auto-expose like the game camera.
+		MapCapture->bAlwaysPersistRenderingState = true;
+		MapCapture->ProjectionType = ECameraProjectionMode::Orthographic;
+		MapCapture->bAutoCalculateOrthoPlanes = false;
+		MapCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+		MapCapture->TextureTarget = MapTarget;
+		MapCapture->ShowFlags.SetFog(false);
+		MapCapture->ShowFlags.SetVolumetricFog(false);
+		MapCapture->ShowFlags.SetMotionBlur(false);
+		MapCapture->RegisterComponentWithWorld(GetWorld());
+	}
+	// Straight down with yaw 0, so the image's up is world +X (SSeleneMapView relies on this).
+	MapCenter = MapPawn->GetActorLocation();
+	MapCapture->OrthoWidth = MapWidthCm;
+	MapCapture->HiddenActors = { MapPawn };
+	MapCapture->SetWorldLocationAndRotation(MapCenter + FVector(0.f, 0.f, 60000.f), FRotator(-90.f, 0.f, 0.f));
+	MapCapture->CaptureScene();
 }
 
 void ASelenePlayerController::OnPossess(APawn* InPawn)
@@ -224,6 +367,18 @@ void ASelenePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 			GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(PauseMenu.ToSharedRef());
 		PauseMenu.Reset();
 	}
+	CloseMap();
+	if (FpsCounter.IsValid())
+	{
+		if (GetWorld() && GetWorld()->GetGameViewport())
+			GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(FpsCounter.ToSharedRef());
+		FpsCounter.Reset();
+	}
+	if (MapCapture)
+	{
+		MapCapture->DestroyComponent();
+		MapCapture = nullptr;
+	}
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -260,6 +415,9 @@ void ASelenePlayerController::StartJump()
 {
 	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn()))
 	{
+		// AdvancedMovement hook: a ground dash can become a momentum-carrying jump.
+		if (auto* Movement = Cast<USeleneMovementComponent>(Character->GetCharacterMovement()))
+			if (Movement->TryAdvancedJump()) return;
 		Character->Jump();
 	}
 }
@@ -286,6 +444,8 @@ void ASelenePlayerController::EndSprint()
 
 void ASelenePlayerController::ToggleWalk()
 {
+	// AdvancedMovement hook: Ctrl is reserved for slide; CapsLock invokes the new walk binding.
+	if (USeleneMovementComponent::IsAdvancedMovementEnabled()) return;
 	bWalkToggled = !bWalkToggled;
 	ApplyMovementPace();
 }
