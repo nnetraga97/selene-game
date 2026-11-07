@@ -7,6 +7,7 @@
 class SSelenePauseMenu;
 class SSeleneFpsCounter;
 class SSeleneMapView;
+class SSeleneHeroPicker;
 class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class UInputAction;
@@ -24,6 +25,8 @@ public:
 	void ClosePauseMenu();
 	void ToggleMap();
 	void ToggleFpsCounter();
+	void ToggleHeroPicker();
+	void CloseHeroPicker();
 	FVector GetMapCenter() const { return MapCenter; }
 	float GetMapWidthCm() const { return MapWidthCm; }
 
@@ -99,6 +102,7 @@ private:
 	TObjectPtr<UTextureRenderTarget2D> MapTarget;
 
 	TSharedPtr<SSeleneMapView> MapView;
+	TSharedPtr<SSeleneHeroPicker> HeroPicker;
 	TSharedPtr<SSeleneFpsCounter> FpsCounter;
 	FVector MapCenter = FVector::ZeroVector;
 	float MapWidthCm = 40000.f;
