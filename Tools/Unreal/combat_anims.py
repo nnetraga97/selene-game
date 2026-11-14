@@ -128,6 +128,8 @@ def strafe_space(name, folder, skeleton, idle, fwd, bwd, left, right, speed):
     bs.set_editor_property('sample_data', samples)
     # No speed-axis scaling (idle samples sit at speed 0) and no marker sync (mismatched jog markers): both gave NaN poses.
     bs.set_editor_property('allow_marker_based_sync', False)
+    # Script-set samples leave the runtime grid empty (the blend space then plays the T-pose): rebuild it.
+    u.SeleneAnimTools.rebuild_blend_space(bs)
     save(bs)
     return {'path': bs.get_path_name(), 'samples': len(bs.get_editor_property('sample_data')), 'speed': speed}
 

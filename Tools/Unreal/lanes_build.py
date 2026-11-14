@@ -33,7 +33,8 @@ try:
     bx, by = L['bounds']
     # One continuous ground mesh (Tools/Unreal/lanes_ground.py) when it exists; the flat slab otherwise.
     import sys; sys.path.insert(0, str(ROOT / 'Tools/Maps')); import lanes_heightfield as HF
-    G = HF.sampler(L)   # ground height (m) under any layout point: things sit on the shaped ground
+    G = HF.sampler(L)   # full ground height (m): buildings and the player start sit on it
+    M = HF.macro(L)     # macro elevation only: pieces with absolute heights (they already include plateaus) are raised by it
     GROUND_MESH = u.load_asset('/Game/Selene/Maps/LanesGround/SM_LanesGround') if u.EditorAssetLibrary.does_asset_exist('/Game/Selene/Maps/LanesGround/SM_LanesGround') else None
     if GROUND_MESH:
         ground = spawn(u.StaticMeshActor, 'Ground', u.Vector(0, 0, 0), 0, 'Lanes/Ground')
@@ -61,7 +62,7 @@ try:
         folder = 'Lanes/Terrain/' + t['role']; mat = mats.get(t['mat'], pave)
         if t['kind'] == 'box':
             sx, sy, sz = t['size']
-            a = box(f"T{i:03d}_{t['role']}", V(t['c'][0], t['c'][1], G(*t['c']) + t['z'] + sz / 2), (sx, sy, sz), -t['yaw_deg'], mat, folder)
+            a = box(f"T{i:03d}_{t['role']}", V(t['c'][0], t['c'][1], M(*t['c']) + t['z'] + sz / 2), (sx, sy, sz), -t['yaw_deg'], mat, folder)
             prop = cover_prop(t)
             if prop:
                 # Exact box collision stays (consistent cover); a real prop scaled to the box is what you see.
@@ -77,7 +78,7 @@ try:
                     mx, my = (size.y, size.x) if swap else (size.x, size.y)
                     scale = u.Vector(seg * 100 / max(mx, 1), sy * 100 / max(my, 1), sz * 100 / max(size.z, 1))
                     if swap: scale = u.Vector(scale.y, scale.x, scale.z)
-                    pa = spawn(u.StaticMeshActor, f"T{i:03d}_{t['role']}_prop{k}", V(cx, cy, G(*t['c']) + t['z']), yaw + (90.0 if swap else 0.0), folder)
+                    pa = spawn(u.StaticMeshActor, f"T{i:03d}_{t['role']}_prop{k}", V(cx, cy, M(*t['c']) + t['z']), yaw + (90.0 if swap else 0.0), folder)
                     pc = pa.static_mesh_component; pc.set_static_mesh(pm); pa.set_actor_scale3d(scale)
                     pc.set_collision_enabled(u.CollisionEnabled.NO_COLLISION); pc.set_mobility(u.ComponentMobility.STATIC)
                     # mesh pivot may not sit at its base centre: shift so the scaled bounds fill the box
@@ -85,7 +86,7 @@ try:
                     pa.add_actor_local_offset(u.Vector(-c.x * scale.x, -c.y * scale.y, -bb.min.z * scale.z), False, False)
             continue
         (lx, ly), (hx, hy) = t['low'], t['high']
-        zl, zh = t['z_low'] + G(lx, ly), t['z_high'] + G(hx, hy)
+        zl, zh = t['z_low'] + M(lx, ly), t['z_high'] + M(hx, hy)
         run = math.hypot(hx - lx, hy - ly); rise = zh - zl; th = t['thick']
         pitch = math.atan2(rise, run); slab = math.hypot(run, rise)
         yaw = -math.degrees(math.atan2(hy - ly, hx - lx))
@@ -129,7 +130,7 @@ try:
     for i, (a0, b0) in enumerate(L['walls']):
         length = math.hypot(b0[0] - a0[0], b0[1] - a0[1]) + 1.2
         yaw = -math.degrees(math.atan2(b0[1] - a0[1], b0[0] - a0[0]))
-        box(f'Wall{i:03d}', V((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2, 2.5 + G((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2)), (length, 0.5, 5.0), yaw, curb, 'Lanes/Walls')
+        box(f'Wall{i:03d}', V((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2, 2.5 + M((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2)), (length, 0.5, 5.0), yaw, curb, 'Lanes/Walls')
     R['walls'] = len(L['walls'])
     # outer boundary so nobody leaves the map
     for i, (cx, cy, sx, sy) in enumerate(((0, by + 28, bx * 2 + 60, 1), (0, -by - 28, bx * 2 + 60, 1), (bx + 28, 0, 1, by * 2 + 60), (-bx - 28, 0, 1, by * 2 + 60))):

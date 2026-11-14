@@ -126,7 +126,8 @@ for side in range(4):
         if not gap: run_pts.append(q)
         elif run_pts: runs.append(run_pts); run_pts = []
     if run_pts: runs.append(run_pts)
-for run in runs:
+PARAPETS = False   # the parapet ring read as a barrier round the spawn (removed 2026-11-14)
+for run in (runs if PARAPETS else []):
     if len(run) < 3: continue
     a, b = run[0], run[-1]; c = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
     keep(box("cover", c, (math.hypot(b[0] - a[0], b[1] - a[1]) + 0.5, 0.5, 1.0), PLAT_H, math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])), "curb"), False)

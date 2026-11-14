@@ -761,7 +761,8 @@ void ASeleneLaneDirector::Attack(ASeleneLaneUnit& Unit, const FSeleneTarget& Tar
 	}
 	else
 	{
-		Shot.TrailFx = FSoftObjectPath(FxMinionShot); Shot.FxScale = Unit.Kind == ESeleneUnitKind::Siege ? 0.6f : 0.35f;
+		// The Prime Helix bolt was invisible at trooper scale: troopers fire a small fireball (the Guardian's, scaled down).
+		Shot.TrailFx = FSoftObjectPath(FxStructureShot); Shot.FxScale = Unit.Kind == ESeleneUnitKind::Siege ? 0.55f : 0.45f;
 		Shot.Speed = Unit.Kind == ESeleneUnitKind::Siege ? 1800.f : 2600.f;
 		Shot.bHeavy = Unit.Kind == ESeleneUnitKind::Siege;
 	}
@@ -806,6 +807,7 @@ void ASeleneLaneDirector::TickUnit(ASeleneLaneUnit& Unit, float DeltaSeconds)
 	if (Target.IsSet() && Gap <= Unit.Range)
 	{
 		const FVector2D To = TargetPos - Unit.Pos;
+		Unit.NoProgressTime = 0.f; Unit.ProgressPos = Unit.Pos;   // fighting is not being stuck
 		if (Unit.CurrentAnim != Unit.AttackAnim) Unit.AttackTimer = FMath::Min(Unit.AttackTimer, Unit.AttackPeriod * Spec(Unit.Kind).ShotFraction);
 		Unit.Play(Unit.AttackAnim, true);
 		Unit.AttackTimer -= DeltaSeconds * Rate;
@@ -837,13 +839,31 @@ void ASeleneLaneDirector::TickUnit(ASeleneLaneUnit& Unit, float DeltaSeconds)
 		const float Edge = FMath::Min(Ahead, Path.Length - Ahead);
 		Goal = Centre + FVector2D(-Tangent.Y, Tangent.X) * Unit.Lateral * FMath::Clamp(Edge / 2500.f, 0.f, 1.f);
 	}
-	FVector2D Step = (Goal - Unit.Pos).GetSafeNormal() * Unit.Speed * Rate * DeltaSeconds;
+	const FVector2D GoalDir = (Goal - Unit.Pos).GetSafeNormal();
+	FVector2D Step = GoalDir * Unit.Speed * Rate * DeltaSeconds;
 	for (const ASeleneLaneUnit* Other : Units)   // keep units from stacking on one spot
 	{
 		if (!Other || Other == &Unit || !Other->IsAlive()) continue;
 		const FVector2D Away = Unit.Pos - Other->Pos;
 		const float Min = Unit.Radius + Other->Radius;
 		const float DistSq = Away.SizeSquared();
+		// Structures stand on the lane: walk round them instead of pushing straight into them (troopers used to pin there).
+		if (Other->bStructure && DistSq < FMath::Square(Min + 150.f) && DistSq > 1.f)
+		{
+			const float Dist = FMath::Sqrt(DistSq);
+			const FVector2D Normal = Away / Dist;
+			if (FVector2D::DotProduct(GoalDir, -Normal) > 0.f)
+			{
+				FVector2D Tangent(-Normal.Y, Normal.X);
+				// Head-on the side is a coin flip that changed every frame (troopers pinned on Walkers): each unit keeps
+				// to the side of its lane spot unless the goal clearly lies one way.
+				const float Side = FVector2D::DotProduct(Tangent, GoalDir);
+				if (FMath::Abs(Side) > 0.3f ? Side < 0.f : (Unit.Lateral < 0.f) != (Unit.Team == ESeleneTeam::Dawn)) Tangent = -Tangent;
+				// Replace the part of the step that points into the structure with a slide along its edge.
+				const float Into = FVector2D::DotProduct(Step, -Normal);
+				if (Into > 0.f) Step += Normal * Into + Tangent * Into;
+			}
+		}
 		if (DistSq < Min * Min && DistSq > 1.f)
 		{
 			const float Dist = FMath::Sqrt(DistSq);
@@ -853,8 +873,12 @@ void ASeleneLaneDirector::TickUnit(ASeleneLaneUnit& Unit, float DeltaSeconds)
 	Unit.Pos += Step;
 	Unit.S = Path.Project(Unit.Pos);
 	// Follow the terrain: trace from just above the current ground so overpass decks overhead are ignored.
-	const float NewZ = TraceGround(Unit.Pos, Unit.Z + 120.f, Unit.Z);
-	Unit.Z = FMath::FInterpTo(Unit.Z, NewZ, DeltaSeconds, 20.f);
+	// Step up at once (lagging below a steep rise put units under the ground mesh, where the trace found only the slab
+	// beneath and they walked on underground); ease down so drops still read smoothly.
+	const float NewZ = TraceGround(Unit.Pos, Unit.Z + 200.f, Unit.Z);
+	Unit.Z = NewZ > Unit.Z ? NewZ : FMath::FInterpTo(Unit.Z, NewZ, DeltaSeconds, 20.f);
+	if (FVector2D::DistSquared(Unit.Pos, Unit.ProgressPos) > FMath::Square(100.f)) { Unit.ProgressPos = Unit.Pos; Unit.NoProgressTime = 0.f; }
+	else Unit.NoProgressTime += DeltaSeconds;
 	Unit.Play(Unit.MoveAnim, true);
 	if (!Step.IsNearlyZero()) Place(Unit, FMath::RadiansToDegrees(FMath::Atan2(Goal.Y - Unit.Pos.Y, Goal.X - Unit.Pos.X)));
 }
@@ -1085,7 +1109,14 @@ void ASeleneLaneDirector::LogStats(float DeltaSeconds)
 			{
 				if (U && U->bStructure) Hp += FString::Printf(TEXT(" %c%s%d=%.0f%%"), U->Team == ESeleneTeam::Dawn ? 'A' : 'U', KindName(U->Kind), U->Lane, U->IsAlive() ? U->Health / U->MaxHealth * 100.f : 0.f);
 			}
-			UE_LOG(LogSelene, Log, TEXT("LaneBalance t=%.0f%s |%s"), Clock, *LaneText, *Hp);
+			// Walking troopers that have not covered 1 m in 3 s are stuck (on a structure, a wall or terrain).
+			int32 Stuck = 0; FString StuckAt;
+			for (const ASeleneLaneUnit* U : Units)
+			{
+				if (!U || !U->IsAlive() || U->bStructure || U->NoProgressTime < 3.f) continue;
+				if (++Stuck <= 4) StuckAt += FString::Printf(TEXT(" (%.0f,%.0f)"), U->Pos.X / 100.f, -U->Pos.Y / 100.f);
+			}
+			UE_LOG(LogSelene, Log, TEXT("LaneBalance t=%.0f%s stuck=%d%s |%s"), Clock, *LaneText, Stuck, *StuckAt, *Hp);
 			StatTime = 0.f; StatFrames = 0; StatWorst = 0.f;
 		}
 	}

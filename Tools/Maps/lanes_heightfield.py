@@ -84,6 +84,14 @@ def build(layout, cell=1.0, margin=30.0, blur_passes=2):
     return x0, y0, nx, ny, cell, H
 
 
+def macro(layout):
+    """Macro elevation only (m): what pieces with absolute heights (cover, walls, ramps, overpasses) are raised by."""
+    if not ELEVATION: return lambda x, y: 0.0
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import lanes_elevation
+    return lanes_elevation.Elevation(layout).at
+
+
 def sampler(layout):
     """height_at(x, y) in metres (layout frame), bilinear over the built field."""
     x0, y0, nx, ny, cell, H = build(layout)

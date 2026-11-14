@@ -36,6 +36,8 @@ public:
 
 	/** Name of the masked slot: spine and everything above it, legs keep the base locomotion. */
 	static const FName UpperBodySlot;
+	/** Bones replaced by the reference pose because the evaluated pose was NaN, since the last call (all instances). */
+	static int32 ConsumeNaNBones();
 
 protected:
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;

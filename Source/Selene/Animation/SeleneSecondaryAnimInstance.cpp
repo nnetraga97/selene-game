@@ -12,6 +12,7 @@
 #include "Engine/SkeletalMesh.h"
 #include "ReferenceSkeleton.h"
 #include "HAL/IConsoleManager.h"
+#include <atomic>
 
 namespace
 {
@@ -60,6 +61,9 @@ namespace
 
 const FName USeleneSecondaryAnimInstance::UpperBodySlot(TEXT("UpperBody"));
 
+namespace { std::atomic<int32> GNaNBones{0}; }
+int32 USeleneSecondaryAnimInstance::ConsumeNaNBones() { return GNaNBones.exchange(0); }
+
 /**
  * A slot whose montage only drives the spine and everything above it. Bones below (root, pelvis, legs) keep the
  * source pose, and the first two spine bones blend partially so the twist spreads up the back.
@@ -98,7 +102,7 @@ struct FSeleneUpperBodySlot : public FAnimNode_Slot
 		// Cheap guard: a bad montage pose must never reach the rest of the graph.
 		for (FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())
 		{
-			if (Output.Pose[Index].ContainsNaN()) Output.Pose[Index] = Output.Pose.GetRefPose(Index);
+			if (Output.Pose[Index].ContainsNaN()) { Output.Pose[Index] = Output.Pose.GetRefPose(Index); ++GNaNBones; }
 		}
 		if (!bHaveBase || Base.GetNumBones() != Output.Pose.GetNumBones() || Mask.Num() != Output.Pose.GetNumBones()) return;
 		for (FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())

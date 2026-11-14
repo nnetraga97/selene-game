@@ -916,11 +916,37 @@ void ASeleneCharacter::TickActionLayer(float DeltaSeconds)
 	const float Target = (bActive && (bActionCommitsLegs || (bActionFullBody && bStill))) || bDashClip ? 1.f : 0.f;
 	LegWeight = FMath::FInterpConstantTo(LegWeight, Target, DeltaSeconds, Target > LegWeight ? 10.f : 6.f);
 	if (Layered) Layered->LegWeight = LegWeight;
+	// A NaN pose shows as a T-pose (the slot swaps in the reference pose): always report it, with what was playing.
+	if (IsPlayerControlled())
+	{
+		NaNLogTimer -= DeltaSeconds;
+		if (NaNLogTimer <= 0.f)
+		{
+			if (const int32 Bad = USeleneSecondaryAnimInstance::ConsumeNaNBones())
+			{
+				UE_LOG(LogSelene, Warning, TEXT("AnimNaN bones=%d hero=%s base=%s montage=%s speed=%.0f stance=%d phase=%d"), Bad, *ActiveCharacterName.ToString(),
+					GetMesh()->GetSingleNodeInstance() ? *GetNameSafe(GetMesh()->GetSingleNodeInstance()->GetAnimationAsset()) : TEXT("-"),
+					*GetNameSafe(Anim->GetCurrentActiveMontage()), GetVelocity().Size2D(), bCombatStance ? 1 : 0, static_cast<int32>(SingleNodePhase));
+			}
+			NaNLogTimer = 0.5f;
+		}
+	}
 	if (CVarAnimLog.GetValueOnGameThread() != 0 && IsPlayerControlled())
 	{
 		AnimLogTimer += DeltaSeconds;
 		if (AnimLogTimer >= 1.f)
 		{
+			// How far the left upper arm is from its reference (T) pose, in degrees: ~0 means the mesh is T-posed.
+			float ArmDeg = -1.f;
+			if (USkeletalMeshComponent* SkelMesh = GetMesh(); SkelMesh && SkelMesh->GetSkeletalMeshAsset())
+			{
+				const FReferenceSkeleton& RefSkel = SkelMesh->GetSkeletalMeshAsset()->GetRefSkeleton();
+				const int32 Bone = RefSkel.FindBoneIndex(TEXT("upperarm_l"));
+				const TArray<FTransform>& Local = SkelMesh->GetBoneSpaceTransforms();
+				if (Bone != INDEX_NONE && Local.IsValidIndex(Bone))
+					ArmDeg = FMath::RadiansToDegrees(Local[Bone].GetRotation().AngularDistance(RefSkel.GetRefBonePose()[Bone].GetRotation()));
+			}
+			UE_LOG(LogSelene, Log, TEXT("AnimLog arm_from_ref=%.0f stance=%d"), ArmDeg, bCombatStance ? 1 : 0);
 			UE_LOG(LogSelene, Log, TEXT("AnimLog switches/s=%d legs=%.2f action=%s locked=%d dash=%d speed=%.0f base=%s"), BaseSwitches, LegWeight,
 				*GetNameSafe(ActionMontage.Get()), IsActionLocked() ? 1 : 0, bDashing ? 1 : 0, GetVelocity().Size2D(),
 				GetMesh()->GetSingleNodeInstance() ? *GetNameSafe(GetMesh()->GetSingleNodeInstance()->GetAnimationAsset()) : TEXT("-"));

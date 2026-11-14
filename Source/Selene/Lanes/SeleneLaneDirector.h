@@ -74,6 +74,9 @@ public:
 	float SlowTimer = 0.f;
 	/** Map time an enemy hero last damaged this structure (structures regenerate when only troopers fight them). */
 	float LastHeroHitTime = -100.f;
+	/** Debug: where the unit last made progress while walking, and how long it has walked without any. */
+	FVector2D ProgressPos = FVector2D::ZeroVector;
+	float NoProgressTime = 0.f;
 	float SlowFactor = 1.f;
 	float StunTimer = 0.f;
 	float HitReactTimer = 0.f;

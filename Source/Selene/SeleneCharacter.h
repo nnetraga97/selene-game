@@ -258,6 +258,7 @@ private:
 	float DebugMoveUntil = 0.f;
 	int32 BaseSwitches = 0;
 	float AnimLogTimer = 0.f;
+	float NaNLogTimer = 0.f;
 	UPROPERTY(Transient) TArray<TObjectPtr<UObject>> CombatAssets;
 	TWeakObjectPtr<class UAnimMontage> AttackMontage;
 	int32 AttackIndex = 0;
