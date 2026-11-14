@@ -48,6 +48,8 @@ Status labels: **live** governs work currently in progress; **current** is retai
 | Document | Status | One-line description |
 | --- | --- | --- |
 | [`research/after-the-wind-workflow.md`](research/after-the-wind-workflow.md) | historical | External AI-assisted 3D workflow research and lessons. |
+| [`research/character-pipeline-plan.md`](research/character-pipeline-plan.md) | current | Character-quality diagnosis, studio practice research, and the proposed one-hero pipeline plan (awaiting approval). |
+| [`research/movement-animation-plan.md`](research/movement-animation-plan.md) | current | Why body animation feels unrefined, how studios layer movement, animation and abilities, and the proposed hero framework plan (awaiting approval). |
 | [`research/multi-tail-3d.md`](research/multi-tail-3d.md) | historical | Earlier six-tail character-generation research for Lysara. |
 | [`research/town-quality.md`](research/town-quality.md) | historical | Assessment of the old Town presentation and its phased improvement strategy. |
 | [`research/workflow-retrospective.md`](research/workflow-retrospective.md) | historical | Retrospective on Nov. 5–6 asset and animation workflow failures. |

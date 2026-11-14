@@ -1,0 +1,35 @@
+{
+ "buildings": 138,
+ "triangles": 1620100,
+ "per_asset": {
+  "seaside-lighthouse-house": 8,
+  "shop-bakery-corner": 16,
+  "metro-walkup": 36,
+  "workshop-garage": 2,
+  "apartment-curved": 6,
+  "metro-diner": 12,
+  "metro-lane-houses": 20,
+  "townhouse-terrace": 4,
+  "shop-tool-repair": 6,
+  "harbour-boathouse": 2,
+  "metro-brownstones": 8,
+  "seaside-guesthouse": 2,
+  "metro-glass-office": 10,
+  "clock-hall": 6
+ },
+ "lane_length_m": {
+  "north": 292.3,
+  "mid": 218.9,
+  "south": 292.3
+ },
+ "base_to_centre_jog_s": {
+  "north": 33.0,
+  "mid": 24.7,
+  "south": 33.0
+ },
+ "base_to_centre_sprint_s": {
+  "north": 19.6,
+  "mid": 14.7,
+  "south": 19.6
+ }
+}
