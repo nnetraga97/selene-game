@@ -47,6 +47,10 @@ private:
 	void Look(const FInputActionValue& Value);
 	void StartJump();
 	void StartAttack();
+	void StopAttack();
+	void StartAim();
+	void StopAim();
+	void Ability(int32 Index);
 	void EndJump();
 	void StartSprint();
 	void EndSprint();
@@ -86,6 +90,12 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> AttackAction;
 
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> AimAction;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UInputAction>> AbilityActions;
+
 	TSharedPtr<SSelenePauseMenu> PauseMenu;
 
 	UPROPERTY(Transient)
@@ -110,6 +120,8 @@ private:
 	TSharedPtr<SSeleneHeroPicker> HeroPicker;
 	TSharedPtr<SSeleneFpsCounter> FpsCounter;
 	TSharedPtr<SSeleneMinimap> Minimap;
+	TSharedPtr<class SSeleneHud> Hud;
+	FTimerHandle SprintHoldTimer;
 	FVector MapCenter = FVector::ZeroVector;
 	float MapWidthCm = 40000.f;
 

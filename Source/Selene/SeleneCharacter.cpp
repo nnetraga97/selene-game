@@ -205,7 +205,7 @@ void ASeleneCharacter::BeginPlay()
 			return Entry.Name == Settings->DefaultCharacter;
 		});
 		// A Manny-only roster remains usable even if DefaultCharacter was not overridden.
-		SelectCharacter(bHasDefault ? Settings->DefaultCharacter : Settings->Roster[0].Name);
+		SelectCharacter(!StartCharacter.IsNone() ? StartCharacter : bHasDefault ? Settings->DefaultCharacter : Settings->Roster[0].Name);
 	}
 }
 
@@ -216,7 +216,8 @@ void ASeleneCharacter::SetCameraMode(ESeleneCameraMode NewMode)
 	FirstPersonCamera->SetActive(bFirstPerson);
 	ThirdPersonCamera->SetActive(!bFirstPerson);
 	bUseControllerRotationYaw = bFirstPerson;
-	GetCharacterMovement()->bOrientRotationToMovement = !bFirstPerson;
+	GetCharacterMovement()->bOrientRotationToMovement = !bFirstPerson && !bCombatStance;
+	GetCharacterMovement()->bUseControllerDesiredRotation = !bFirstPerson && bCombatStance;
 	GetMesh()->SetOwnerNoSee(bFirstPerson);
 	if (bFirstPerson && Controller)
 	{
@@ -233,14 +234,7 @@ void ASeleneCharacter::ToggleCameraMode()
 void ASeleneCharacter::SetMovementPace(ESelenePace NewPace)
 {
 	MovementPace = NewPace;
-	float Speed = JogSpeed;
-	switch (MovementPace)
-	{
-	case ESelenePace::Walk: Speed = WalkSpeed; break;
-	case ESelenePace::Sprint: Speed = SprintSpeed; break;
-	default: break;
-	}
-	GetCharacterMovement()->MaxWalkSpeed = FMath::Max(0.f, Speed);
+	ApplySpeed();
 }
 
 void ASeleneCharacter::SelectCharacter(FName Name)
@@ -426,14 +420,30 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 	Mesh->SetCastShadow(true);
 	Mesh->bCastHiddenShadow = true;
 	Mesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	PreloadCombatAssets();
 	UE_LOG(LogSelene, Log, TEXT("Active playable character: %s"), *ActiveCharacterName.ToString());
+}
+
+void ASeleneCharacter::BlendAxesFor(UBlendSpace* Blend, int32& OutSpeed, int32& OutDirection)
+{
+	if (const FIntPoint* Cached = BlendAxisCache.Find(Blend)) { OutSpeed = Cached->X; OutDirection = Cached->Y; return; }
+	const int32 SavedSpeed = SpeedAxis, SavedDirection = DirectionAxis;
+	ConfigureBlendAxesOf(Blend);
+	OutSpeed = SpeedAxis; OutDirection = DirectionAxis;
+	BlendAxisCache.Add(Blend, FIntPoint(OutSpeed, OutDirection));
+	SpeedAxis = SavedSpeed; DirectionAxis = SavedDirection;
 }
 
 void ASeleneCharacter::ConfigureBlendAxes()
 {
+	BlendAxisCache.Reset();
+	ConfigureBlendAxesOf(ActiveCharacter.Locomotion.Get());
+}
+
+void ASeleneCharacter::ConfigureBlendAxesOf(UBlendSpace* Blend)
+{
 	SpeedAxis = 0;
 	DirectionAxis = INDEX_NONE;
-	UBlendSpace* Blend = ActiveCharacter.Locomotion.Get();
 	if (!Blend) return;
 	const int32 AxisCount = Blend->IsA<UBlendSpace1D>() ? 1 : 2;
 	int32 NamedSpeed = INDEX_NONE;
@@ -474,13 +484,13 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 	UAnimSingleNodeInstance* Instance = GetMesh()->GetSingleNodeInstance();
 	if (!Instance) return;
 	// AdvancedMovement hook: the slide owns DefaultSlot; base changes otherwise cancel or retime its held pose.
-	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && (Advanced->IsSliding() || Advanced->IsSlideExitPlaying()))
+	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && (Advanced->IsSliding() || Advanced->IsSlideExitPlaying() || Advanced->IsDashing()))
 	{
 		PrevSpeed = GetVelocity().Size2D();
 		bHadInput = Advanced->GetCurrentAcceleration().SizeSquared2D() > 1.f;
 		return;
 	}
-	// A swing owns DefaultSlot the same way: base loop changes and transitions would cancel it.
+	// A full-body swing, ability or death owns DefaultSlot the same way: base loop changes and transitions would cancel it.
 	if (IsAttackPlaying())
 	{
 		PrevSpeed = GetVelocity().Size2D();
@@ -488,6 +498,8 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 		return;
 	}
 	const bool bFalling = GetCharacterMovement()->IsFalling();
+	const float Speed = GetVelocity().Size2D();
+	const ESingleNodePhase PreviousPhase = SingleNodePhase;
 	if (bFalling)
 	{
 		if (!bWasFalling && GetVelocity().Z > 0.f && ActiveCharacter.Jump.Get())
@@ -502,21 +514,34 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 	}
 	else if (bWasFalling && ActiveCharacter.Land.Get())
 	{
-		SingleNodePhase = ESingleNodePhase::Land;
+		// Landing on the move flows straight into the run (with a short crossfade); a standing landing plays Land.
+		SingleNodePhase = Speed > 200.f ? ESingleNodePhase::Ground : ESingleNodePhase::Land;
 	}
 	else if (SingleNodePhase != ESingleNodePhase::Land ||
-		Instance->GetCurrentTime() + DeltaSeconds >= FMath::Min(0.2f, Instance->GetLength()))
+		Instance->GetCurrentTime() + DeltaSeconds >= FMath::Min(0.2f, Instance->GetLength()) || Speed > 200.f)
 	{
 		SingleNodePhase = ESingleNodePhase::Ground;
 	}
 	bWasFalling = bFalling;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (SingleNodePhase == ESingleNodePhase::Jump && PreviousPhase != ESingleNodePhase::Jump && AnimInstance)
+	{
+		AnimInstance->StopSlotAnimation(0.12f, TEXT("DefaultSlot"));   // drop start/stop overlays on take-off
+		if (!IsNpc()) Voice({ TEXT("Effort_Jump") }, 0.3f, 2.f);
+	}
 
 	UAnimationAsset* Animation = ActiveCharacter.Locomotion.Get();
 	bool bLoop = true;
-	const float Speed = GetVelocity().Size2D();
 	float LoopRate = 1.f;
 	const bool bClipLocomotion = !ActiveCharacter.WalkLoop.IsNull() && ActiveCharacter.WalkLoop.Get();
-	if (bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground)
+	// Combat stance: the hero faces the crosshair, so legs come from a directional blend space.
+	UBlendSpace* Strafe = ActiveCharacter.StrafeLocomotion.Get() ? ActiveCharacter.StrafeLocomotion.Get() : ActiveCharacter.Locomotion.Get();
+	const bool bStrafing = bCombatStance && Strafe && SingleNodePhase == ESingleNodePhase::Ground;
+	if (bStrafing)
+	{
+		Animation = Strafe;
+	}
+	else if (bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground)
 	{
 		Animation = ChooseGroundLoop(Speed, LoopRate);
 	}
@@ -539,56 +564,54 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 		Animation = ActiveCharacter.Land.Get();
 		bLoop = false;
 	}
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (Instance->GetAnimationAsset() != Animation)
 	{
-		UAnimSequence* PreviousLoop = Cast<UAnimSequence>(Instance->GetAnimationAsset());
-		const float PreviousTime = Instance->GetCurrentTime();
-		const float PreviousRate = Instance->GetPlayRate();
-		const bool bLoopToLoop = bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground && PreviousLoop &&
-			(PreviousLoop == ActiveCharacter.IdleLoop.Get() || PreviousLoop == ActiveCharacter.WalkLoop.Get() ||
-			 PreviousLoop == ActiveCharacter.RunLoop.Get() || PreviousLoop == ActiveCharacter.SprintLoop.Get());
-		// SetAnimationAsset stops slot montages, so switch first, then cross-fade from the old loop on the slot.
+		// Pose-snapshot crossfade covers every base switch (loop to loop, loop to blend space, air phases).
+		if (USeleneSecondaryAnimInstance* Secondary = Cast<USeleneSecondaryAnimInstance>(AnimInstance))
+		{
+			const bool bAir = SingleNodePhase != ESingleNodePhase::Ground || PreviousPhase != ESingleNodePhase::Ground;
+			Secondary->StartCrossfade(bAir ? 0.12f : 0.22f);
+		}
+		++BaseSwitches;
 		Instance->SetAnimationAsset(Animation, bLoop);
 		Instance->SetPosition(0.f, false);
 		Instance->SetPlaying(true);
-		if (bLoopToLoop && AnimInstance)
+	}
+	if (bStrafing || !bClipLocomotion || SingleNodePhase != ESingleNodePhase::Ground) LoopRate = 1.f;
+	if (SingleNodePhase == ESingleNodePhase::Ground && !FMath::IsNearlyEqual(Instance->GetPlayRate(), LoopRate, 0.01f))
+	{
+		// UAnimSingleNodeInstance::SetPlayRate also retimes an active montage; restore transitions to 1x.
+		Instance->SetPlayRate(LoopRate);
+		if (AnimInstance)
 		{
-			if (UAnimMontage* Fade = AnimInstance->PlaySlotAnimationAsDynamicMontage(PreviousLoop, TEXT("DefaultSlot"),
-				0.f, 0.25f, PreviousRate, 1, -1.f, PreviousTime))
-			{
-				AnimInstance->Montage_Stop(0.25f, Fade);
-				UE_LOG(LogSelene, Verbose, TEXT("Loop crossfade %s -> %s slot=DefaultSlot"), *GetNameSafe(PreviousLoop), *GetNameSafe(Animation));
-			}
+			if (UAnimMontage* Active = AnimInstance->GetCurrentActiveMontage()) AnimInstance->Montage_SetPlayRate(Active, 1.f);
 		}
 	}
-	if (bClipLocomotion && SingleNodePhase == ESingleNodePhase::Ground)
+	if (bClipLocomotion && !bStrafing && SingleNodePhase == ESingleNodePhase::Ground)
 	{
-		if (!FMath::IsNearlyEqual(Instance->GetPlayRate(), LoopRate, 0.01f))
-		{
-			// UAnimSingleNodeInstance::SetPlayRate also retimes an active montage; restore transitions to 1x.
-			Instance->SetPlayRate(LoopRate);
-			if (AnimInstance)
-			{
-				if (UAnimMontage* Active = AnimInstance->GetCurrentActiveMontage()) AnimInstance->Montage_SetPlayRate(Active, 1.f);
-			}
-		}
 		UpdateLocomotionTransitions(Speed, DeltaSeconds);
 	}
-	if (UBlendSpace* Blend = ActiveCharacter.Locomotion.Get(); Blend && Animation == Blend)
+	else
+	{
+		bHadInput = GetCharacterMovement()->GetCurrentAcceleration().SizeSquared2D() > 1.f;
+		PrevSpeed = Speed;
+	}
+	if (UBlendSpace* Blend = Cast<UBlendSpace>(Animation))
 	{
 		FVector Input = FVector::ZeroVector;
 		const FVector Velocity = GetVelocity();
+		int32 SpeedIdx = 0, DirIdx = INDEX_NONE;   // axes of this blend space
+		BlendAxesFor(Blend, SpeedIdx, DirIdx);
 		// Speed is the outer horizontal speed.
-		const FBlendParameter& SpeedParameter = Blend->GetBlendParameter(SpeedAxis);
-		Input[SpeedAxis] = FMath::Clamp(Speed, SpeedParameter.Min, SpeedParameter.Max);
-		if (DirectionAxis != INDEX_NONE)
+		const FBlendParameter& SpeedParameter = Blend->GetBlendParameter(SpeedIdx);
+		Input[SpeedIdx] = FMath::Clamp(Speed, SpeedParameter.Min, SpeedParameter.Max);
+		if (DirIdx != INDEX_NONE)
 		{
 			const FVector Local = FRotator(0.f, GetActorRotation().Yaw, 0.f).UnrotateVector(Velocity);
 			float Direction = Speed > KINDA_SMALL_NUMBER ? FMath::RadiansToDegrees(FMath::Atan2(Local.Y, Local.X)) : 0.f;
-			const FBlendParameter& DirectionParameter = Blend->GetBlendParameter(DirectionAxis);
+			const FBlendParameter& DirectionParameter = Blend->GetBlendParameter(DirIdx);
 			if (DirectionParameter.Min >= 0.f && Direction < 0.f) Direction += 360.f;
-			Input[DirectionAxis] = FMath::Clamp(Direction, DirectionParameter.Min, DirectionParameter.Max);
+			Input[DirIdx] = FMath::Clamp(Direction, DirectionParameter.Min, DirectionParameter.Max);
 		}
 		Instance->SetBlendSpacePosition(Input);
 	}
@@ -660,8 +683,8 @@ void ASeleneCharacter::UpdateLocomotionTransitions(float Speed, float DeltaSecon
 	}
 	else if (bHasInput && !bHadInput)
 	{
-		// Input came back mid-stop: drop the stop overlay instead of finishing it.
-		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance()) AnimInstance->Montage_Stop(0.15f);
+		// Input came back mid-stop: drop the stop overlay (DefaultSlot only; actions keep playing).
+		if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance()) AnimInstance->StopSlotAnimation(0.15f, TEXT("DefaultSlot"));
 	}
 	else if (bHasInput && Speed > 120.f && TransitionCooldown <= 0.f)
 	{
@@ -680,70 +703,26 @@ void ASeleneCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	TickAttack(DeltaSeconds);
+	TickCombat(DeltaSeconds);
 	UpdateSingleNodeAnimation(DeltaSeconds);
 	TickDebugDrivers(DeltaSeconds);
 }
 
-bool ASeleneCharacter::IsAttackPlaying() const
-{
-	const UAnimInstance* Anim = GetMesh()->GetAnimInstance();
-	return Anim && AttackMontage.IsValid() && Anim->Montage_IsActive(AttackMontage.Get());
-}
-
-void ASeleneCharacter::Attack()
-{
-	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
-	if (!Anim || ActiveCharacter.Attacks.IsEmpty() || GetCharacterMovement()->IsFalling()) return;
-	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && (Advanced->IsSliding() || Advanced->IsSlideExitPlaying())) return;
-	if (IsAttackPlaying())
-	{
-		bAttackQueued = true;  // chained in TickAttack once the current swing has landed
-		return;
-	}
-	UAnimSequence* Clip = ActiveCharacter.Attacks[AttackIndex % ActiveCharacter.Attacks.Num()].Get();
-	if (!Clip) return;
-	AttackMontage = Anim->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), 0.08f, 0.2f, 1.f, 1, -1.f, 0.f);
-	AttackClipLength = Clip->GetPlayLength();
-	AttackResetTimer = AttackClipLength + 0.6f;
-	bAttackQueued = false;
-	UE_LOG(LogSelene, Log, TEXT("Attack hero=%s index=%d clip=%s playing=%d"), *ActiveCharacterName.ToString(), AttackIndex, *GetNameSafe(Clip), IsAttackPlaying());
-	// Lane test map: the swing lands on enemy (Dusk) units in front of the hero part-way through the clip.
-	FTimerHandle StrikeTimer;
-	GetWorldTimerManager().SetTimer(StrikeTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
-	{
-		if (ASeleneLaneDirector* Director = ASeleneLaneDirector::Get(GetWorld()))
-		{
-			Director->HeroStrike(GetActorLocation(), GetActorForwardVector(), ESeleneTeam::Dawn, Director->HeroReach, Director->HeroDamage);
-		}
-	}), FMath::Max(AttackClipLength * 0.35f, 0.05f), false);
-	++AttackIndex;
-}
-
-void ASeleneCharacter::TickAttack(float DeltaSeconds)
-{
-	if (AttackResetTimer > 0.f)
-	{
-		AttackResetTimer -= DeltaSeconds;
-		if (AttackResetTimer <= 0.f) AttackIndex = 0;  // combo dropped: start again from the first swing
-	}
-	if (!bAttackQueued) return;
-	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
-	if (!IsAttackPlaying() || (Anim && Anim->Montage_GetPosition(AttackMontage.Get()) >= AttackClipLength * 0.6f))
-	{
-		AttackMontage.Reset();
-		Attack();
-	}
-}
-
 void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 {
-	if (CVarAnimMatch.GetValueOnGameThread() > 0 && IsLocallyControlled())
+	if (CVarAnimMatch.GetValueOnGameThread() > 0 && IsPlayerControlled())
 	{
 		TickAnimMatch(DeltaSeconds);
 		return;
 	}
 	DebugTime += DeltaSeconds;
-	if (const float Every = CVarAutoAttack.GetValueOnGameThread(); Every > 0.f && IsLocallyControlled())
+	if (DebugTime < DebugMoveUntil && IsPlayerControlled() && Controller)
+	{
+		const FRotationMatrix Yaw(FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f));
+		AddMovementInput(Yaw.GetUnitAxis(EAxis::X), DebugMoveInput.X);
+		AddMovementInput(Yaw.GetUnitAxis(EAxis::Y), DebugMoveInput.Y);
+	}
+	if (const float Every = CVarAutoAttack.GetValueOnGameThread(); Every > 0.f && IsPlayerControlled())
 	{
 		if (DebugTime >= NextAutoAttack)
 		{
@@ -754,7 +733,7 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 		if (AController* PC = GetController())
 			PC->SetControlRotation(FRotator(-8.f, GetActorRotation().Yaw + CVarAutoAttackYaw.GetValueOnGameThread(), 0.f));
 	}
-	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsLocallyControlled())
+	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsPlayerControlled())
 	{
 		// 12 s loop: 0-3 walk, 3-5.5 sprint, 5.5-7 stop, 7-9 jog back (start), 9-10.5 reverse while jogging (pivot),
 		// 10.5-10.6 jump, 10.6-12 idle.
@@ -781,12 +760,12 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 		AutoWalkBaseYaw = GetActorRotation().Yaw;
 	}
 	const float Interval = CVarAutoShots.GetValueOnGameThread();
-	if (Interval > 0.f && DebugTime >= NextAutoShot)
+	if (Interval > 0.f && IsPlayerControlled() && DebugTime >= NextAutoShot)
 	{
 		NextAutoShot = DebugTime + Interval;
 		const FString Dir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir() / TEXT("AutoShots"));
 		IFileManager::Get().MakeDirectory(*Dir, true);
-		FScreenshotRequest::RequestScreenshot(Dir / FString::Printf(TEXT("%s_%05.1f.png"), *ActiveCharacterName.ToString(), DebugTime), false, false);
+		FScreenshotRequest::RequestScreenshot(Dir / FString::Printf(TEXT("%s_%05.1f.png"), *ActiveCharacterName.ToString(), DebugTime), true, false);
 	}
 }
 

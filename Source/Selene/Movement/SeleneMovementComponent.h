@@ -42,6 +42,11 @@ public:
 	bool IsDashing() const { return MovementMode == MOVE_Custom && CustomMovementMode == 1; }
 	float GetStamina() const { return Stamina; }
 	float GetFOVKick() const { return CurrentFOVKick; }
+	int32 GetStaminaCharges() const { return StaminaCharges; }
+	/** Camera field of view before the dash kick (0 = the camera's own). Set by the hero for aim zoom. */
+	float BaseFOV = 0.f;
+	/** The hero HUD draws dash charges; set false to hide the old text box. */
+	bool bShowStaminaText = true;
 
 	UPROPERTY(EditAnywhere, Category="Selene|Advanced Movement|Dash")
 	float DashSpeed = 1100.f;

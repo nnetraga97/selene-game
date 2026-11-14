@@ -1,6 +1,8 @@
 #include "UI/SSeleneMinimap.h"
 
 #include "Lanes/SeleneLaneDirector.h"
+#include "SeleneCharacter.h"
+#include "Combat/SeleneCombat.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
@@ -118,6 +120,17 @@ int32 SSeleneMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& Geometry,
 	});
 
 	const APlayerController* PC = Controller.Get();
+	// Other heroes: ringed team-coloured dots.
+	if (const USeleneCombatSubsystem* Combat = USeleneCombatSubsystem::Get(PC))
+	{
+		Combat->ForEachHero([&](ASeleneCharacter& Hero)
+		{
+			if (Hero.IsPlayerControlled() || !Hero.IsCombatAlive()) return;
+			const FVector2f At = ToMap(FVector2f(FVector2D(Hero.GetActorLocation())));
+			Dot(LayerId + 6, At, 6.f, FLinearColor::Black);
+			Dot(LayerId + 7, At, 4.5f, Hero.GetTeam() == ESeleneTeam::Dawn ? FLinearColor(0.42f, 0.86f, 1.f) : FLinearColor(1.f, 0.36f, 0.32f));
+		});
+	}
 	if (const APawn* Pawn = PC ? PC->GetPawn() : nullptr)
 	{
 		const FVector2f Raw = ToMap(FVector2f(FVector2D(Pawn->GetActorLocation())));

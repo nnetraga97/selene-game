@@ -16,9 +16,44 @@ Three-lane test map (`/Game/Selene/Maps/Lanes`) for trying heroes against minion
 - Minion logic costs about 0.5 ms a frame.
 - Minimap on: 66-68 fps average with 40-52 minions; off: 69-72 fps (same session, after stopping a stuck CrashReportClient that had been using a full core and caused most of the earlier dips).
 
+## Terrain (2026-11-14)
+
+`Tools/Maps/lanes_terrain.py` adds a `terrain` list to `layout.json` and draws `terrain.svg` / `terrain.svg.png`. `lanes_build.py` spawns the pieces under `Lanes/Terrain/<role>`. Regenerate with `python3 Tools/Maps/lanes_layout.py && python3 Tools/Maps/lanes_terrain.py`, then rebuild the map.
+
+- **Bases:** 38 x 38 m plateaus 2.5 m up, a 15 m ramp down each lane, 1 m parapets.
+- **Hills:** a 1.5 m hill across the north lane (and its mirror on the south lane), clear of structures.
+- **Overpasses:** a 4.5 m deck over the mid lane on the x = ±40 m alleys, with stair ramps, pillars and railings (high ground).
+- **Landmark:** a 10 m column beside the mid lane on each side of the centre.
+- **Cover:** low walls, crate stacks and pillars every 22-28 m along each lane edge, plus alley-mouth cover.
+- **Plinths:** 0.6 m platforms with ramps under every Guardian and Walker.
+
+Units follow the ground by tracing down from just above their current height, so the overpass decks don't capture minions walking under them. The map before the terrain pass is kept at `Saved/LanesMap/backup/Lanes.pre-terrain.umap`.
+
+## Ground (2026-11-14, second pass)
+
+The plateaus, ramps, hills and plinths are no longer separate boxes: `Tools/Maps/lanes_heightfield.py` turns them into one height field (1 m grid, lightly blurred so every join is a slope) and `Tools/Unreal/lanes_ground.py` builds it into one mesh, `/Game/Selene/Maps/LanesGround/SM_LanesGround`, with mesh collision. `lanes_build.py` places that mesh and skips those pieces. Cover, overpasses, parapets and the landmark stay separate; crate stacks and low walls are dressed with Fantastic Village crates and hay bales over their collision boxes. Rebuild order: `lanes_terrain.py` (data), `lanes_ground` (editor), `lanes_build` (editor).
+
+## Combat (2026-11-14)
+
+- **Code:** `Source/Selene/Combat/SeleneCombat.*` (targets, damage, projectiles, effects, hit-stop, HUD feed, sound), `Source/Selene/SeleneCharacterCombat.cpp` (hero attacks, abilities, health, death and respawn, combat stance, camera), `Source/Selene/Combat/SeleneBotController.*` (bot heroes), `Source/Selene/UI/SSeleneHud.*` (HUD).
+- **Heroes:** kits are roster data in `Config/DefaultGame.ini` (`Weapon`, `Attacks`/`MovingAttacks`, `FireClip`, `Abilities`, hit reacts, `Death`, `StrafeLocomotion`, `VoicePrefix`).
+  - Warrior (frost sword): Frost Burst (Q, slowing nova), Frost Charge (E, dash strike), Shatter (R, leap slam with stun).
+  - Warden (guardian sword): Shield Rush (Q), Bulwark (E, 60% damage reduction + stun pulse), Judgement (R, leap slam).
+  - Sparrow (bow): Rain of Arrows (Q), Piercing Shot (E), Overdrive (R, double fire rate).
+- **Animation:** every swing, shot and ability plays on one masked upper-body slot whose leg weight follows speed (the clip drives the legs only while standing still, during a charge or leap, and during a dash clip), so the legs never freeze. Presses during a commit window are buffered (0.35 s; up to two swings queue); an ability cancels a slide or a swing; abilities lock only until their cast point and blend out 0.6 s later or as soon as you move. Hits pause only the swing, not the hero. Shift tap dashes (Warrior and Warden play Aurora's directional dodge clips); sprint starts after a 0.25 s hold and is ignored on lane maps, where the hero always faces the crosshair. `selene.InputLog 1` logs press-to-action latency; `selene.AnimLog 1` logs base-animation switches per second. A combat stance (after attacking or while aiming) faces the crosshair and uses a directional strafe blend space; travel mode keeps the forward clips with starts, stops and pivots. Base switches cross-fade from a pose snapshot. Turn-in-place clips play when the aim swings past 65 degrees while standing. Landing on the move no longer stalls on the land clip.
+  - Clips: `Tools/Unreal/combat_anims.py` (extra Aurora clips for Warrior, the full Aurora sword set for Warden through `RTG_Aurora_To_Warden`, strafe blend spaces), then `Tools/Unreal/combat_curves.py` in a fresh editor (registers curve names; without it `-game` crashes when the hero loads).
+- **Lane balance (Deadlock-style, 2026-11-14):** waves stay symmetric. Structures take 35% of trooper damage and regain 0.3% of max health per second once no enemy hero has hit them for 8 s (1% erased a hero's push before the next wave arrived), so waves alone stall; heroes break structures over one or two pushes. A broken enemy structure moves that team's wave entry up to it (like a pushed zipline), so the fight settles under the next one. Troopers get 35% stronger only after the enemy loses a Shrine. Measured at 4x speed, no heroes, 11 game minutes: all structures at 100%, fronts between 0.36 and 0.67; with the Dusk mid Guardian broken, mid fights at about 0.68 and the Walker holds. Hero tests (normal speed): Warrior with a wave took the mid Guardian from 100% to 35% in about 9 s before dying; Aurora alone, facing it, landed 15 of 17 swings (72, every third 115), about 150 damage per second. A solo hero dies to a Guardian in about 8 s. Bot heroes are off by default (`selene.Bots`). `selene.LaneLog 60` prints fronts and structure health.
+- **Elevation (2026-11-14):** `Tools/Maps/lanes_elevation.py` adds macro height to the ground mesh (`ELEVATION` in `lanes_heightfield.py`; False restores the flat ground). Lanes and alleys stay at 0 m, the blocks between them rise 2.2 m, the land outside the side lanes 3.5 m, and the mid plaza dips 1.2 m; every rise blends over about 8 m (no new slope steeper than 35 degrees). `lanes_build.py` seats buildings on the lowest ground under their footprint, so 104 of 138 have the high ground up to 3.4 m against their back walls (set into the slope). Preview: `elevation-proposal.png`.
+- **Match rules:** troopers do a third of their damage to heroes; structures do full damage and only shoot a hero when no enemy trooper is in range. Walkers are protected while their lane's Guardian stands; a Patron while all of its team's Walkers stand. Heroes regenerate out of combat (fast at base) and respawn after 8 s. The match restarts 15 s after a Patron falls.
+- **Bots:** `selene.Bots` (default `none` while testing; e.g. `Dusk:Sparrow:mid;Dusk:Warrior:north;Dawn:Warden:south`, read at map start).
+- **Sound:** hero voices use the Paragon Aurora and Sparrow effort cues (attack, pain, death, jump, land, abilities), spatialized with a 5-40 m falloff. Nothing else is voiced.
+- **Debug:** `selene.GoTo <lane> <fraction>`, `selene.Ability <0-2>`, `selene.Attack`, `selene.Dash`, `selene.Slide 1|0`, `selene.Move <fwd> <right> <s>`, `selene.Break <team> <lane> <guardian|walker>`, `selene.Aim 0|1`, `selene.Face` (turn to the nearest enemy), `selene.Pitch <deg> [yaw]`, `selene.DamageLog 1`, `selene.InputLog 1` (also logs missed swings), `-DPCVars=selene.Bots=none`, `selene.LaneScript "t:cmd;t:cmd"`, `selene.Hud 0|1`, `selene.LaneRestartDelay N`.
+
 ## Known gaps
 
-- Building fronts are not checked: some face the street with a side wall.
-- Minions do not attack the hero; the hero has no health.
-- No effects, sounds or projectiles. Ranged damage is instant.
-- Equal waves stalemate at the lane centre unless the hero tips a lane.
+- Terrain pieces are untextured blockout boxes in the town ground materials; the cover and ramps are placeholders for art.
+- Structures are Paragon minions standing in for Guardians, Walkers and Patrons.
+- Bots are simple: no dodging, no item logic, no lane switching.
+- Sound: only the Paragon voice cues (hero efforts). No weapon, impact, footstep or interface sounds yet; the user rule is pack or downloaded assets only.
+- The strafe blend spaces use idle plus four jog directions; diagonals blend between them.
+- `ImportText (Roster): Missing closing parenthesis` for the Courier and Fixer entries predates this pass.

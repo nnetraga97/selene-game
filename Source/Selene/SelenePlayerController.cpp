@@ -1,4 +1,5 @@
 #include "SelenePlayerController.h"
+#include "TimerManager.h"
 
 // AdvancedMovement hooks: ability implementation and additional bindings live in Movement/.
 #include "Movement/SeleneMovementComponent.h"
@@ -9,6 +10,7 @@
 #include "UI/SSeleneFpsCounter.h"
 #include "UI/SSeleneMapView.h"
 #include "UI/SSeleneMinimap.h"
+#include "UI/SSeleneHud.h"
 #include "UI/SSeleneHeroPicker.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
@@ -190,6 +192,21 @@ void ASelenePlayerController::CreateRuntimeInput()
 	RuntimeMappingContext->MapKey(CharacterAction, EKeys::C);
 	RuntimeMappingContext->MapKey(AttackAction, EKeys::LeftMouseButton);
 	RuntimeMappingContext->MapKey(AttackAction, EKeys::Gamepad_RightTrigger);
+	AimAction = MakeAction(TEXT("Aim"), EInputActionValueType::Boolean);
+	RuntimeMappingContext->MapKey(AimAction, EKeys::RightMouseButton);
+	RuntimeMappingContext->MapKey(AimAction, EKeys::Gamepad_LeftTrigger);
+	// Abilities: Q / E / R, also 1 / 2 / 3 and the gamepad face/shoulder buttons.
+	const FKey AbilityKeys[3][3] = {
+		{ EKeys::Q, EKeys::One, EKeys::Gamepad_FaceButton_Left },
+		{ EKeys::E, EKeys::Two, EKeys::Gamepad_RightShoulder },
+		{ EKeys::R, EKeys::Three, EKeys::Gamepad_FaceButton_Top } };
+	AbilityActions.Reset();
+	for (int32 i = 0; i < 3; ++i)
+	{
+		UInputAction* Action = MakeAction(*FString::Printf(TEXT("Ability%d"), i + 1), EInputActionValueType::Boolean);
+		for (const FKey& Key : AbilityKeys[i]) RuntimeMappingContext->MapKey(Action, Key);
+		AbilityActions.Add(Action);
+	}
 }
 
 void ASelenePlayerController::SetupInputComponent()
@@ -214,6 +231,15 @@ void ASelenePlayerController::SetupInputComponent()
 	// C opens the hero picker (numbered list); `selene.Character next` still cycles.
 	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleHeroPicker);
 	EnhancedInput->BindAction(AttackAction, ETriggerEvent::Started, this, &ASelenePlayerController::StartAttack);
+	EnhancedInput->BindAction(AttackAction, ETriggerEvent::Completed, this, &ASelenePlayerController::StopAttack);
+	EnhancedInput->BindAction(AttackAction, ETriggerEvent::Canceled, this, &ASelenePlayerController::StopAttack);
+	EnhancedInput->BindAction(AimAction, ETriggerEvent::Started, this, &ASelenePlayerController::StartAim);
+	EnhancedInput->BindAction(AimAction, ETriggerEvent::Completed, this, &ASelenePlayerController::StopAim);
+	EnhancedInput->BindAction(AimAction, ETriggerEvent::Canceled, this, &ASelenePlayerController::StopAim);
+	for (int32 i = 0; i < AbilityActions.Num(); ++i)
+	{
+		EnhancedInput->BindAction(AbilityActions[i], ETriggerEvent::Started, this, &ASelenePlayerController::Ability, i);
+	}
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
 	EnhancedInput->BindAction(MenuAction, ETriggerEvent::Started, this, &ASelenePlayerController::TogglePauseMenu);
 	EnhancedInput->BindAction(MapAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleMap);
@@ -253,6 +279,11 @@ void ASelenePlayerController::BeginPlay()
 	{
 		SAssignNew(Minimap, SSeleneMinimap).Controller(this);
 		Viewport->AddViewportWidgetContent(Minimap.ToSharedRef(), 30);
+		if (!IsCaptureRun())
+		{
+			SAssignNew(Hud, SSeleneHud).Controller(this);
+			Viewport->AddViewportWidgetContent(Hud.ToSharedRef(), 20);
+		}
 	}
 }
 
@@ -418,6 +449,9 @@ void ASelenePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (Minimap.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
 		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(Minimap.ToSharedRef());
 	Minimap.Reset();
+	if (Hud.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(Hud.ToSharedRef());
+	Hud.Reset();
 	if (HeroPicker.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
 		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(HeroPicker.ToSharedRef());
 	HeroPicker.Reset();
@@ -469,6 +503,26 @@ void ASelenePlayerController::StartAttack()
 	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->Attack();
 }
 
+void ASelenePlayerController::StopAttack()
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->StopAttack();
+}
+
+void ASelenePlayerController::StartAim()
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->SetAiming(true);
+}
+
+void ASelenePlayerController::StopAim()
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->SetAiming(false);
+}
+
+void ASelenePlayerController::Ability(int32 Index)
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->UseAbility(Index);
+}
+
 void ASelenePlayerController::StartJump()
 {
 	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn()))
@@ -490,12 +544,17 @@ void ASelenePlayerController::EndJump()
 
 void ASelenePlayerController::StartSprint()
 {
-	bSprintHeld = true;
-	ApplyMovementPace();
+	// Shift tap = dash (bound in FSeleneMovementInput). Sprint only after a short hold, so a dash never flips pace.
+	GetWorldTimerManager().SetTimer(SprintHoldTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+	{
+		bSprintHeld = true;
+		ApplyMovementPace();
+	}), 0.25f, false);
 }
 
 void ASelenePlayerController::EndSprint()
 {
+	GetWorldTimerManager().ClearTimer(SprintHoldTimer);
 	bSprintHeld = false;
 	ApplyMovementPace();
 }

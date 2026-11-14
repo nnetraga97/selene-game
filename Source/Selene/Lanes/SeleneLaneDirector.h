@@ -7,12 +7,15 @@
 class UAnimSequence;
 class UCapsuleComponent;
 class USkeletalMeshComponent;
+class UParticleSystemComponent;
+class ASeleneCharacter;
+struct FSeleneTarget;
 
 UENUM()
 enum class ESeleneTeam : uint8 { Dawn, Dusk };
 
 UENUM()
-enum class ESeleneUnitKind : uint8 { Melee, Ranged, Siege, Guardian, Walker, Patron };
+enum class ESeleneUnitKind : uint8 { Melee, Ranged, Siege, Guardian, Walker, Patron, BaseGuardian, Shrine };
 
 /** One lane of the 3-lane test map: a polyline running from the Dawn base to the Dusk base (cm, world space). */
 USTRUCT(BlueprintType)
@@ -47,6 +50,8 @@ public:
 	UPROPERTY() TObjectPtr<UAnimSequence> DeathAnim;
 	UPROPERTY() TObjectPtr<UAnimSequence> IdleAnim;
 	UPROPERTY() TObjectPtr<UAnimSequence> CurrentAnim;
+	UPROPERTY() TArray<TObjectPtr<UAnimSequence>> HitReactAnims;   // front, back, left, right (may be empty)
+	UPROPERTY() TArray<TObjectPtr<UAnimSequence>> DeathAnims;
 
 	ESeleneTeam Team = ESeleneTeam::Dawn;
 	ESeleneUnitKind Kind = ESeleneUnitKind::Melee;
@@ -65,8 +70,23 @@ public:
 	float Speed = 0.f;
 	float AttackTimer = 0.f;
 	float DeadTime = -1.f;        // >= 0 once dead
+	float Z = 0.f;                // ground height under the unit (cm)
+	float SlowTimer = 0.f;
+	/** Map time an enemy hero last damaged this structure (structures regenerate when only troopers fight them). */
+	float LastHeroHitTime = -100.f;
+	/** Debug: where the unit last made progress while walking, and how long it has walked without any. */
+	FVector2D ProgressPos = FVector2D::ZeroVector;
+	float NoProgressTime = 0.f;
+	float SlowFactor = 1.f;
+	float StunTimer = 0.f;
+	float HitReactTimer = 0.f;
+	float BaseScale = 1.f;
+	float HeroAggroTimer = 0.f;   // > 0: chasing the hero who hit an ally
+	TWeakObjectPtr<ASeleneCharacter> AggroHero;
+	TWeakObjectPtr<UParticleSystemComponent> StateFx;
 
 	bool IsAlive() const { return DeadTime < 0.f; }
+	FVector Center() const { return FVector(Pos.X, Pos.Y, Z + HalfHeight); }
 	void Play(UAnimSequence* Anim, bool bLoop);
 };
 
@@ -84,8 +104,42 @@ public:
 
 	static ASeleneLaneDirector* Get(const UWorld* World);
 
-	/** Hero melee: damages every living enemy unit of Attacker's team in a forward arc. Returns the number hit. */
-	int32 HeroStrike(const FVector& Origin, const FVector& Forward, ESeleneTeam AttackerTeam, float Reach, float Amount);
+	/** Damage from any source (heroes, projectiles, minions). Returns the damage dealt: 0 when the structure is protected. */
+	float DamageUnit(ASeleneLaneUnit& Unit, float Amount, const FVector& From, AActor* Instigator);
+
+	/** Walkers are protected while their lane's Guardian stands; a Patron while all of its team's Walkers stand. */
+	bool IsProtected(const ASeleneLaneUnit& Unit) const;
+	bool IsAnyAlive(ESeleneTeam Team, ESeleneUnitKind Kind) const;
+	bool IsAnyDead(ESeleneTeam Team, ESeleneUnitKind Kind, const ASeleneLaneUnit* Except = nullptr) const;
+
+	/** A hero hurt one of Team's units: nearby minions of that team turn on the hero for a few seconds. */
+	void DrawAggro(ESeleneTeam Team, ASeleneCharacter* Hero, const FVector& Where);
+
+	const TArray<TObjectPtr<ASeleneLaneUnit>>& GetUnits() const { return Units; }
+
+	struct FObjectives
+	{
+		int32 Guardians[2] = { 0, 0 };
+		int32 Walkers[2] = { 0, 0 };
+		int32 BaseGuardians[2] = { 0, 0 };
+		int32 Shrines[2] = { 0, 0 };
+		float PatronHealth[2] = { 0.f, 0.f };   // fraction
+		bool bPatronProtected[2] = { true, true };
+		bool bGameOver = false;
+		ESeleneTeam Winner = ESeleneTeam::Dawn;
+		float Clock = 0.f;
+		float NextWave = 0.f;
+		int32 Wave = 0;
+		bool bHasLanes = false;
+	};
+	FObjectives GetObjectives() const;
+
+	/** Debug: put a pawn on a lane at a fraction of its length from the Dawn base, facing Dusk. */
+	void DebugTeleport(APawn& Pawn, FName LaneName, float Fraction);
+	void DebugBreak(ESeleneTeam Team, FName LaneName, ESeleneUnitKind Kind);
+
+	/** Ground height at a point, tracing down from Above (cm). */
+	float TraceGround(const FVector2D& At, float Above, float Fallback) const;
 
 	/** Read-only walk over every unit (minions and structures), for the minimap. */
 	void ForEachUnit(TFunctionRef<void(const ASeleneLaneUnit&)> Visit) const
@@ -108,7 +162,11 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 RangedPerWave = 1;
 	/** A siege minion joins every Nth wave (0 = never). */
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 SiegeEveryNthWave = 3;
-	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 MaxMinions = 96;
+	/** Share of trooper damage a structure takes. */
+	UPROPERTY(Config, EditAnywhere, Category = "Waves") float TrooperVsStructure = 0.35f;
+	/** Max-health share a structure heals per second once no enemy hero has hit it for 8 s (slow, so a push carries over to the next wave). */
+	UPROPERTY(Config, EditAnywhere, Category = "Waves") float StructureRegen = 0.003f;
+	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 MaxMinions = 140;
 	/** Where the structures stand, as a fraction of the lane measured from their own base. */
 	UPROPERTY(Config, EditAnywhere, Category = "Structures") float WalkerFraction = 0.15f;
 	UPROPERTY(Config, EditAnywhere, Category = "Structures") float GuardianFraction = 0.36f;
@@ -126,13 +184,14 @@ private:
 		float Project(const FVector2D& Point) const;
 	};
 
-	ASeleneLaneUnit* SpawnUnit(ESeleneUnitKind Kind, ESeleneTeam Team, int32 Lane, const FVector2D& At, float S, float Lateral);
+	ASeleneLaneUnit* SpawnUnit(ESeleneUnitKind Kind, ESeleneTeam Team, int32 Lane, const FVector2D& At, float S, float Lateral, float Power = 1.f);
 	void SpawnStructures();
 	void SpawnWave();
 	void SpawnStress(int32 PerTeam);
 	void TickUnit(ASeleneLaneUnit& Unit, float DeltaSeconds);
-	ASeleneLaneUnit* FindTarget(const ASeleneLaneUnit& Unit, float MaxDistance) const;
-	void ApplyDamage(ASeleneLaneUnit& Target, float Amount);
+	FSeleneTarget FindTarget(const ASeleneLaneUnit& Unit, float MaxDistance) const;
+	void Kill(ASeleneLaneUnit& Target, const FVector& From);
+	void Attack(ASeleneLaneUnit& Unit, const FSeleneTarget& Target);
 	void Place(ASeleneLaneUnit& Unit, float FaceYaw);
 	void DrawHealth() const;
 	int32 CountMinions() const;
@@ -144,19 +203,25 @@ private:
 	int32 TourIndex = 0;
 	bool bTourShot = false;
 
-	struct FPendingSpawn { ESeleneUnitKind Kind; ESeleneTeam Team; int32 Lane; FVector2D At; float S; float Lateral; };
+	struct FPendingSpawn { ESeleneUnitKind Kind; ESeleneTeam Team; int32 Lane; FVector2D At; float S; float Lateral; float Power; };
 	TArray<FPendingSpawn> Pending;
 	UPROPERTY() TArray<TObjectPtr<ASeleneLaneUnit>> Units;
+	/** Unit meshes and clips loaded at map start, held so the first wave doesn't hitch on loads. */
+	UPROPERTY(Transient) TArray<TObjectPtr<UObject>> Preloaded;
 	TArray<FPath> Paths;
 	float Clock = 0.f;
 	float NextWave = 0.f;
 	int32 WaveIndex = 0;
 	bool bGameOver = false;
+	ESeleneTeam Winner = ESeleneTeam::Dawn;
+	float GameOverTime = 0.f;
 	int32 LastStress = 0;
 	float StatTime = 0.f;
 	float StatWorst = 0.f;
 	int32 StatFrames = 0;
 	double StatDirector = 0.0;
 	bool bExecDone = false;
+	bool ScriptParsed = false;
+	TArray<TPair<float, FString>> Script;
 	TMap<FString, int32> SavedCVars;
 };
