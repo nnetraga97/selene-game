@@ -1,0 +1,49 @@
+{
+  "asset": "eclipse-warrior",
+  "run": "20261114T064017-14459e",
+  "run_state": "needs_review",
+  "draft": true,
+  "delivered_at": "2026-11-14T06:40:33.039607+00:00",
+  "files": {
+    "glb": {
+      "file": "eclipse-warrior.glb",
+      "sha256": "ab05bcce3da24275cce42a116b2b190ed399e006f35669d7dfdc0fc6f67875ac",
+      "bytes": 15444728
+    },
+    "fbx": {
+      "file": "eclipse-warrior.fbx",
+      "sha256": "33b2ff2de30a2ca9fbc5e8ef5376ed09e6295b4e23dd77e53d417a4e0eeaeb9d",
+      "bytes": 14242716
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "warrior_prepped.blend",
+      "blend_sha256": "93de3db5f51772d2870b22fdd1eef04a94513e1d08b3f75de1522df0a164d69c",
+      "script": "prep_champ.py",
+      "script_sha256": "ac4c5226f74162efd47cc39393b877f41891351376fcbfab4cad52e9a19b9b44"
+    },
+    "downloaded_at": "2026-11-14T06:30:27.015493+00:00",
+    "sha256": "5ffc1fcd18ec5af1d9f5fdfad57040f0aaa1a4a8917a7ac2df758493793b8bec",
+    "bytes": 7283620,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [],
+  "lineage": {
+    "parent_run": "20261114T063027-9f6e01",
+    "change": "Add the user's ornate sword (scaled to 1.05 m) skinned to a new weapon_r bone under hand_r, grip in the right palm, so she holds a sword in game",
+    "candidate_sha256": "a78ee31433a13124224cc2d768a37f3ee481085cf1254aa7273d6daeca6e1e0b",
+    "candidate_name": "eclipse-warrior-sword.glb",
+    "at": "2026-11-14T06:40:17.626691+00:00",
+    "repair_files": [
+      {
+        "file": "add_sword.py",
+        "sha256": "ad82f884c394412a46269a7368928a0f09d459b0fbaeb88452340bbba9336cd3"
+      }
+    ]
+  },
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/eclipse-warrior/runs/20261114T064017-14459e",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

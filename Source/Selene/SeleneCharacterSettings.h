@@ -168,6 +168,10 @@ struct SELENE_API FSelenePlayableCharacter
 	UPROPERTY(EditAnywhere, Category = "Slide")
 	TSoftObjectPtr<UAnimSequence> SlideOutStand;
 
+	/** Optional melee combo, played in order on DefaultSlot by ASeleneCharacter::Attack. */
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<UAnimSequence>> Attacks;
+
 	/** Kawaii Physics secondary motion (requires single-node locomotion, i.e. no AnimClass). */
 	UPROPERTY(EditAnywhere, Category = "Secondary")
 	TArray<FSeleneSecondaryChain> SecondaryChains;

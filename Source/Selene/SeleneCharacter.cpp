@@ -1,4 +1,6 @@
 #include "SeleneCharacter.h"
+#include "Lanes/SeleneLaneDirector.h"
+#include "TimerManager.h"
 
 // AdvancedMovement hook: all ability/physics logic lives in Movement/.
 #include "Movement/SeleneMovementComponent.h"
@@ -282,6 +284,7 @@ void ASeleneCharacter::SelectCharacter(FName Name)
 	AddPath(Entry->SprintStop);
 	AddPath(Entry->WalkPivot);
 	AddPath(Entry->RunPivot);
+	for (const auto& AttackClip : Entry->Attacks) AddPath(AttackClip);
 	PendingCharacterLoad = UAssetManager::GetStreamableManager().RequestAsyncLoad(Paths,
 		FStreamableDelegate::CreateWeakLambda(this, [this, Selection = *Entry, RequestId]()
 		{
@@ -360,6 +363,7 @@ void ASeleneCharacter::ApplyCharacter(const FSelenePlayableCharacter& Entry, uin
 	Validate(Entry.SprintStop);
 	Validate(Entry.WalkPivot);
 	Validate(Entry.RunPivot);
+	for (const auto& AttackClip : Entry.Attacks) Validate(AttackClip);
 	PendingCharacterName = NAME_None;
 	if (!bLoaded)
 	{
@@ -476,6 +480,13 @@ void ASeleneCharacter::UpdateSingleNodeAnimation(float DeltaSeconds)
 		bHadInput = Advanced->GetCurrentAcceleration().SizeSquared2D() > 1.f;
 		return;
 	}
+	// A swing owns DefaultSlot the same way: base loop changes and transitions would cancel it.
+	if (IsAttackPlaying())
+	{
+		PrevSpeed = GetVelocity().Size2D();
+		bHadInput = GetCharacterMovement()->GetCurrentAcceleration().SizeSquared2D() > 1.f;
+		return;
+	}
 	const bool bFalling = GetCharacterMovement()->IsFalling();
 	if (bFalling)
 	{
@@ -589,6 +600,10 @@ namespace
 		TEXT("Debug: 1 drives the player on a repeating 12 s loop (walk, sprint, sharp stop, turn, jog, jump) for tuning secondary motion."));
 	TAutoConsoleVariable<float> CVarAutoShots(TEXT("selene.AutoShots"), 0.f,
 		TEXT("Debug: > 0 takes a game screenshot every N seconds to Saved/AutoShots/."));
+	TAutoConsoleVariable<float> CVarAutoAttack(TEXT("selene.AutoAttack"), 0.f,
+		TEXT("Debug: > 0 presses attack every N seconds and holds the camera at selene.AutoAttackYaw."));
+	TAutoConsoleVariable<float> CVarAutoAttackYaw(TEXT("selene.AutoAttackYaw"), 150.f,
+		TEXT("Debug: camera yaw relative to the hero while selene.AutoAttack runs (180 looks at her front)."));
 	TAutoConsoleVariable<int32> CVarAnimMatch(TEXT("selene.AnimMatch"), 0,
 		TEXT("Debug: capture idle/walk/run/sprint/stop/pivot/jump from front/side/back on a temporary platform."));
 	TAutoConsoleVariable<FString> CVarAnimMatchLabel(TEXT("selene.AnimMatchLabel"), TEXT("before"),
@@ -664,8 +679,60 @@ void ASeleneCharacter::UpdateLocomotionTransitions(float Speed, float DeltaSecon
 void ASeleneCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	TickAttack(DeltaSeconds);
 	UpdateSingleNodeAnimation(DeltaSeconds);
 	TickDebugDrivers(DeltaSeconds);
+}
+
+bool ASeleneCharacter::IsAttackPlaying() const
+{
+	const UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	return Anim && AttackMontage.IsValid() && Anim->Montage_IsActive(AttackMontage.Get());
+}
+
+void ASeleneCharacter::Attack()
+{
+	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	if (!Anim || ActiveCharacter.Attacks.IsEmpty() || GetCharacterMovement()->IsFalling()) return;
+	if (const auto* Advanced = Cast<USeleneMovementComponent>(GetCharacterMovement()); Advanced && (Advanced->IsSliding() || Advanced->IsSlideExitPlaying())) return;
+	if (IsAttackPlaying())
+	{
+		bAttackQueued = true;  // chained in TickAttack once the current swing has landed
+		return;
+	}
+	UAnimSequence* Clip = ActiveCharacter.Attacks[AttackIndex % ActiveCharacter.Attacks.Num()].Get();
+	if (!Clip) return;
+	AttackMontage = Anim->PlaySlotAnimationAsDynamicMontage(Clip, TEXT("DefaultSlot"), 0.08f, 0.2f, 1.f, 1, -1.f, 0.f);
+	AttackClipLength = Clip->GetPlayLength();
+	AttackResetTimer = AttackClipLength + 0.6f;
+	bAttackQueued = false;
+	UE_LOG(LogSelene, Log, TEXT("Attack hero=%s index=%d clip=%s playing=%d"), *ActiveCharacterName.ToString(), AttackIndex, *GetNameSafe(Clip), IsAttackPlaying());
+	// Lane test map: the swing lands on enemy (Dusk) units in front of the hero part-way through the clip.
+	FTimerHandle StrikeTimer;
+	GetWorldTimerManager().SetTimer(StrikeTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+	{
+		if (ASeleneLaneDirector* Director = ASeleneLaneDirector::Get(GetWorld()))
+		{
+			Director->HeroStrike(GetActorLocation(), GetActorForwardVector(), ESeleneTeam::Dawn, Director->HeroReach, Director->HeroDamage);
+		}
+	}), FMath::Max(AttackClipLength * 0.35f, 0.05f), false);
+	++AttackIndex;
+}
+
+void ASeleneCharacter::TickAttack(float DeltaSeconds)
+{
+	if (AttackResetTimer > 0.f)
+	{
+		AttackResetTimer -= DeltaSeconds;
+		if (AttackResetTimer <= 0.f) AttackIndex = 0;  // combo dropped: start again from the first swing
+	}
+	if (!bAttackQueued) return;
+	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	if (!IsAttackPlaying() || (Anim && Anim->Montage_GetPosition(AttackMontage.Get()) >= AttackClipLength * 0.6f))
+	{
+		AttackMontage.Reset();
+		Attack();
+	}
 }
 
 void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
@@ -676,6 +743,17 @@ void ASeleneCharacter::TickDebugDrivers(float DeltaSeconds)
 		return;
 	}
 	DebugTime += DeltaSeconds;
+	if (const float Every = CVarAutoAttack.GetValueOnGameThread(); Every > 0.f && IsLocallyControlled())
+	{
+		if (DebugTime >= NextAutoAttack)
+		{
+			NextAutoAttack = DebugTime + Every;
+			Attack();
+		}
+		// Unattended captures: hold the camera at a fixed angle around the hero.
+		if (AController* PC = GetController())
+			PC->SetControlRotation(FRotator(-8.f, GetActorRotation().Yaw + CVarAutoAttackYaw.GetValueOnGameThread(), 0.f));
+	}
 	if (CVarAutoWalk.GetValueOnGameThread() > 0 && IsLocallyControlled())
 	{
 		// 12 s loop: 0-3 walk, 3-5.5 sprint, 5.5-7 stop, 7-9 jog back (start), 9-10.5 reverse while jogging (pivot),

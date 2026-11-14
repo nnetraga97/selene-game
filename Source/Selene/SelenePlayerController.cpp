@@ -8,6 +8,7 @@
 #include "SSelenePauseMenu.h"
 #include "UI/SSeleneFpsCounter.h"
 #include "UI/SSeleneMapView.h"
+#include "UI/SSeleneMinimap.h"
 #include "UI/SSeleneHeroPicker.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
@@ -129,6 +130,7 @@ void ASelenePlayerController::CreateRuntimeInput()
 	SprintAction = MakeAction(TEXT("Sprint"), EInputActionValueType::Boolean);
 	WalkAction = MakeAction(TEXT("WalkToggle"), EInputActionValueType::Boolean);
 	CharacterAction = MakeAction(TEXT("CharacterCycle"), EInputActionValueType::Boolean);
+	AttackAction = MakeAction(TEXT("Attack"), EInputActionValueType::Boolean);
 	MenuAction = MakeAction(TEXT("MenuToggle"), EInputActionValueType::Boolean);
 	MenuAction->bTriggerWhenPaused = true;
 	RuntimeMappingContext->MapKey(MenuAction, EKeys::Escape);
@@ -186,6 +188,8 @@ void ASelenePlayerController::CreateRuntimeInput()
 	RuntimeMappingContext->MapKey(WalkAction, EKeys::LeftControl);
 	RuntimeMappingContext->MapKey(CameraAction, EKeys::V);
 	RuntimeMappingContext->MapKey(CharacterAction, EKeys::C);
+	RuntimeMappingContext->MapKey(AttackAction, EKeys::LeftMouseButton);
+	RuntimeMappingContext->MapKey(AttackAction, EKeys::Gamepad_RightTrigger);
 }
 
 void ASelenePlayerController::SetupInputComponent()
@@ -209,6 +213,7 @@ void ASelenePlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(WalkAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleWalk);
 	// C opens the hero picker (numbered list); `selene.Character next` still cycles.
 	EnhancedInput->BindAction(CharacterAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleHeroPicker);
+	EnhancedInput->BindAction(AttackAction, ETriggerEvent::Started, this, &ASelenePlayerController::StartAttack);
 	EnhancedInput->BindAction(CameraAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleCamera);
 	EnhancedInput->BindAction(MenuAction, ETriggerEvent::Started, this, &ASelenePlayerController::TogglePauseMenu);
 	EnhancedInput->BindAction(MapAction, ETriggerEvent::Started, this, &ASelenePlayerController::ToggleMap);
@@ -242,6 +247,12 @@ void ASelenePlayerController::BeginPlay()
 	if (CVarShowFps.GetValueOnGameThread() != 0 && !FpsCounter.IsValid())
 	{
 		ToggleFpsCounter();
+	}
+	// Lane minimap: always present, draws only on maps that have lanes.
+	if (UGameViewportClient* Viewport = IsLocalController() && GetWorld() ? GetWorld()->GetGameViewport() : nullptr)
+	{
+		SAssignNew(Minimap, SSeleneMinimap).Controller(this);
+		Viewport->AddViewportWidgetContent(Minimap.ToSharedRef(), 30);
 	}
 }
 
@@ -404,6 +415,9 @@ void ASelenePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		PauseMenu.Reset();
 	}
 	CloseMap();
+	if (Minimap.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
+		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(Minimap.ToSharedRef());
+	Minimap.Reset();
 	if (HeroPicker.IsValid() && GetWorld() && GetWorld()->GetGameViewport())
 		GetWorld()->GetGameViewport()->RemoveViewportWidgetContent(HeroPicker.ToSharedRef());
 	HeroPicker.Reset();
@@ -448,6 +462,11 @@ void ASelenePlayerController::Look(const FInputActionValue& Value)
 		AddYawInput(Axis.X);
 		AddPitchInput(Axis.Y);
 	}
+}
+
+void ASelenePlayerController::StartAttack()
+{
+	if (ASeleneCharacter* Character = Cast<ASeleneCharacter>(GetPawn())) Character->Attack();
 }
 
 void ASelenePlayerController::StartJump()

@@ -4,6 +4,7 @@
 #include "SeleneCharacter.h"
 #include "SeleneCharacterSettings.h"
 #include "SelenePlayerController.h"
+#include "Lanes/SeleneLaneDirector.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
@@ -19,6 +20,8 @@ void ASeleneGameMode::StartPlay()
 {
 	Super::StartPlay();
 	SpawnNpcs();
+	// Maps without lanes still get an (idle) director so selene.LaneLog frame stats work everywhere.
+	if (!ASeleneLaneDirector::Get(GetWorld())) GetWorld()->SpawnActor<ASeleneLaneDirector>();
 }
 
 void ASeleneGameMode::SpawnNpcs()
