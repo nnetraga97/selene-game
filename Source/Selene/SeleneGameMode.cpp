@@ -5,6 +5,7 @@
 #include "SeleneCharacterSettings.h"
 #include "SelenePlayerController.h"
 #include "Lanes/SeleneLaneDirector.h"
+#include "Combat/SeleneBotController.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
@@ -19,7 +20,10 @@ ASeleneGameMode::ASeleneGameMode()
 void ASeleneGameMode::StartPlay()
 {
 	Super::StartPlay();
-	SpawnNpcs();
+	// Lane maps are for combat: no townsfolk.
+	const ASeleneLaneDirector* Lanes = ASeleneLaneDirector::Get(GetWorld());
+	if (!Lanes || Lanes->Lanes.IsEmpty()) SpawnNpcs();
+	else ASeleneBotController::SpawnBots(GetWorld());
 	// Maps without lanes still get an (idle) director so selene.LaneLog frame stats work everywhere.
 	if (!ASeleneLaneDirector::Get(GetWorld())) GetWorld()->SpawnActor<ASeleneLaneDirector>();
 }

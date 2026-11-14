@@ -7,6 +7,8 @@ public class Selene : ModuleRules
 	public Selene(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		// Several UI files share short anonymous-namespace names (colours); unity blobs would collide.
+		bUseUnity = false;
 
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",

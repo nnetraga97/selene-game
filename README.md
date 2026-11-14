@@ -19,6 +19,9 @@ Do not start another editor while a Selene editor process or `/tmp/selene-unreal
 | Input | Action |
 | --- | --- |
 | WASD / mouse | Move / look |
+| Left mouse | Attack (hold to keep firing) |
+| Right mouse | Aim (tighter shoulder view) |
+| Q / E / R (or 1 / 2 / 3) | Abilities |
 | Shift | Dash on press; sprint while held |
 | Ctrl | Slide |
 | CapsLock | Walk toggle |
@@ -30,6 +33,10 @@ Do not start another editor while a Selene editor process or `/tmp/selene-unreal
 | Esc | Pause menu |
 
 The pause-menu text is implemented in `Source/Selene/SSelenePauseMenu.cpp`; map and FPS UI live in `Source/Selene/UI/`.
+
+## Lanes match
+
+`/Game/Selene/Maps/Lanes` is a playable three-lane match: Warrior, Warden and Sparrow have combat kits, minion waves push each lane, bot heroes fight on both sides, and the HUD tracks the objective (Guardians, then Walkers, then the Patron). See [docs/maps/lanes-test/README.md](docs/maps/lanes-test/README.md).
 
 ## Heroes
 

@@ -202,7 +202,7 @@ void USeleneMovementComponent::PhysCustom(float DeltaTime, int32 Iterations)
 
 void USeleneMovementComponent::TickFeedback(float DeltaTime)
 {
-	if (!CharacterOwner || !CharacterOwner->IsLocallyControlled()) return;
+	if (!CharacterOwner || !CharacterOwner->IsPlayerControlled()) return;
 	const bool bEnabled = IsAdvancedMovementEnabled();
 	CurrentFOVKick = bEnabled ? FMath::FInterpTo(CurrentFOVKick, IsDashing() ? DashFOVKick : 0.f, DeltaTime, FOVReturnSpeed) : 0.f;
 	const float PreviousCameraDrop = CurrentCameraDrop;
@@ -212,12 +212,12 @@ void USeleneMovementComponent::TickFeedback(float DeltaTime)
 	for (UCameraComponent* Camera : Cameras)
 	{
 		if (!OriginalFOV.Contains(Camera)) OriginalFOV.Add(Camera, Camera->FieldOfView);
-		Camera->SetFieldOfView(OriginalFOV[Camera] + CurrentFOVKick);
+		Camera->SetFieldOfView((BaseFOV > 0.f ? BaseFOV : OriginalFOV[Camera]) + CurrentFOVKick);
 		Camera->AddRelativeLocation(FVector(0, 0, PreviousCameraDrop - CurrentCameraDrop));
 	}
 	UGameViewportClient* Viewport = GetWorld()->GetGameViewport();
 	if (!Viewport) return;
-	if (bEnabled && !StaminaWidget)
+	if (bEnabled && bShowStaminaText && !StaminaWidget)
 	{
 		StaminaWidget = SNew(SVerticalBox)
 		+ SVerticalBox::Slot().VAlign(VAlign_Bottom).HAlign(HAlign_Center).Padding(16.f)
@@ -232,7 +232,7 @@ void USeleneMovementComponent::TickFeedback(float DeltaTime)
 		StaminaWidget->SetVisibility(EVisibility::HitTestInvisible);
 		Viewport->AddViewportWidgetContent(StaminaWidget.ToSharedRef(), 5);
 	}
-	else if (!bEnabled && StaminaWidget)
+	else if ((!bEnabled || !bShowStaminaText) && StaminaWidget)
 	{
 		Viewport->RemoveViewportWidgetContent(StaminaWidget.ToSharedRef());
 		StaminaWidget.Reset();

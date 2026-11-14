@@ -10,6 +10,57 @@ class UBlendSpace;
 class UAnimSequence;
 class UMaterialInterface;
 
+UENUM(BlueprintType)
+enum class ESeleneWeapon : uint8
+{
+	Melee,
+	Bow
+};
+
+/** What an ability does when its cast point is reached (implemented in SeleneCharacterCombat.cpp). */
+UENUM(BlueprintType)
+enum class ESeleneAbilityEffect : uint8
+{
+	None,
+	DashStrike,    // charge along the aim, hitting everything in the path
+	Nova,          // burst round the hero: damage + slow
+	LeapSlam,      // leap to the aimed ground point, damage + stun on landing
+	ArrowRain,     // pulses of damage + slow on the aimed ground point
+	PiercingShot,  // fast arrow through every enemy on the line
+	Overdrive,     // buff: faster, stronger primary fire
+	Guard          // buff: damage reduction, knock nearby enemies back
+};
+
+/** One hero ability (Q / E / R in roster order). Times are seconds from the press. */
+USTRUCT(BlueprintType)
+struct SELENE_API FSeleneAbility
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Ability") FName Name;
+	UPROPERTY(EditAnywhere, Category = "Ability") ESeleneAbilityEffect Effect = ESeleneAbilityEffect::None;
+	UPROPERTY(EditAnywhere, Category = "Ability") TSoftObjectPtr<UAnimSequence> Clip;
+	UPROPERTY(EditAnywhere, Category = "Ability") float PlayRate = 1.f;
+	UPROPERTY(EditAnywhere, Category = "Ability") float Cooldown = 8.f;
+	/** When the effect lands, seconds after the press (cast point). */
+	UPROPERTY(EditAnywhere, Category = "Ability") float CastTime = 0.3f;
+	UPROPERTY(EditAnywhere, Category = "Ability") float Damage = 150.f;
+	/** cm */
+	UPROPERTY(EditAnywhere, Category = "Ability") float Radius = 400.f;
+	/** cm */
+	UPROPERTY(EditAnywhere, Category = "Ability") float Range = 1200.f;
+	/** Buff / slow / stun length in seconds. */
+	UPROPERTY(EditAnywhere, Category = "Ability") float Duration = 2.f;
+	/** Nova only: also stun everything hit for this long (0 = slow only). */
+	UPROPERTY(EditAnywhere, Category = "Ability") float StunSeconds = 0.f;
+	/** Plays on the whole body (true) or only above the spine while the legs keep moving (false). */
+	UPROPERTY(EditAnywhere, Category = "Ability") bool bFullBody = true;
+	/** Cascade particle systems: one at the hero on cast, one where the effect lands. */
+	UPROPERTY(EditAnywhere, Category = "Ability") FSoftObjectPath CastFx;
+	UPROPERTY(EditAnywhere, Category = "Ability") FSoftObjectPath ImpactFx;
+	UPROPERTY(EditAnywhere, Category = "Ability") float FxScale = 1.f;
+};
+
 /** One Kawaii Physics chain: RootBone and every bone below it sway (hair, braid, skirt panel, wing). */
 USTRUCT(BlueprintType)
 struct SELENE_API FSeleneSecondaryChain
@@ -171,6 +222,58 @@ struct SELENE_API FSelenePlayableCharacter
 	/** Optional melee combo, played in order on DefaultSlot by ASeleneCharacter::Attack. */
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<TSoftObjectPtr<UAnimSequence>> Attacks;
+
+	/** Primary fire: melee combo (Attacks) or a bow (FireClip + projectile). */
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	ESeleneWeapon Weapon = ESeleneWeapon::Melee;
+
+	/** Optional swing variants played on the upper body while moving (same order as Attacks). */
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<UAnimSequence>> MovingAttacks;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSoftObjectPtr<UAnimSequence> FireClip;
+
+	UPROPERTY(EditAnywhere, Category = "Combat") float MaxHealth = 650.f;
+	UPROPERTY(EditAnywhere, Category = "Combat") float AttackDamage = 70.f;
+	/** Melee reach or bow range, cm. */
+	UPROPERTY(EditAnywhere, Category = "Combat") float AttackReach = 330.f;
+	/** Fraction of the swing at which the blow lands. */
+	UPROPERTY(EditAnywhere, Category = "Combat") float AttackHitFraction = 0.35f;
+	/** Seconds between bow shots while the button is held. */
+	UPROPERTY(EditAnywhere, Category = "Combat") float FireInterval = 0.45f;
+	UPROPERTY(EditAnywhere, Category = "Combat") float ProjectileSpeed = 9000.f;
+	/** Cascade systems: projectile trail, muzzle flash and impact on a hit. */
+	UPROPERTY(EditAnywhere, Category = "Combat") FSoftObjectPath ProjectileFx;
+	UPROPERTY(EditAnywhere, Category = "Combat") FSoftObjectPath MuzzleFx;
+	UPROPERTY(EditAnywhere, Category = "Combat") FSoftObjectPath HitFx;
+	/** Bone or socket the bow shot leaves from (falls back to the chest). */
+	UPROPERTY(EditAnywhere, Category = "Combat") FName MuzzleBone = TEXT("hand_l");
+
+	/** Voice cue path prefix, e.g. /Game/ParagonSparrow/Audio/Cues/Sparrow_ (cues: Effort_Attack, Effort_Pain, Effort_Death, ...). */
+	UPROPERTY(EditAnywhere, Category = "Combat") FString VoicePrefix;
+
+	/** Q, E, R in order. */
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FSeleneAbility> Abilities;
+
+	UPROPERTY(EditAnywhere, Category = "Reactions") TSoftObjectPtr<UAnimSequence> HitReactFront;
+	UPROPERTY(EditAnywhere, Category = "Reactions") TSoftObjectPtr<UAnimSequence> HitReactBack;
+	UPROPERTY(EditAnywhere, Category = "Reactions") TSoftObjectPtr<UAnimSequence> HitReactLeft;
+	UPROPERTY(EditAnywhere, Category = "Reactions") TSoftObjectPtr<UAnimSequence> HitReactRight;
+	UPROPERTY(EditAnywhere, Category = "Reactions") TSoftObjectPtr<UAnimSequence> Death;
+
+	/** Combat stance (facing the crosshair): directional blend space, speed + direction axes. Falls back to Locomotion. */
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UBlendSpace> StrafeLocomotion;
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> TurnLeft90;
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> TurnRight90;
+	/** Directional dash clips (forward, back, left, right relative to facing), played for the dash's length. */
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> DashFwd;
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> DashBwd;
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> DashLeft;
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> DashRight;
+	/** Played instead of Land when the hero lands while moving (optional). */
+	UPROPERTY(EditAnywhere, Category = "Locomotion") TSoftObjectPtr<UAnimSequence> LandMoving;
 
 	/** Kawaii Physics secondary motion (requires single-node locomotion, i.e. no AnimClass). */
 	UPROPERTY(EditAnywhere, Category = "Secondary")
