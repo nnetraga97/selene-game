@@ -161,8 +161,8 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 SiegeEveryNthWave = 3;
 	/** Share of trooper damage a structure takes. */
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") float TrooperVsStructure = 0.35f;
-	/** Max-health share a structure heals per second once no enemy hero has hit it for 8 s. */
-	UPROPERTY(Config, EditAnywhere, Category = "Waves") float StructureRegen = 0.01f;
+	/** Max-health share a structure heals per second once no enemy hero has hit it for 8 s (slow, so a push carries over to the next wave). */
+	UPROPERTY(Config, EditAnywhere, Category = "Waves") float StructureRegen = 0.003f;
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 MaxMinions = 140;
 	/** Where the structures stand, as a fraction of the lane measured from their own base. */
 	UPROPERTY(Config, EditAnywhere, Category = "Structures") float WalkerFraction = 0.15f;
@@ -203,6 +203,8 @@ private:
 	struct FPendingSpawn { ESeleneUnitKind Kind; ESeleneTeam Team; int32 Lane; FVector2D At; float S; float Lateral; float Power; };
 	TArray<FPendingSpawn> Pending;
 	UPROPERTY() TArray<TObjectPtr<ASeleneLaneUnit>> Units;
+	/** Unit meshes and clips loaded at map start, held so the first wave doesn't hitch on loads. */
+	UPROPERTY(Transient) TArray<TObjectPtr<UObject>> Preloaded;
 	TArray<FPath> Paths;
 	float Clock = 0.f;
 	float NextWave = 0.f;

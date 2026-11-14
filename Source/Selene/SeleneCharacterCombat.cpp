@@ -223,8 +223,15 @@ void ASeleneCharacter::Attack()
 	bAttackQueued = false;
 	const float HitTime = FMath::Max(AttackClipLength * ActiveCharacter.AttackHitFraction, 0.05f);
 	ActionLockUntil = GetWorld()->GetTimeSeconds() + HitTime + 0.05;   // the next swing can start right after the blow
-	// Step into the swing on the ground without leaving the walking state.
-	if (GetCharacterMovement()->IsMovingOnGround()) GetCharacterMovement()->Velocity += GetActorForwardVector() * 260.f;
+	// Step into the swing on the ground without leaving the walking state, unless an enemy is already in reach
+	// (stepping then only shoves the hero into or past the target).
+	if (GetCharacterMovement()->IsMovingOnGround())
+	{
+		TArray<FSeleneTarget> InReach;
+		if (const USeleneCombatSubsystem* Combat = USeleneCombatSubsystem::Get(this))
+			Combat->GatherCone(GetActorLocation(), GetActorForwardVector(), ActiveCharacter.AttackReach * 0.7f, 0.3f, Team, InReach);
+		if (InReach.IsEmpty()) GetCharacterMovement()->Velocity += GetActorForwardVector() * 260.f;
+	}
 	Voice({ TEXT("Effort_Attack"), TEXT("Effort_Swing") }, 0.35f, 1.5f);
 	const int32 Serial = ++SwingSerial;
 	FTimerHandle StrikeTimer;
@@ -310,6 +317,22 @@ void ASeleneCharacter::MeleeStrike(int32 SwingIndex)
 			HitPauseUntil = GetWorld()->GetRealTimeSeconds() + (bFinisher ? 0.08 : 0.05);
 		}
 		AddCameraShake(bFinisher ? 0.45f : 0.22f);
+	}
+	else if (CVarInputLog.GetValueOnGameThread() != 0 && IsPlayerControlled())
+	{
+		TArray<FSeleneTarget> Near;
+		Combat->GatherEnemies(GetActorLocation(), 3000.f, Team, Near);
+		float Best = 1e9f, Angle = 0.f;
+		for (const FSeleneTarget& T : Near)
+		{
+			const FVector2D To = FVector2D(T.Location() - GetActorLocation());
+			if (To.Size() - T.Radius() < Best)
+			{
+				Best = To.Size() - T.Radius();
+				Angle = FMath::RadiansToDegrees(FMath::Acos(FVector2D::DotProduct(To.GetSafeNormal(), FVector2D(GetActorForwardVector()).GetSafeNormal())));
+			}
+		}
+		UE_LOG(LogSelene, Warning, TEXT("Swing missed: nearest enemy %.0f cm away, %.0f deg off facing (reach %.0f)"), Best, Angle, ActiveCharacter.AttackReach);
 	}
 }
 

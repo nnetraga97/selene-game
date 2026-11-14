@@ -5,6 +5,8 @@ Used by Tools/Unreal/lanes_ground.py (editor) and runnable on its own to print a
 import json, math, os, sys
 
 GROUND_ROLES = ('base', 'hill', 'plinth')
+# Macro elevation (Tools/Maps/lanes_elevation.py): False restores the old, mostly flat ground.
+ELEVATION = True
 
 
 def is_ground(piece):
@@ -60,6 +62,14 @@ def build(layout, cell=1.0, margin=30.0, blur_passes=2):
                 h = _box_height(p, x, y) if p['kind'] == 'box' else _ramp_height(p, x, y)
                 if h is not None and h > best: best = h
             row[i] = best
+    if ELEVATION:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import lanes_elevation
+        E = lanes_elevation.Elevation(layout)
+        for j in range(ny):
+            y = y0 + j * cell; row = H[j]
+            for i in range(nx):
+                row[i] += E.at(x0 + i * cell, y)
     # Soften: a few 3x3 averaging passes turn every hard edge into a short slope (about 2 m wide).
     for _ in range(blur_passes):
         G = [r[:] for r in H]
@@ -72,6 +82,18 @@ def build(layout, cell=1.0, margin=30.0, blur_passes=2):
                 G[j][i] = s / 9.0
         H = G
     return x0, y0, nx, ny, cell, H
+
+
+def sampler(layout):
+    """height_at(x, y) in metres (layout frame), bilinear over the built field."""
+    x0, y0, nx, ny, cell, H = build(layout)
+    def height_at(xm, ym):
+        fx = min(max((xm - x0) / cell, 0.0), nx - 1.001); fy = min(max((ym - y0) / cell, 0.0), ny - 1.001)
+        i, j = int(fx), int(fy); tx, ty = fx - i, fy - j
+        a = H[j][i] * (1 - tx) + H[j][i + 1] * tx
+        b = H[j + 1][i] * (1 - tx) + H[j + 1][i + 1] * tx
+        return a * (1 - ty) + b * ty
+    return height_at
 
 
 if __name__ == '__main__':

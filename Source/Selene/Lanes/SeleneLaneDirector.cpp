@@ -117,6 +117,27 @@ namespace
 			PC->SetControlRotation(R);
 		}));
 
+	FAutoConsoleCommandWithWorldAndArgs FaceCommand(TEXT("selene.Face"),
+		TEXT("Debug: turns the player's camera toward the nearest living enemy unit or structure."),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>&, UWorld* World)
+		{
+			APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
+			ASeleneLaneDirector* Director = ASeleneLaneDirector::Get(World);
+			ASeleneCharacter* Hero = PC ? Cast<ASeleneCharacter>(PC->GetPawn()) : nullptr;
+			if (!Director || !Hero) return;
+			const FVector2D Me(Hero->GetActorLocation());
+			const ASeleneLaneUnit* Best = nullptr;
+			for (const ASeleneLaneUnit* Unit : Director->GetUnits())
+			{
+				if (!Unit || !Unit->IsAlive() || Unit->Team == Hero->GetTeam()) continue;
+				if (!Best || FVector2D::DistSquared(Me, Unit->Pos) < FVector2D::DistSquared(Me, Best->Pos)) Best = Unit;
+			}
+			if (!Best) return;
+			FRotator R = PC->GetControlRotation();
+			R.Yaw = FMath::RadiansToDegrees(FMath::Atan2(Best->Pos.Y - Me.Y, Best->Pos.X - Me.X));
+			PC->SetControlRotation(R);
+		}));
+
 	FAutoConsoleCommandWithWorldAndArgs AimCommand(TEXT("selene.Aim"),
 		TEXT("Debug: selene.Aim 0|1 holds or releases the player's aim (combat stance)."),
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
@@ -321,6 +342,19 @@ void ASeleneLaneDirector::BeginPlay()
 	}
 	NextWave = FirstWaveDelay;
 	if (Paths.IsEmpty()) return;
+	// Load every unit mesh, clip and effect now: loading them when the first wave spawns stalled that frame.
+	for (int32 KindIndex = 0; KindIndex <= static_cast<int32>(ESeleneUnitKind::Shrine); ++KindIndex)
+	{
+		const FKindSpec& K = Spec(static_cast<ESeleneUnitKind>(KindIndex));
+		for (const TCHAR* Path : { K.DawnMesh, K.DuskMesh }) if (Path) if (UObject* Obj = LoadAsset<USkeletalMesh>(Path)) Preloaded.Add(Obj);
+		for (const TCHAR* Path : { K.Move, K.Attack, K.Death, K.Idle, K.HitReacts[0], K.HitReacts[1], K.HitReacts[2], K.HitReacts[3], K.ExtraDeaths[0], K.ExtraDeaths[1] })
+			if (Path) if (UObject* Obj = LoadAsset<UAnimSequence>(Path)) Preloaded.Add(Obj);
+	}
+	if (USeleneCombatSubsystem* Combat = USeleneCombatSubsystem::Get(this))
+	{
+		for (const TCHAR* Path : { FxMinionShot, FxStructureShot, FxShotImpact, FxMeleeImpact, FxMuzzle, FxSiegeMuzzle, FxMinionDeath, FxStructureDeath, FxPatronDeath, FxSpawn, FxStun, FxShielded })
+			Combat->Fx(FSoftObjectPath(Path));
+	}
 	if (CVarLaneFastRender.GetValueOnGameThread() != 0)
 	{
 		// The project default (Lumen GI + reflections) costs about 10 ms a frame here; this map is for gameplay tests.

@@ -33,6 +33,7 @@ try:
     bx, by = L['bounds']
     # One continuous ground mesh (Tools/Unreal/lanes_ground.py) when it exists; the flat slab otherwise.
     import sys; sys.path.insert(0, str(ROOT / 'Tools/Maps')); import lanes_heightfield as HF
+    G = HF.sampler(L)   # ground height (m) under any layout point: things sit on the shaped ground
     GROUND_MESH = u.load_asset('/Game/Selene/Maps/LanesGround/SM_LanesGround') if u.EditorAssetLibrary.does_asset_exist('/Game/Selene/Maps/LanesGround/SM_LanesGround') else None
     if GROUND_MESH:
         ground = spawn(u.StaticMeshActor, 'Ground', u.Vector(0, 0, 0), 0, 'Lanes/Ground')
@@ -60,7 +61,7 @@ try:
         folder = 'Lanes/Terrain/' + t['role']; mat = mats.get(t['mat'], pave)
         if t['kind'] == 'box':
             sx, sy, sz = t['size']
-            a = box(f"T{i:03d}_{t['role']}", V(t['c'][0], t['c'][1], t['z'] + sz / 2), (sx, sy, sz), -t['yaw_deg'], mat, folder)
+            a = box(f"T{i:03d}_{t['role']}", V(t['c'][0], t['c'][1], G(*t['c']) + t['z'] + sz / 2), (sx, sy, sz), -t['yaw_deg'], mat, folder)
             prop = cover_prop(t)
             if prop:
                 # Exact box collision stays (consistent cover); a real prop scaled to the box is what you see.
@@ -76,7 +77,7 @@ try:
                     mx, my = (size.y, size.x) if swap else (size.x, size.y)
                     scale = u.Vector(seg * 100 / max(mx, 1), sy * 100 / max(my, 1), sz * 100 / max(size.z, 1))
                     if swap: scale = u.Vector(scale.y, scale.x, scale.z)
-                    pa = spawn(u.StaticMeshActor, f"T{i:03d}_{t['role']}_prop{k}", V(cx, cy, t['z']), yaw + (90.0 if swap else 0.0), folder)
+                    pa = spawn(u.StaticMeshActor, f"T{i:03d}_{t['role']}_prop{k}", V(cx, cy, G(*t['c']) + t['z']), yaw + (90.0 if swap else 0.0), folder)
                     pc = pa.static_mesh_component; pc.set_static_mesh(pm); pa.set_actor_scale3d(scale)
                     pc.set_collision_enabled(u.CollisionEnabled.NO_COLLISION); pc.set_mobility(u.ComponentMobility.STATIC)
                     # mesh pivot may not sit at its base centre: shift so the scaled bounds fill the box
@@ -84,11 +85,12 @@ try:
                     pa.add_actor_local_offset(u.Vector(-c.x * scale.x, -c.y * scale.y, -bb.min.z * scale.z), False, False)
             continue
         (lx, ly), (hx, hy) = t['low'], t['high']
-        run = math.hypot(hx - lx, hy - ly); rise = t['z_high'] - t['z_low']; th = t['thick']
+        zl, zh = t['z_low'] + G(lx, ly), t['z_high'] + G(hx, hy)
+        run = math.hypot(hx - lx, hy - ly); rise = zh - zl; th = t['thick']
         pitch = math.atan2(rise, run); slab = math.hypot(run, rise)
         yaw = -math.degrees(math.atan2(hy - ly, hx - lx))
         # top surface passes through both end points: centre of the top line, then down half the thickness along the normal
-        cx, cy, cz = (lx + hx) / 2, (ly + hy) / 2, (t['z_low'] + t['z_high']) / 2
+        cx, cy, cz = (lx + hx) / 2, (ly + hy) / 2, (zl + zh) / 2
         dx, dy = (hx - lx) / run, (hy - ly) / run
         nx, ny, nz = -dx * math.sin(pitch), -dy * math.sin(pitch), math.cos(pitch)   # slab normal (layout frame)
         cx -= nx * th / 2; cy -= ny * th / 2; cz -= nz * th / 2
@@ -114,7 +116,10 @@ try:
         yaw = -b['yaw_deg'] + (90.0 if swap else 0.0) + FRONT_FIX.get(slug, 0.0)
         cx, cy = (bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2
         r = math.radians(yaw); ox = cx * math.cos(r) - cy * math.sin(r); oy = cx * math.sin(r) + cy * math.cos(r)
-        t = V(b['x'], b['y']); loc = u.Vector(t.x - ox, t.y - oy, -bb.min.z)
+        # Seat on the lowest ground under the footprint (the rest sinks in, nothing floats).
+        fw, fd = want[0] / 2, want[1] / 2; br = math.radians(b['yaw_deg'])
+        gz = min(G(b['x'] + dx * math.cos(br) - dy * math.sin(br), b['y'] + dx * math.sin(br) + dy * math.cos(br)) for dx in (-fw, 0, fw) for dy in (-fd, 0, fd))
+        t = V(b['x'], b['y']); loc = u.Vector(t.x - ox, t.y - oy, -bb.min.z + gz * 100.0)
         a = spawn(u.StaticMeshActor, f'B{i:03d}_{slug}', loc, yaw, 'Lanes/Buildings/' + b['role'])
         a.static_mesh_component.set_static_mesh(m); a.static_mesh_component.set_mobility(u.ComponentMobility.STATIC)
         placed.append({'label': a.get_actor_label(), 'yaw': yaw, 'swap': swap})
@@ -124,7 +129,7 @@ try:
     for i, (a0, b0) in enumerate(L['walls']):
         length = math.hypot(b0[0] - a0[0], b0[1] - a0[1]) + 1.2
         yaw = -math.degrees(math.atan2(b0[1] - a0[1], b0[0] - a0[0]))
-        box(f'Wall{i:03d}', V((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2, 2.5), (length, 0.5, 5.0), yaw, curb, 'Lanes/Walls')
+        box(f'Wall{i:03d}', V((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2, 2.5 + G((a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2)), (length, 0.5, 5.0), yaw, curb, 'Lanes/Walls')
     R['walls'] = len(L['walls'])
     # outer boundary so nobody leaves the map
     for i, (cx, cy, sx, sy) in enumerate(((0, by + 28, bx * 2 + 60, 1), (0, -by - 28, bx * 2 + 60, 1), (bx + 28, 0, 1, by * 2 + 60), (-bx - 28, 0, 1, by * 2 + 60))):
@@ -132,7 +137,7 @@ try:
     # lighting, player start, lane director
     tod = spawn(u.load_class(None, '/Script/Selene.SeleneTimeOfDay'), 'TimeOfDay', u.Vector(0, 0, 0), 0, 'Lanes/Lighting'); tod.set_hour(15)
     hero = next(s for s in L['structures'] if s['type'] == 'hero_spawn' and s['team'] == 'dawn')
-    spawn(u.PlayerStart, 'PlayerStart_Dawn', V(hero['pos'][0], hero['pos'][1], 1.2 + (2.5 if L.get('terrain') else 0.0)), 0, 'Lanes')
+    spawn(u.PlayerStart, 'PlayerStart_Dawn', V(hero['pos'][0], hero['pos'][1], 1.2 + G(*hero['pos'])), 0, 'Lanes')
     d = spawn(u.load_class(None, '/Script/Selene.SeleneLaneDirector'), 'LaneDirector', u.Vector(0, 0, 0), 0, 'Lanes')
     lanes = []
     for name in ('north', 'mid', 'south'):
