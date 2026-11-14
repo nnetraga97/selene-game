@@ -1,0 +1,37 @@
+{
+  "asset": "eclipse-warden",
+  "run": "20261114T061533-6b1fa3",
+  "run_state": "needs_review",
+  "draft": true,
+  "delivered_at": "2026-11-14T06:15:46.924061+00:00",
+  "files": {
+    "glb": {
+      "file": "eclipse-warden.glb",
+      "sha256": "2445948d69ab077c64cc569b6b620a66a75bd6dfa0488a9ed815f3a04794cdb3",
+      "bytes": 16744240
+    },
+    "fbx": {
+      "file": "eclipse-warden.fbx",
+      "sha256": "8285e37a753cef5a61f45cb6a409e75248164a2239136923889a826418eec348",
+      "bytes": 14954540
+    }
+  },
+  "source": {
+    "source_authored": {
+      "blend": "warden_assembled.blend",
+      "blend_sha256": "6b235dd455a4e1842f3580d7b2f731b36d9ebf905da49d85c51792e92f6bdc18",
+      "script": "build.py",
+      "script_sha256": "e1ca93d40b539dd8668614de5c0ead5f86b8933989adc2ced7047140d63d8d73"
+    },
+    "downloaded_at": "2026-11-14T06:15:33.321179+00:00",
+    "sha256": "e6adb7c14fb12fffdab1711acb1ac2bb07c33a06ff7cc596cf411e93ff448c22",
+    "bytes": 16741744,
+    "license": "Retain account/plan evidence; download time does not establish generation-time license"
+  },
+  "reviews": [],
+  "lineage": null,
+  "workflow_root": "/Users/nicknetraganti/Desktop/Developer Stuff/game-asset-workflow",
+  "run_path": "assets/eclipse-warden/runs/20261114T061533-6b1fa3",
+  "game_ready": false,
+  "engine_validation": "not_run"
+}

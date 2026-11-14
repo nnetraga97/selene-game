@@ -62,6 +62,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Selene|Movement")
 	void SetMovementPace(ESelenePace NewPace);
 
+	/** Plays the next roster attack clip; a press during a swing queues the next one in the combo. */
+	void Attack();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selene|Movement", meta = (ClampMin = "0"))
 	float WalkSpeed = 150.f;
 
@@ -127,4 +130,14 @@ private:
 	float PrevSpeed = 0.f;
 	bool bHadInput = false;
 	float TransitionCooldown = 0.f;
+
+	// Melee combo (roster Attacks): the swing owns DefaultSlot while it plays.
+	void TickAttack(float DeltaSeconds);
+	bool IsAttackPlaying() const;
+	TWeakObjectPtr<class UAnimMontage> AttackMontage;
+	int32 AttackIndex = 0;
+	float AttackClipLength = 0.f;
+	float AttackResetTimer = 0.f;
+	bool bAttackQueued = false;
+	float NextAutoAttack = 0.f;
 };

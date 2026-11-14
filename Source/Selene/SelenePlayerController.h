@@ -7,6 +7,7 @@
 class SSelenePauseMenu;
 class SSeleneFpsCounter;
 class SSeleneMapView;
+class SSeleneMinimap;
 class SSeleneHeroPicker;
 class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
@@ -45,6 +46,7 @@ private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void StartJump();
+	void StartAttack();
 	void EndJump();
 	void StartSprint();
 	void EndSprint();
@@ -81,6 +83,9 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> CharacterAction;
 
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> AttackAction;
+
 	TSharedPtr<SSelenePauseMenu> PauseMenu;
 
 	UPROPERTY(Transient)
@@ -104,6 +109,7 @@ private:
 	TSharedPtr<SSeleneMapView> MapView;
 	TSharedPtr<SSeleneHeroPicker> HeroPicker;
 	TSharedPtr<SSeleneFpsCounter> FpsCounter;
+	TSharedPtr<SSeleneMinimap> Minimap;
 	FVector MapCenter = FVector::ZeroVector;
 	float MapWidthCm = 40000.f;
 
