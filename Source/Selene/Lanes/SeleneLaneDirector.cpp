@@ -514,18 +514,20 @@ void ASeleneLaneDirector::SpawnWave()
 			const float Dir = Team == ESeleneTeam::Dawn ? 1.f : -1.f;
 			// Deadlock-style: waves stay symmetric. A broken enemy structure only moves this team's wave forward (it starts
 			// further up the lane, like the zipline being pushed), so the fight settles nearer the enemy instead of mid.
-			// Troopers get stronger only once the enemy has lost a Shrine (the late game, meant to end it).
 			float Start = Team == ESeleneTeam::Dawn ? 2600.f : Path.Length - 2600.f;   // the lane mouth at the base plaza edge
 			bool bEnemyShrineDown = false;
+			int32 BrokenInLane = 0;
 			for (const ASeleneLaneUnit* Unit : Units)
 			{
 				if (!Unit || !Unit->bStructure || Unit->IsAlive() || Unit->Team == Team) continue;
 				if (Unit->Kind == ESeleneUnitKind::Shrine) bEnemyShrineDown = true;
 				// The wave enters at the farthest broken enemy structure in this lane.
-				if (Unit->Lane == Lane) Start = Dir > 0.f ? FMath::Max(Start, Unit->S - 1200.f) : FMath::Min(Start, Unit->S + 1200.f);
+				if (Unit->Lane == Lane) { Start = Dir > 0.f ? FMath::Max(Start, Unit->S - 1200.f) : FMath::Min(Start, Unit->S + 1200.f); ++BrokenInLane; }
 			}
-			const float Power = bEnemyShrineDown ? 1.35f : 1.f;
-			const int32 Melee = MeleePerWave;
+			// A pushed lane hits harder: each broken enemy structure in it adds a trooper and 25% strength to that
+			// lane's waves, so the push carries on without a hero (waves alone used to stall at the next structure).
+			const float Power = (bEnemyShrineDown ? 1.35f : 1.f) + 0.25f * BrokenInLane;
+			const int32 Melee = MeleePerWave + BrokenInLane;
 			const int32 Count = Melee + RangedPerWave + (bSiege ? 1 : 0);
 			for (int32 i = 0; i < Count; ++i)
 			{
@@ -620,7 +622,9 @@ FSeleneTarget ASeleneLaneDirector::FindTarget(const ASeleneLaneUnit& Unit, float
 			const bool bAggro = Unit.HeroAggroTimer > 0.f && Unit.AggroHero.Get() == &Hero;
 			const float Reach = Unit.bStructure ? Unit.Range : (bAggro ? AggroRange : HeroNoticeRange);
 			if (Dist > Reach || Dist >= BestHeroDist) return;
-			if (Unit.bStructure && Best && !Best->bStructure) return;
+			// A hero who hit this structure in the last 3 s draws its fire even from among their troopers.
+			const bool bHitMe = Unit.bStructure && Unit.LastHeroHitter.Get() == &Hero && Clock - Unit.LastHeroHitTime < 3.f;
+			if (Unit.bStructure && Best && !Best->bStructure && !bHitMe) return;
 			if (!Unit.bStructure && !bAggro && Best && BestDist < Dist) return;
 			BestHero = &Hero; BestHeroDist = Dist;
 		});
@@ -658,7 +662,8 @@ float ASeleneLaneDirector::DamageUnit(ASeleneLaneUnit& Target, float Amount, con
 	// back between waves; a hero is what breaks it.
 	const ASeleneLaneUnit* FromUnit = Cast<ASeleneLaneUnit>(Instigator);
 	if (Target.bStructure && FromUnit && !FromUnit->bStructure) Amount *= TrooperVsStructure;
-	if (Target.bStructure && Cast<ASeleneCharacter>(Instigator)) Target.LastHeroHitTime = Clock;
+	if (Target.bStructure && FromUnit && !FromUnit->bStructure) Target.LastTrooperHitTime = Clock;
+	if (Target.bStructure) if (ASeleneCharacter* Hitter = Cast<ASeleneCharacter>(Instigator)) { Target.LastHeroHitTime = Clock; Target.LastHeroHitter = Hitter; }
 	Target.Health -= Amount;
 	if (ASeleneCharacter* Hero = Cast<ASeleneCharacter>(Instigator)) DrawAggro(Target.Team, Hero, Target.Center());
 	if (Target.Health > 0.f)
@@ -749,7 +754,7 @@ void ASeleneLaneDirector::Attack(ASeleneLaneUnit& Unit, const FSeleneTarget& Tar
 		return;
 	}
 	// Troopers mostly fight troopers: a hero takes a third of their damage. Structures hit heroes at full strength.
-	const float Scale = (Target.Hero.IsValid() && !Unit.bStructure) ? 0.35f : 1.f;
+	const float Scale = (Target.Hero.IsValid() && !Unit.bStructure) ? 0.35f : (Unit.bStructure && !Target.Hero.IsValid()) ? StructureVsTrooper : 1.f;
 	USeleneCombatSubsystem::FProjectileSpec Shot;
 	Shot.Damage = Unit.Damage * Scale;
 	Shot.bHitWorld = false;
@@ -791,7 +796,8 @@ void ASeleneLaneDirector::TickUnit(ASeleneLaneUnit& Unit, float DeltaSeconds)
 		Unit.Mesh->SetRelativeScale3D(FVector(Unit.BaseScale));
 		if (Unit.CurrentAnim && Unit.HitReactAnims.Contains(Unit.CurrentAnim)) Unit.CurrentAnim = nullptr;
 	}
-	if (Unit.bStructure && Unit.Health < Unit.MaxHealth && Clock - Unit.LastHeroHitTime > 8.f)
+	// Heals only when left alone: no hero hit for 8 s and no trooper hit for 4 s (a sieged structure keeps its damage).
+	if (Unit.bStructure && Unit.Health < Unit.MaxHealth && Clock - Unit.LastHeroHitTime > 8.f && Clock - Unit.LastTrooperHitTime > 4.f)
 	{
 		Unit.Health = FMath::Min(Unit.MaxHealth, Unit.Health + Unit.MaxHealth * StructureRegen * DeltaSeconds);
 	}

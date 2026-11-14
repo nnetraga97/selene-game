@@ -74,6 +74,10 @@ public:
 	float SlowTimer = 0.f;
 	/** Map time an enemy hero last damaged this structure (structures regenerate when only troopers fight them). */
 	float LastHeroHitTime = -100.f;
+	/** The hero who last hit this structure: it turns on them for a few seconds even with troopers around. */
+	TWeakObjectPtr<ASeleneCharacter> LastHeroHitter;
+	/** Last time an enemy trooper hit this structure: no regeneration while it is under siege. */
+	float LastTrooperHitTime = -100.f;
 	/** Debug: where the unit last made progress while walking, and how long it has walked without any. */
 	FVector2D ProgressPos = FVector2D::ZeroVector;
 	float NoProgressTime = 0.f;
@@ -164,6 +168,8 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 SiegeEveryNthWave = 3;
 	/** Share of trooper damage a structure takes. */
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") float TrooperVsStructure = 0.35f;
+	/** Share of a structure's damage dealt to troopers (structures are mainly there to stop heroes). */
+	UPROPERTY(Config, EditAnywhere, Category = "Waves") float StructureVsTrooper = 0.5f;
 	/** Max-health share a structure heals per second once no enemy hero has hit it for 8 s (slow, so a push carries over to the next wave). */
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") float StructureRegen = 0.003f;
 	UPROPERTY(Config, EditAnywhere, Category = "Waves") int32 MaxMinions = 140;
