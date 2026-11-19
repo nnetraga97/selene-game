@@ -14,11 +14,11 @@ Status labels: **live** governs work currently in progress; **current** is retai
 | Document | Status | One-line description |
 | --- | --- | --- |
 | [`ANIM-MATCH-BRIEF.md`](ANIM-MATCH-BRIEF.md) | current | Scope for aligning the playable heroes with Sparrow's movement presentation. |
-| [`ANIM-MATCH-PROGRESS.md`](ANIM-MATCH-PROGRESS.md) | current | Accepted facing fixes plus outstanding transition, clip, and foot-sliding work. |
+| [`ANIM-MATCH-PROGRESS.md`](ANIM-MATCH-PROGRESS.md) | current | Accepted facing fixes plus outstanding transition, clip, and foot-sliding work (written before the C++ transitions went live; see `STATUS.md`). |
 | [`ART-DIRECTION.md`](ART-DIRECTION.md) | current | Approved rendering, UI, and soft-cinematic anime direction. |
 | [`CHARS-PROGRESS.md`](CHARS-PROGRESS.md) | current | Stopped Fixer/Courier integration record and its diagnosed next action. |
 | [`CLIPS-BRIEF.md`](CLIPS-BRIEF.md) | current | Bounded plan for adopting GASP clips without breaking the native player path. |
-| [`CLIPS-PROGRESS.md`](CLIPS-PROGRESS.md) | current | Clip/slot research record; the gameplay C++ hookup remains unfinished. |
+| [`CLIPS-PROGRESS.md`](CLIPS-PROGRESS.md) | current | Clip/slot research record (written before the gameplay C++ hookup, which is now live; see `STATUS.md`). |
 | [`CLEANUP-PLAN.md`](CLEANUP-PLAN.md) | current | Non-destructive cleanup inventory, exclusions, and trash-only execution plan. |
 | [`ENVIRONMENT-ASSET-LIST-DRAFT.md`](ENVIRONMENT-ASSET-LIST-DRAFT.md) | current | Draft inventory and sourcing considerations for environment assets. |
 | [`FOX-HOOKUP-BRIEF.md`](FOX-HOOKUP-BRIEF.md) | current | Scope for the Fox (Lysara) playable-character hookup. |
@@ -48,6 +48,7 @@ Status labels: **live** governs work currently in progress; **current** is retai
 | Document | Status | One-line description |
 | --- | --- | --- |
 | [`research/after-the-wind-workflow.md`](research/after-the-wind-workflow.md) | historical | External AI-assisted 3D workflow research and lessons. |
+| [`research/animation-runtime-review.md`](research/animation-runtime-review.md) | current | Why movement and combat still look unrefined (the playback runtime, not the clips), clip sources investigated and not adopted, and an unapproved layered-graph proposal. |
 | [`research/character-pipeline-plan.md`](research/character-pipeline-plan.md) | current | Character-quality diagnosis, studio practice research, and the proposed one-hero pipeline plan (awaiting approval). |
 | [`research/movement-animation-plan.md`](research/movement-animation-plan.md) | current | Why body animation feels unrefined, how studios layer movement, animation and abilities, and the proposed hero framework plan (awaiting approval). |
 | [`research/multi-tail-3d.md`](research/multi-tail-3d.md) | historical | Earlier six-tail character-generation research for Lysara. |
